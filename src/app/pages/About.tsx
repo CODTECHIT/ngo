@@ -33,7 +33,7 @@ export default function About() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Our Story</SectionLabel>
           </motion.div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter flex items-center justify-center gap-4 flex-wrap">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
             <BlurText text="About" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#8B5CF6", "#C084FC", "#8B5CF6"]} animationSpeed={5} showBorder={false}>LEAD TO SERVE</GradientText>
           </h1>
@@ -48,7 +48,7 @@ export default function About() {
       </section>
 
       {/* Founder's Message */}
-      <section className="py-24 relative z-10">
+      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="relative">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent rounded-3xl transform -rotate-3 scale-105 -z-10" />
@@ -95,7 +95,7 @@ export default function About() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-24 bg-zinc-950 border-y border-white/5 relative overflow-hidden">
+      <section className="py-12 md:py-24 px-4 md:px-6 bg-zinc-950 border-y border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
           {[
@@ -114,7 +114,7 @@ export default function About() {
       </section>
 
       {/* Transparency & Governance */}
-      <section className="py-32 relative z-10">
+      <section className="py-16 md:py-32 px-4 md:px-6 relative z-10">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <SectionLabel className="justify-center">Accountability</SectionLabel>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">Transparency & Governance</h2>

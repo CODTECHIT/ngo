@@ -133,7 +133,7 @@ export default function Events() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 overflow-hidden flex items-center justify-center">
+      <section className="pt-24 pb-16 md:pt-32 md:pb-24 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         {/* React Bits Aurora Background */}
         <div className="absolute inset-0 z-0 opacity-60 pointer-events-none mix-blend-screen">
           <Aurora colorStops={["#8B5CF6", "#C084FC", "#4C1D95"]} amplitude={1.2} />
@@ -145,7 +145,7 @@ export default function Events() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Get Involved</SectionLabel>
           </motion.div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter flex items-center justify-center gap-4 flex-wrap">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
             <BlurText text="Events &" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#8B5CF6", "#C084FC", "#8B5CF6"]} animationSpeed={5} showBorder={false}>Programs</GradientText>
           </h1>
@@ -160,7 +160,7 @@ export default function Events() {
       </section>
 
       {/* Filter & Grid */}
-      <section className="py-16 relative z-10">
+      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-3 mb-16">
             {(["all", "upcoming", "ongoing", "completed"] as Filter[]).map(f => (
@@ -192,7 +192,7 @@ export default function Events() {
                             </div>
                         </div>
                         
-                        <div className="p-6 md:p-8 flex-1 flex flex-col relative z-20 -mt-8">
+                        <div className="p-4 md:p-6 flex-1 flex flex-col relative z-20">
                             <div className="bg-zinc-950/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex-1 flex flex-col shadow-xl">
                             <div className="inline-block mb-3">
                                 <span className="bg-white/5 border border-white/10 text-primary text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">

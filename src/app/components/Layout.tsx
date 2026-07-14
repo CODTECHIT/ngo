@@ -128,7 +128,7 @@ function FloatingIslandNav() {
 
 function Footer() {
   return (
-    <footer className="bg-black text-white py-24 border-t border-white/10 relative overflow-hidden">
+    <footer className="bg-black text-white py-12 md:py-24 px-4 md:px-6 border-t border-white/10 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
       

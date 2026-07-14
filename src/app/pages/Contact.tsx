@@ -61,7 +61,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter">
+            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
             Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Touch</span>
           </motion.h1>
           <motion.p 
@@ -75,7 +75,7 @@ export default function Contact() {
       </section>
 
       {/* Main Content */}
-      <section className="py-24 relative z-10">
+      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact Details */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="space-y-10">
@@ -123,7 +123,7 @@ export default function Contact() {
             <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">Send a Message</h2>
             
             {submitted ? (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-20 text-center h-full">
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-12 md:py-20 px-4 md:px-6 text-center h-full">
                 <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 border border-emerald-500/30">
                   <CheckCircle2 size={40} className="text-emerald-400" />
                 </div>
@@ -170,7 +170,7 @@ export default function Contact() {
       </section>
 
       {/* Map */}
-      <section className="py-20 relative z-10">
+      <section className="py-12 md:py-20 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="w-full h-96 bg-zinc-900 border border-white/10 rounded-3xl overflow-hidden relative flex items-center justify-center">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&h=800&fit=crop&auto=format')] opacity-20 object-cover mix-blend-luminosity grayscale" />

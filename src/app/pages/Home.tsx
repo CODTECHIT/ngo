@@ -78,7 +78,7 @@ function Hero() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-20">
+    <section className="relative min-h-[90vh] md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background pt-24 pb-12">
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070" className="w-full h-full object-cover opacity-60" alt="Background" />
         <div className="absolute inset-0 bg-black/30" />
@@ -92,34 +92,34 @@ function Hero() {
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] z-0 pointer-events-none" />
 
       <motion.div style={{ y: y1, opacity }} className="relative z-10 w-full max-w-7xl mx-auto px-6 text-center flex flex-col items-center">
-        <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }} className="mb-8 inline-flex">
+        <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }} className="mb-6 md:mb-8 inline-flex max-w-[90vw]">
           <span className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-medium tracking-widest text-zinc-400 uppercase">
-            <span className="w-2 h-2 rounded-full bg-accent inline-block mr-2 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-accent inline-block mr-2 animate-pulse flex-shrink-0" />
             Transforming Communities Since 2009
           </span>
         </motion.div>
 
-        <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-bold tracking-tighter leading-[0.95] mb-8 text-white max-w-5xl flex flex-wrap justify-center gap-x-4 gap-y-2">
-          <BlurText text="Rooting Change," delay={150} animateBy="words" direction="top" />
-          <BlurText text="One Life at a Time." delay={150} animateBy="words" direction="bottom" />
+        <h1 className="text-[2.5rem] leading-tight sm:text-5xl md:text-7xl lg:text-[7rem] font-bold tracking-tight md:leading-[0.95] mb-6 md:mb-8 text-white max-w-5xl flex flex-col md:flex-row flex-wrap justify-center items-center gap-x-3 gap-y-2 md:gap-y-2">
+          <BlurText text="Rooting Change," delay={150} animateBy="words" direction="top" className="text-center" />
+          <BlurText text="One Life at a Time." delay={150} animateBy="words" direction="bottom" className="text-center" />
         </h1>
 
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8 }} className="text-xl md:text-2xl text-zinc-400 font-light max-w-2xl mb-12">
+        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8 }} className="text-base sm:text-lg md:text-2xl text-zinc-400 font-light max-w-2xl mb-10 px-4">
           Empowering marginalized communities through skill-building, environmental action, and grassroots development.
         </motion.p>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1 }} className="flex flex-col sm:flex-row items-center gap-4">
-          <Link to="/services" className="group relative px-8 py-4 bg-white text-black rounded-full font-bold text-lg hover:scale-105 transition-all active:scale-95 overflow-hidden">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1 }} className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 w-full sm:w-auto px-4 md:px-6">
+          <Link to="/services" className="group w-full sm:w-auto relative px-8 py-4 bg-white text-black rounded-full font-bold text-base md:text-lg hover:scale-105 transition-all active:scale-95 overflow-hidden text-center flex justify-center">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity" />
             <span className="relative z-10 flex items-center gap-2">Explore Impact <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></span>
           </Link>
-          <Link to="/about" className="px-8 py-4 rounded-full border border-white/10 text-white font-bold text-lg hover:bg-white/5 transition-all">
+          <Link to="/about" className="px-8 py-4 w-full sm:w-auto rounded-full border border-white/10 text-white font-bold text-base md:text-lg hover:bg-white/5 transition-all text-center">
             Our Story
           </Link>
         </motion.div>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 2 }} className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-zinc-500">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 2 }} className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 md:gap-3 text-zinc-500">
         <span className="text-[10px] uppercase tracking-widest font-bold">Scroll Down</span>
         <div className="w-px h-12 bg-gradient-to-b from-zinc-500 to-transparent animate-pulse" />
       </motion.div>
@@ -130,9 +130,9 @@ function Hero() {
 // ── Impact Stats (Floating Island style) ──────────────────────────────────────
 function ImpactStats() {
   return (
-    <section className="relative z-20 -mt-24 px-6 max-w-5xl mx-auto">
+    <section className="relative z-20 mt-8 px-4 md:px-6 max-w-5xl mx-auto">
       <SpotlightCard className="p-8 backdrop-blur-2xl">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
           {STATS.map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
               <p className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight">{s.value}</p>
@@ -148,11 +148,11 @@ function ImpactStats() {
 // ── Bento Grid Services ────────────────────────────────────────────────────────
 function BentoServices() {
   return (
-    <section className="py-32 relative">
+    <section className="py-16 md:py-24 px-4 md:px-6 max-w-7xl mx-auto relative">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-16">
           <SectionLabel>Initiatives</SectionLabel>
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-white max-w-2xl">Core Programs</h2>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-6 text-white max-w-2xl">Core Programs</h2>
         </div>
 
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 lg:gap-6 auto-rows-[300px]">
@@ -161,13 +161,13 @@ function BentoServices() {
             <SpotlightCard className="h-full group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" alt="Environment" />
-              <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-zinc-950/90 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/95 via-zinc-950/50 to-transparent pointer-events-none" />
               <div className="absolute inset-0 p-10 flex flex-col justify-end">
                 <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mb-6 border border-white/20">
                   <Leaf size={28} className="text-accent" />
                 </div>
-                <h3 className="text-3xl font-bold text-white mb-3 tracking-tight">Environmental Action</h3>
-                <p className="text-zinc-400 text-lg max-w-md mb-6 leading-relaxed">Large-scale afforestation and zero-waste initiatives aimed at creating sustainable urban ecosystems.</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">Environmental Action</h3>
+                <p className="text-zinc-300 text-base md:text-lg max-w-md mb-6 leading-relaxed">Large-scale afforestation and zero-waste initiatives aimed at creating sustainable urban ecosystems.</p>
                 <Link to="/services" className="inline-flex items-center gap-2 text-white font-bold group-hover:text-accent transition-colors">
                   Read More <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -215,7 +215,7 @@ function PromotionalEventAds() {
   const ads = [upcomingAd, ongoingAd, completedAd].filter(Boolean) as typeof EVENTS;
 
   return (
-    <section className="py-32 relative bg-zinc-950 border-t border-red-900/30">
+    <section className="py-16 md:py-24 relative bg-zinc-950 border-t border-red-900/30">
       <div className="absolute inset-0 bg-red-900/5 blur-[120px] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -239,12 +239,12 @@ function PromotionalEventAds() {
                     Promoted
                   </div>
                 </div>
-                <div className="p-6 relative z-20 -mt-10">
+                <div className="p-4 md:p-6 relative z-20">
                   <div className="bg-zinc-900 border border-white/10 group-hover:border-red-500/30 rounded-2xl p-5 backdrop-blur-xl shadow-2xl transition-colors">
                     <h3 className="text-white font-bold text-lg leading-snug mb-4 group-hover:text-red-400 transition-colors line-clamp-2">
                       {event.title}
                     </h3>
-                    <div className="space-y-2 mb-6">
+                    <div className="space-y-3 mb-6">
                       <div className="flex items-center gap-3 text-zinc-400 text-xs font-medium">
                         <Calendar size={14} className="text-red-500" /> {event.date}
                       </div>
@@ -276,7 +276,7 @@ function DonationCTA() {
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 z-0 mix-blend-screen" />
       
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tighter flex items-center justify-center gap-4 flex-wrap">
+        <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
           Make a <GradientText colors={["#8B5CF6", "#C084FC", "#8B5CF6"]} animationSpeed={5} showBorder={false}>Real Impact</GradientText>
         </motion.h2>
         <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="text-zinc-400 text-xl font-light mb-12 max-w-2xl mx-auto">

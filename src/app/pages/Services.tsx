@@ -40,7 +40,7 @@ export default function Services() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Programs</SectionLabel>
           </motion.div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter flex items-center justify-center gap-4 flex-wrap">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
             <BlurText text="Our" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#8B5CF6", "#C084FC", "#8B5CF6"]} animationSpeed={5} showBorder={false}>Services</GradientText>
           </h1>
@@ -55,7 +55,7 @@ export default function Services() {
       </section>
 
       {/* Services detail */}
-      <section className="py-24 relative z-10">
+      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6 space-y-24">
           {SERVICES.map((s, i) => {
             const Icon = ICON_MAP[s.icon];
@@ -88,11 +88,9 @@ export default function Services() {
                   </Link>
                 </div>
                 <div className={`relative rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl group ${reversed ? "md:order-1" : ""}`}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/95 via-zinc-950/20 to-transparent opacity-100 transition-opacity duration-700 z-10 pointer-events-none" />
                   <div className={`h-80 lg:h-96 flex items-center justify-center relative z-0`}>
-                     {/* Using a placeholder tech-style background gradient instead of solid color for premium feel */}
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay" />
-                    <Icon size={120} className={`text-white/5 group-hover:scale-110 group-hover:text-white/10 transition-all duration-700`} />
+                    <img src={s.img} alt={s.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
                   </div>
                 </div>
               </motion.div>
@@ -102,7 +100,7 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="py-32 relative overflow-hidden flex items-center justify-center">
+      <section className="py-16 md:py-32 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-primary/10 z-0" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[400px] bg-gradient-to-r from-primary via-accent to-primary blur-[150px] opacity-20 rounded-full pointer-events-none" />
         

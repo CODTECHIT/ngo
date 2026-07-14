@@ -97,7 +97,7 @@ export default function News() {
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter">
+            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
             News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Updates</span>
           </motion.h1>
           <motion.p 
@@ -181,7 +181,7 @@ export default function News() {
                         <img src={n.img} alt={n.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
                       </div>
-                      <div className="p-6 md:p-8 flex-1 flex flex-col relative z-20 -mt-6">
+                      <div className="p-4 md:p-6 flex-1 flex flex-col relative z-20">
                         <div className="bg-zinc-950/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex-1 flex flex-col shadow-xl">
                           <div className="flex items-center justify-between mb-4">
                             <span className="text-[10px] font-bold px-2.5 py-1 bg-white/5 border border-white/10 text-primary rounded-md uppercase tracking-widest">

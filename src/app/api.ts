@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:5000/api';
+import axios from 'axios';
+// Use relative path so it hits Vercel Serverless Functions in prod, and proxy in local dev
+const API_URL = '/api';
 
 function getAuthHeader() {
   const token = localStorage.getItem('token');

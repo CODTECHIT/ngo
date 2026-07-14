@@ -8,6 +8,9 @@ import Gallery from "./pages/Gallery";
 import News from "./pages/News";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 
 function NotFound() {
   return (
@@ -29,8 +32,20 @@ function NotFound() {
 
 export const router = createBrowserRouter([
   {
-    path: "/admin",
-    Component: Admin,
+    path: "/admin/lead",
+    element: <Admin />,
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "register",
+    element: <Register />,
+  },
+  {
+    path: "dashboard",
+    element: <Dashboard />,
   },
   {
     path: "/",

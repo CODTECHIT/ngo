@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { SectionLabel } from "../components/Layout";
 import { GALLERY_IMAGES } from "../data";
+
+// ── Shared Animation Variants ──────────────────────────────────────────────────
+const fadeIn = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
 
 export default function Gallery() {
   const [activeTag, setActiveTag] = useState("All");
@@ -11,82 +23,107 @@ export default function Gallery() {
   const shown = activeTag === "All" ? GALLERY_IMAGES : GALLERY_IMAGES.filter(g => g.tag === activeTag);
 
   return (
-    <div className="bg-background">
-      {/* Hero */}
-      <section className="py-28 bg-foreground relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1400&h=500&fit=crop&auto=format"
-          alt="Community volunteers"
-          className="absolute inset-0 w-full h-full object-cover opacity-15"
-        />
-        <div className="relative max-w-7xl mx-auto px-6 text-center">
-          <SectionLabel light>Visual Story</SectionLabel>
-          <h1 className="text-5xl md:text-6xl font-bold text-primary-foreground mb-5"
-            style={{ fontFamily: "'Playfair Display', serif" }}>
-            Gallery
-          </h1>
-          <p className="text-primary-foreground/70 max-w-xl mx-auto text-lg leading-relaxed"
-            style={{ fontFamily: "'Lato', sans-serif" }}>
+    <div className="bg-background min-h-screen">
+      {/* Hero Section */}
+      <section className="relative pt-40 pb-20 overflow-hidden flex items-center justify-center">
+        {/* Animated Mesh Background */}
+        <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+          <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
+          <div className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
+        </div>
+        
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] z-0 pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
+            <SectionLabel>Visual Story</SectionLabel>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter">
+            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Gallery</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-zinc-400 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
             Photographs and videos from our programs, events, and communities — moments that words alone cannot capture.
-          </p>
+          </motion.p>
         </div>
       </section>
 
-      {/* Filter */}
-      <section className="py-16">
+      {/* Filter & Grid */}
+      <section className="py-16 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-3 flex-wrap justify-center mb-10">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex gap-3 flex-wrap justify-center mb-16">
             {tags.map(t => (
               <button key={t}
                 onClick={() => setActiveTag(t)}
-                className={`px-5 py-2 rounded-full text-sm font-bold border transition-colors ${activeTag === t ? "bg-accent text-accent-foreground border-accent" : "border-border text-muted-foreground hover:border-foreground"}`}
-                style={{ fontFamily: "'Lato', sans-serif" }}>
+                className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all border ${activeTag === t ? "bg-accent/20 text-accent border-accent/30 shadow-[0_0_15px_rgba(6,182,212,0.2)]" : "border-white/5 text-zinc-500 hover:text-white hover:border-white/20 bg-white/[0.02]"}`}>
                 {t}
               </button>
             ))}
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          </motion.div>
+          <motion.div 
+            key={activeTag} 
+            initial="hidden" animate="visible" variants={staggerContainer} 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {shown.map((img, i) => (
-              <div key={i}
-                onClick={() => setLightbox(img)}
-                className="relative group overflow-hidden rounded-2xl bg-muted cursor-pointer aspect-[4/3]">
-                <img src={img.src} alt={img.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/50 transition-colors flex items-center justify-center">
-                  <span className="text-white font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity text-center px-4"
-                    style={{ fontFamily: "'Lato', sans-serif" }}>
-                    {img.alt}
+              <motion.div variants={fadeIn} key={i}>
+                <div
+                  onClick={() => setLightbox(img)}
+                  className="relative group overflow-hidden rounded-3xl bg-zinc-900 cursor-pointer aspect-[4/3] border border-white/5 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all duration-500">
+                  <img src={img.src} alt={img.alt}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-zinc-950/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="absolute inset-0 flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <span className="text-white font-bold text-lg leading-snug">
+                      {img.alt}
+                    </span>
+                  </div>
+                  <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                    {img.tag}
                   </span>
                 </div>
-                <span className="absolute top-3 right-3 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full">
-                  {img.tag}
-                </span>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Lightbox */}
-      {lightbox && (
-        <div
-          className="fixed inset-0 z-50 bg-foreground/90 flex items-center justify-center p-6"
-          onClick={() => setLightbox(null)}>
-          <div className="relative max-w-3xl w-full" onClick={e => e.stopPropagation()}>
-            <img src={lightbox.src.replace("w=600&h=450", "w=900&h=680")} alt={lightbox.alt}
-              className="w-full rounded-2xl shadow-2xl" />
-            <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-foreground/80 to-transparent rounded-b-2xl">
-              <p className="text-white font-medium" style={{ fontFamily: "'Lato', sans-serif" }}>{lightbox.alt}</p>
-              <span className="text-xs text-white/60 bg-black/40 px-2 py-0.5 rounded-full">{lightbox.tag}</span>
-            </div>
-            <button
-              onClick={() => setLightbox(null)}
-              className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/20 backdrop-blur text-white flex items-center justify-center hover:bg-white/40 transition-colors">
-              <X size={16} />
-            </button>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-6"
+            onClick={() => setLightbox(null)}>
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="relative max-w-5xl w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl" 
+              onClick={e => e.stopPropagation()}>
+              <img src={lightbox.src.replace("w=600&h=450", "w=1200&h=900")} alt={lightbox.alt}
+                className="w-full h-auto max-h-[80vh] object-contain bg-zinc-950" />
+              <div className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
+                <p className="text-white font-bold text-xl mb-2">{lightbox.alt}</p>
+                <span className="text-[10px] text-accent font-bold uppercase tracking-widest border border-accent/20 bg-accent/10 px-3 py-1 rounded-full">{lightbox.tag}</span>
+              </div>
+              <button
+                onClick={() => setLightbox(null)}
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 border border-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/10 hover:scale-110 transition-all">
+                <X size={18} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

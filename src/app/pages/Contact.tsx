@@ -1,130 +1,186 @@
-import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Youtube, MessageCircle, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from "lucide-react";
+import { api } from "../api";
+import { useState } from "react";
+import { motion } from "motion/react";
 import { SectionLabel } from "../components/Layout";
 
+// ── Shared Animation Variants ──────────────────────────────────────────────────
+const fadeIn = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
 export default function Contact() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const fname = formData.get('fname') as string;
+    const lname = formData.get('lname') as string;
+    const email = formData.get('email') as string;
+    const subject = formData.get('subject') as string;
+    const message = formData.get('message') as string;
+    
+    try {
+      await api.sendMessage({ fname, lname, email, subject, message });
+      
+      const whatsappMessage = `Hello LTS Foundation, my name is ${fname} ${lname}. I am contacting you regarding: ${subject}. Message: ${message}. My email is ${email}.`;
+      window.open(`https://wa.me/919999999999?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
+      
+      setSubmitted(true);
+      e.currentTarget.reset();
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch (err) {
+      console.error('Failed to send message', err);
+      alert('Failed to send message.');
+    }
+  };
+
   return (
-    <div className="bg-background">
-      {/* Hero */}
-      <section className="py-28 bg-foreground relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1400&h=500&fit=crop&auto=format"
-          alt="Contact and communication"
-          className="absolute inset-0 w-full h-full object-cover opacity-15"
-        />
-        <div className="relative max-w-7xl mx-auto px-6 text-center">
-          <SectionLabel light>Reach Out</SectionLabel>
-          <h1 className="text-5xl md:text-6xl font-bold text-primary-foreground mb-5"
-            style={{ fontFamily: "'Playfair Display', serif" }}>
-            Contact Us
-          </h1>
-          <p className="text-primary-foreground/70 max-w-xl mx-auto text-lg leading-relaxed"
-            style={{ fontFamily: "'Lato', sans-serif" }}>
-            For partnerships, volunteering, media inquiries, or general questions — we respond within 24 hours.
-          </p>
+    <div className="bg-background min-h-screen">
+      {/* Hero Section */}
+      <section className="relative pt-40 pb-20 overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+          <div className="absolute top-[10%] right-[20%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
+          <div className="absolute -bottom-[10%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
+        </div>
+        
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] z-0 pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
+            <SectionLabel>Reach Out</SectionLabel>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter">
+            Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Touch</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-zinc-400 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
+            Whether you want to volunteer, partner with us, or learn more about our impact, we would love to hear from you.
+          </motion.p>
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16">
-          {/* Info */}
-          <div>
-            <SectionLabel>Get in Touch</SectionLabel>
-            <h2 className="text-4xl font-bold mb-8" style={{ fontFamily: "'Playfair Display', serif" }}>
-              We're Here to Help
-            </h2>
-            <div className="space-y-6 mb-10">
+      {/* Main Content */}
+      <section className="py-24 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Contact Details */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="space-y-10">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-6 tracking-tight">Contact Information</h2>
+              <p className="text-zinc-400 font-light leading-relaxed mb-8">
+                Our team is available Monday through Saturday. For urgent press or media inquiries, please email the director directly.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[
-                { icon: MapPin, label: "Head Office", value: "47-B, Lajpat Nagar II, New Delhi — 110024" },
-                { icon: Phone, label: "Phone", value: "+91 98765 43210" },
-                { icon: Mail, label: "Email", value: "connect@aadhaarSeva.org" },
-                { icon: Clock, label: "Office Hours", value: "Mon – Sat · 9:00 AM – 6:00 PM IST" },
-              ].map(item => (
-                <div key={item.label} className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <item.icon size={18} className="text-primary" />
+                { icon: MapPin, title: "Head Office", lines: ["124, Phase 2, Industrial Area", "Okhla, New Delhi 110020"] },
+                { icon: Phone, title: "Phone", lines: ["+91 11 2684 0000", "+91 98110 98110"] },
+                { icon: Mail, title: "Email", lines: ["info@leadtoserve.org", "partnerships@leadtoserve.org"] },
+                { icon: Clock, title: "Working Hours", lines: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sunday: Closed"] }
+              ].map((item, i) => (
+                <motion.div variants={fadeIn} key={item.title} className="bg-zinc-900 border border-white/5 rounded-2xl p-6 hover:border-white/20 hover:bg-zinc-900/80 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 border border-white/10">
+                    <item.icon size={20} className="text-primary" />
+                  </div>
+                  <h3 className="font-bold text-white mb-2">{item.title}</h3>
+                  {item.lines.map((line, j) => (
+                    <p key={j} className="text-sm text-zinc-400 font-light">{line}</p>
+                  ))}
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div variants={fadeIn} className="bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20 rounded-2xl p-8 backdrop-blur-sm">
+              <h3 className="font-bold text-white mb-2">Corporate Partnerships</h3>
+              <p className="text-sm text-zinc-300 font-light mb-4">
+                Looking to fulfill your CSR mandate? Download our corporate partnership brochure.
+              </p>
+              <button className="text-sm font-bold text-primary hover:text-white transition-colors underline decoration-primary/50 underline-offset-4">
+                Download Brochure PDF
+              </button>
+            </motion.div>
+          </motion.div>
+
+          {/* Contact Form */}
+          <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-zinc-950 border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
+            
+            <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">Send a Message</h2>
+            
+            {submitted ? (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-20 text-center h-full">
+                <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 border border-emerald-500/30">
+                  <CheckCircle2 size={40} className="text-emerald-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3>
+                <p className="text-zinc-400 font-light">Thank you for reaching out. Our team will get back to you within 24-48 hours.</p>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">First Name</label>
+                    <input required name="fname" type="text" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-colors" placeholder="John" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-0.5"
-                      style={{ fontFamily: "'DM Mono', monospace" }}>{item.label}</p>
-                    <p className="text-foreground font-medium" style={{ fontFamily: "'Lato', sans-serif" }}>{item.value}</p>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Last Name</label>
+                    <input required name="lname" type="text" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-colors" placeholder="Doe" />
                   </div>
                 </div>
-              ))}
-            </div>
-            {/* Social */}
-            <div>
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4"
-                style={{ fontFamily: "'DM Mono', monospace" }}>Follow Us</p>
-              <div className="flex gap-3">
-                {[
-                  { Icon: Facebook, label: "Facebook" },
-                  { Icon: Twitter, label: "Twitter" },
-                  { Icon: Instagram, label: "Instagram" },
-                  { Icon: Youtube, label: "YouTube" },
-                  { Icon: MessageCircle, label: "WhatsApp" },
-                ].map(({ Icon, label }) => (
-                  <button key={label}
-                    title={label}
-                    className="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors">
-                    <Icon size={16} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Form */}
-          <div className="bg-card rounded-2xl p-8 border border-border shadow-sm">
-            <h3 className="text-xl font-bold mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>Send a Message</h3>
-            <form className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                {["First Name", "Last Name"].map(f => (
-                  <div key={f}>
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5 block"
-                      style={{ fontFamily: "'DM Mono', monospace" }}>{f}</label>
-                    <input className="w-full px-4 py-2.5 rounded-lg bg-muted border border-border text-sm outline-none focus:border-primary transition-colors"
-                      placeholder={f.split(" ")[0]} />
-                  </div>
-                ))}
-              </div>
-              {[
-                { label: "Email", type: "email", placeholder: "you@example.com" },
-                { label: "Phone (optional)", type: "tel", placeholder: "+91 98765 00000" },
-                { label: "Subject", type: "text", placeholder: "Volunteer inquiry" },
-              ].map(f => (
-                <div key={f.label}>
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5 block"
-                    style={{ fontFamily: "'DM Mono', monospace" }}>{f.label}</label>
-                  <input type={f.type}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted border border-border text-sm outline-none focus:border-primary transition-colors"
-                    placeholder={f.placeholder} />
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Email Address</label>
+                  <input required name="email" type="email" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-colors" placeholder="john@example.com" />
                 </div>
-              ))}
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5 block"
-                  style={{ fontFamily: "'DM Mono', monospace" }}>Message</label>
-                <textarea rows={4}
-                  className="w-full px-4 py-2.5 rounded-lg bg-muted border border-border text-sm outline-none focus:border-primary transition-colors resize-none"
-                  placeholder="Tell us how you'd like to collaborate or support us..." />
-              </div>
-              <button className="w-full py-3 bg-primary text-primary-foreground font-bold rounded hover:opacity-90 transition-opacity"
-                style={{ fontFamily: "'Lato', sans-serif" }}>
-                Send Message
-              </button>
-            </form>
-          </div>
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Subject</label>
+                  <select required name="subject" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-colors appearance-none">
+                    <option value="" disabled className="bg-zinc-900 text-zinc-500">Select a topic</option>
+                    <option value="volunteer" className="bg-zinc-900 text-white">I want to Volunteer</option>
+                    <option value="donate" className="bg-zinc-900 text-white">Donation Inquiry</option>
+                    <option value="partner" className="bg-zinc-900 text-white">Corporate Partnership (CSR)</option>
+                    <option value="other" className="bg-zinc-900 text-white">Other Inquiry</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Message</label>
+                  <textarea required name="message" rows={5} className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-colors resize-none" placeholder="How can we help you?" />
+                </div>
+                <button type="submit" className="w-full py-4 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-xl hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center justify-center gap-2">
+                  Send Message <Send size={16} />
+                </button>
+              </form>
+            )}
+          </motion.div>
         </div>
       </section>
 
-      {/* Map placeholder */}
-      <section className="pb-16">
+      {/* Map */}
+      <section className="py-20 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="rounded-2xl overflow-hidden h-72 bg-muted border border-border flex items-center justify-center">
-            <div className="text-center text-muted-foreground">
-              <MapPin size={36} className="mx-auto mb-3 text-primary/40" />
-              <p className="font-medium" style={{ fontFamily: "'Lato', sans-serif" }}>AadhaarSeva Foundation</p>
-              <p className="text-sm" style={{ fontFamily: "'Lato', sans-serif" }}>47-B, Lajpat Nagar II, New Delhi — 110024</p>
-              <p className="text-xs mt-1 text-muted-foreground" style={{ fontFamily: "'DM Mono', monospace" }}>Google Maps integration</p>
+          <div className="w-full h-96 bg-zinc-900 border border-white/10 rounded-3xl overflow-hidden relative flex items-center justify-center">
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&h=800&fit=crop&auto=format')] opacity-20 object-cover mix-blend-luminosity grayscale" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+            <div className="relative z-10 text-center">
+              <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(255,255,255,0.3)] animate-bounce">
+                <MapPin size={24} />
+              </div>
+              <h3 className="text-2xl font-bold text-white tracking-tight">Visit Our HQ</h3>
+              <p className="text-zinc-400 font-light mt-2">New Delhi, India</p>
             </div>
           </div>
         </div>

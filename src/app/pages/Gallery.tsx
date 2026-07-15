@@ -25,14 +25,14 @@ export default function Gallery() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 overflow-hidden flex items-center justify-center">
+      <section className="pt-24 pb-12 md:pt-32 md:pb-24 relative overflow-hidden flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
         {/* Animated Mesh Background */}
-        <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+        <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
           <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           <div className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
         </div>
         
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
@@ -42,27 +42,27 @@ export default function Gallery() {
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+            className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
             Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Gallery</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-zinc-400 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
+            className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
             Photographs and videos from our programs, events, and communities — moments that words alone cannot capture.
           </motion.p>
         </div>
       </section>
 
       {/* Filter & Grid */}
-      <section className="py-16 relative z-10">
+      <section className="py-12 md:py-16 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex gap-3 flex-wrap justify-center mb-16">
             {tags.map(t => (
               <button key={t}
                 onClick={() => setActiveTag(t)}
-                className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all border ${activeTag === t ? "bg-accent/20 text-accent border-accent/30 shadow-[0_0_15px_rgba(6,182,212,0.2)]" : "border-white/5 text-zinc-500 hover:text-white hover:border-white/20 bg-white/[0.02]"}`}>
+                className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all border ${activeTag === t ? "bg-primary/10 text-primary border-primary/20 shadow-[0_0_15px_rgba(15,110,110,0.2)]" : "border-black/5 text-zinc-500 hover:text-zinc-900 hover:border-black/20 bg-black/[0.02]"}`}>
                 {t}
               </button>
             ))}
@@ -75,7 +75,7 @@ export default function Gallery() {
               <motion.div variants={fadeIn} key={i}>
                 <div
                   onClick={() => setLightbox(img)}
-                  className="relative group overflow-hidden rounded-3xl bg-zinc-900 cursor-pointer aspect-[4/3] border border-white/5 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all duration-500">
+                  className="relative group overflow-hidden rounded-3xl bg-black/5 cursor-pointer aspect-[4/3] border border-black/5 hover:border-black/20 hover:shadow-[0_0_20px_rgba(0,0,0,0.05)] transition-all duration-500">
                   <img src={img.src} alt={img.alt}
                     className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
                   <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-zinc-950/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -110,7 +110,7 @@ export default function Gallery() {
               className="relative max-w-5xl w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl" 
               onClick={e => e.stopPropagation()}>
               <img src={lightbox.src.replace("w=600&h=450", "w=1200&h=900")} alt={lightbox.alt}
-                className="w-full h-auto max-h-[80vh] object-contain bg-zinc-950" />
+                className="w-full h-auto max-h-[80vh] object-contain bg-transparent" />
               <div className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
                 <p className="text-white font-bold text-xl mb-2">{lightbox.alt}</p>
                 <span className="text-[10px] text-accent font-bold uppercase tracking-widest border border-accent/20 bg-accent/10 px-3 py-1 rounded-full">{lightbox.tag}</span>

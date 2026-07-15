@@ -1,53 +1,45 @@
 export const EVENTS = [
   {
-    id: 1, status: "upcoming", category: "Environment",
-    title: "Annual Green Earth Drive 2025",
-    date: "August 12, 2025", venue: "Central Park, New Delhi",
-    desc: "Join 500+ volunteers for our largest tree plantation event. Refreshments provided for all participants. Certificate of participation issued.",
-    banner: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=700&h=400&fit=crop&auto=format",
-    seats: 120, deadline: "August 5, 2025",
-  },
-  {
-    id: 2, status: "upcoming", category: "Women",
-    title: "Women Leadership Summit 2025",
-    date: "August 28–30, 2025", venue: "Convention Centre, Mumbai",
-    desc: "Three-day summit featuring keynotes, panel discussions, and networking sessions for women change-makers across sectors.",
-    banner: "https://images.unsplash.com/photo-1573164574472-797cdf4a583a?w=700&h=400&fit=crop&auto=format",
-    seats: 80, deadline: "August 20, 2025",
-  },
-  {
-    id: 3, status: "ongoing", category: "Education",
-    title: "Digital Skills Bootcamp — Cohort 7",
-    date: "July 1 – September 30, 2025", venue: "Online + Jaipur Hub",
-    desc: "90-day intensive bootcamp covering web development, data entry, and digital marketing. Placement assistance provided.",
-    banner: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=700&h=400&fit=crop&auto=format",
-    seats: 40, deadline: "Ongoing enrollment",
-  },
-  {
-    id: 4, status: "upcoming", category: "Health",
-    title: "Rural Health & Nutrition Camp",
-    date: "September 6, 2025", venue: "Alwar District, Rajasthan",
-    desc: "Free health check-ups, nutritional counselling, and medicine distribution for rural families across 12 villages.",
-    banner: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=700&h=400&fit=crop&auto=format",
-    seats: 300, deadline: "Walk-in welcome",
-  },
-  {
-    id: 5, status: "completed", category: "Community",
-    title: "Swachh Basti Abhiyan — Phase III",
-    date: "May 15, 2025", venue: "Dharavi, Mumbai",
-    desc: "Community-led sanitation drive reaching 2,400 households. Installed 18 water purification units and trained 60 sanitation workers.",
-    banner: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=700&h=400&fit=crop&auto=format",
+    id: 1, status: "completed", category: "Health",
+    title: "Free Eye Check-up Camp",
+    date: "December 2025", venue: "Dahegam, Telangana",
+    desc: "150+ people screened, 45 identified for free spectacles, in partnership with iCare Vision Center.",
+    banner: "/events/eye-camp.jpg",
     seats: 0, deadline: "Completed",
   },
+  {
+    id: 2, status: "completed", category: "Health",
+    title: "Blood Donation & Health Check Camp",
+    date: "June 14, 2026", venue: "Agrasen Bhavan, near Krishna Rao Hospital",
+    desc: "Free blood donation camp with sugar, BP, and hemoglobin testing, in partnership with Hindu Jagarana Mancha and iCare Vision Center.",
+    banner: "/events/blood-donation.jpg",
+    seats: 0, deadline: "Completed",
+  },
+  {
+    id: 3, status: "upcoming", category: "Community",
+    title: "Drug Awareness Program",
+    date: "June 26, 2026", venue: "Opp. Fine Hotel, Ambedkar Chowk, Khagaznagar",
+    desc: "Awareness drive in partnership with Telangana Police, TGNAB, and Lions Club of Bellampalli.",
+    banner: "/events/drug-awareness.jpg",
+    seats: 100, deadline: "June 25, 2026",
+  },
+  {
+    id: 4, status: "upcoming", category: "Environment",
+    title: "Annual Green Earth Drive 2026",
+    date: "August 12, 2026", venue: "Central Park, Khagaznagar",
+    desc: "Join 500+ volunteers for our largest tree plantation event. Refreshments provided for all participants. Certificate of participation issued.",
+    banner: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=700&h=400&fit=crop&auto=format",
+    seats: 120, deadline: "August 5, 2026",
+  }
 ];
 
 export const SERVICES = [
-  { slug: "skill-development", icon: "BookOpen", title: "Skill Development", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&fit=crop&q=80", color: "bg-amber-50", textColor: "text-amber-700", desc: "Vocational training, digital literacy, and livelihood programs empowering individuals to build sustainable futures.", details: "Our skill development centres operate in 14 cities and have trained over 8,200 individuals since 2012. Programs range from basic computer literacy to advanced coding bootcamps and artisan crafts. Each trainee receives placement support and a recognised certification upon completion." },
-  { slug: "environment", icon: "Leaf", title: "Environmental Awareness", img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&fit=crop&q=80", color: "bg-emerald-50", textColor: "text-emerald-700", desc: "Tree plantation drives, waste management campaigns, and conservation workshops for a greener tomorrow.", details: "We have planted 1.2 million saplings across 9 states, partnered with 80 municipal bodies for waste segregation, and run 340 school-level conservation workshops annually. Our Green Schools Program currently covers 220 government schools." },
-  { slug: "women-empowerment", icon: "Users", title: "Women Empowerment", img: "https://images.unsplash.com/photo-1573164574397-dd250bc8a598?w=800&fit=crop&q=80", color: "bg-rose-50", textColor: "text-rose-700", desc: "Self-help groups, legal aid, health camps, and entrepreneurship support for women across communities.", details: "3,200 women are active members of our self-help groups across rural and peri-urban areas. We provide micro-finance linkages, legal awareness camps, free health check-ups, and business incubation support for women entrepreneurs." },
-  { slug: "community-development", icon: "Globe", title: "Community Development", img: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&fit=crop&q=80", color: "bg-blue-50", textColor: "text-blue-700", desc: "Infrastructure improvement, sanitation projects, and local governance engagement for stronger communities.", details: "From building village libraries to installing solar street lights, our community projects are co-designed with residents. We have completed 140+ infrastructure projects across 9 states with funding from government schemes and corporate CSR." },
-  { slug: "social-welfare", icon: "Shield", title: "Social Welfare", img: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&fit=crop&q=80", color: "bg-purple-50", textColor: "text-purple-700", desc: "Food security programs, emergency relief, and support networks for the marginalized and vulnerable.", details: "Our food security program distributes 18,000 nutrition packets monthly. Emergency relief operations have reached 22,000+ families during natural disasters. We also run 4 shelter homes and 2 old-age care centres." },
-  { slug: "training-workshops", icon: "Handshake", title: "Training Workshops", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&fit=crop&q=80", color: "bg-orange-50", textColor: "text-orange-700", desc: "Expert-led workshops on health, rights, financial literacy, and sustainable livelihoods.", details: "450+ workshops conducted annually with over 38,000 participants. Topics include personal finance, reproductive health, disaster preparedness, legal rights, and sustainable farming. All workshops are free of charge for participants." },
+  { slug: "health-eye-care", icon: "Heart", title: "Health & Eye Care Camps", img: "https://archive.cehjournal.org/wp-content/uploads/2013/04/5591589853_b254109a50_o.jpg", color: "bg-teal-50", textColor: "text-teal-700", desc: "Free eye check-up camps, spectacle distribution, and blood donation drives.", details: "Free eye check-up camps, spectacle distribution, blood donation drives, and general health screening (sugar, BP, hemoglobin) camps conducted in partnership with local hospitals, Lions Club, and police." },
+  { slug: "education-skill", icon: "BookOpen", title: "Education & Skill Development", img: "https://srdsindia.org/wp-content/uploads/2021/09/teaching.jpeg", color: "bg-sky-50", textColor: "text-sky-700", desc: "Programs aimed at building awareness and skills among youth.", details: "Programs aimed at building awareness and skills among youth and farming communities, including safe agricultural practice awareness." },
+  { slug: "women-empowerment", icon: "Users", title: "Women Empowerment", img: "https://images.deccanchronicle.com/dc-Cover-evutgf5c1ji9f3bioadrrd1q22-20170307231336.Medi.jpeg", color: "bg-orange-50", textColor: "text-orange-700", desc: "Initiatives supporting women's confidence and self-sufficiency.", details: "Initiatives supporting women's confidence, participation, and self-sufficiency within local communities." },
+  { slug: "community-rural", icon: "Globe", title: "Community & Rural Development", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrcFs-CJGepmn6IPdXItKuRt3EYDhm26uOQSb4Dnxt8awYzyYB_zzxtQyB&s=10", color: "bg-teal-50", textColor: "text-teal-700", desc: "Outreach programs including drug awareness and rural health initiatives.", details: "Outreach programs including drug awareness, polio vaccination awareness, and rural health initiatives, run in partnership with Telangana Police, TGNAB, and Lions Club." },
+  { slug: "public-health", icon: "Shield", title: "Public Health Awareness", img: "https://nairshospital.in/wp-content/uploads/2022/11/IMG-20191015-WA0022-1-1024x768.jpg", color: "bg-sky-50", textColor: "text-sky-700", desc: "Campaigns on disease prevention and responsible practices.", details: "Campaigns on responsible pesticide/fertilizer use for farmers, drug-free youth campaigns, and disease prevention (Pulse Polio)." },
+  { slug: "partnerships-outreach", icon: "Handshake", title: "Partnerships & Community Outreach", img: "https://smartvillagemovement.org/wp-content/uploads/2024/03/21.png", color: "bg-orange-50", textColor: "text-orange-700", desc: "Working alongside partners to extend the reach of welfare programs.", details: "Working alongside Lions Club of Bellampalli, iCare Vision Center, Hindu Jagarana Mancha, and Telangana Police to extend the reach of health and welfare programs." },
 ];
 
 export const NEWS = [
@@ -60,15 +52,13 @@ export const NEWS = [
 ];
 
 export const GALLERY_IMAGES = [
-  { src: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&h=450&fit=crop&auto=format", alt: "Community volunteers at tree plantation drive", tag: "Environment" },
-  { src: "https://images.unsplash.com/photo-1573164574397-dd250bc8a598?w=600&h=450&fit=crop&auto=format", alt: "Women empowerment workshop session", tag: "Women" },
-  { src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=450&fit=crop&auto=format", alt: "Food distribution drive for rural communities", tag: "Welfare" },
-  { src: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=600&h=450&fit=crop&auto=format", alt: "Children at skill development centre", tag: "Education" },
-  { src: "https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&h=450&fit=crop&auto=format", alt: "Annual gathering of volunteers", tag: "Events" },
-  { src: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600&h=450&fit=crop&auto=format", alt: "Health camp in rural village", tag: "Health" },
-  { src: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=450&fit=crop&auto=format", alt: "Medical volunteer camp", tag: "Health" },
-  { src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=450&fit=crop&auto=format", alt: "Digital skills training session", tag: "Education" },
-  { src: "https://images.unsplash.com/photo-1567427018141-0584cfcbf1b8?w=600&h=450&fit=crop&auto=format", alt: "Award ceremony and recognition", tag: "Events" },
+  { src: "/gallery/eye-camp.jpg", alt: "Free Eye Check-up Camp", tag: "Eye Care" },
+  { src: "/gallery/blood-donation.jpg", alt: "Blood Donation Camp", tag: "Health" },
+  { src: "/gallery/women-empowerment.jpg", alt: "Women Empowerment Workshop", tag: "Women Empowerment" },
+  { src: "/gallery/community-outreach.jpg", alt: "Community Outreach", tag: "Community" },
+  { src: "/gallery/polio-awareness.jpg", alt: "Polio Awareness Drive", tag: "Awareness Programs" },
+  { src: "/gallery/drug-awareness-banner.jpg", alt: "Drug Awareness Program Banner", tag: "Awareness Programs" },
+  { src: "/gallery/event-photo.jpg", alt: "Foundation Event", tag: "Events" },
 ];
 
 export const TESTIMONIALS = [
@@ -78,10 +68,10 @@ export const TESTIMONIALS = [
 ];
 
 export const STATS = [
-  { value: "12,400+", label: "Lives Impacted" },
-  { value: "340+", label: "Events Organized" },
-  { value: "28", label: "Active Programs" },
-  { value: "95%", label: "Volunteer Satisfaction" },
+  { value: "150+", label: "People Screened in a Single Eye Camp" },
+  { value: "5+", label: "Community Health & Awareness Camps" },
+  { value: "4", label: "Core Focus Areas (Health, Education, Women Empowerment, Community Development)" },
+  { value: "3+", label: "Partner Organizations (Lions Club, Telangana Police, iCare Vision Center)" },
 ];
 
 export const ADMIN_EVENTS = [

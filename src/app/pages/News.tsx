@@ -51,13 +51,13 @@ function SpotlightCard({ children, className = "" }: { children: React.ReactNode
       onBlur={handleBlur}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] shadow-2xl transition-all duration-500 hover:border-white/20 ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-black/5 bg-black/[0.02] shadow-2xl transition-all duration-500 hover:border-black/20 ${className}`}
     >
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(6,182,212,0.15), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(15,110,110,0.1), transparent 40%)`,
         }}
       />
       {children}
@@ -80,14 +80,14 @@ export default function News() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 overflow-hidden flex items-center justify-center">
+      <section className="pt-24 pb-12 md:pt-32 md:pb-24 relative overflow-hidden flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
         {/* Animated Mesh Background */}
-        <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+        <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
           <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           <div className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
         </div>
         
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
@@ -97,20 +97,20 @@ export default function News() {
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+            className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
             News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Updates</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-zinc-400 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
+            className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
             Stories from the field, campaign highlights, partnerships, and organizational milestones.
           </motion.p>
         </div>
       </section>
 
-      <section className="py-16 relative z-10">
+      <section className="py-12 md:py-16 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           {/* Search + Filter */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col md:flex-row gap-4 mb-16">
@@ -119,14 +119,14 @@ export default function News() {
               <input
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                className="pl-11 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm w-full outline-none focus:border-accent/50 focus:bg-white/10 transition-colors placeholder:text-zinc-500"
+                className="pl-11 pr-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm w-full outline-none focus:border-primary/50 focus:bg-black/10 transition-colors placeholder:text-zinc-500"
                 placeholder="Search articles..." />
             </div>
             <div className="flex gap-2 flex-wrap">
               {TAGS.map(t => (
                 <button key={t}
                   onClick={() => setActiveTag(t)}
-                  className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${activeTag === t ? "bg-accent/20 text-accent border-accent/30 shadow-[0_0_15px_rgba(6,182,212,0.2)]" : "border-white/5 text-zinc-500 hover:text-white hover:border-white/20 bg-white/[0.02]"}`}>
+                  className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border ${activeTag === t ? "bg-primary/10 text-primary border-primary/20 shadow-[0_0_15px_rgba(15,110,110,0.2)]" : "border-black/5 text-zinc-500 hover:text-zinc-900 hover:border-black/20 bg-black/[0.02]"}`}>
                   {t}
                 </button>
               ))}
@@ -146,24 +146,24 @@ export default function News() {
                 <motion.div variants={fadeIn} className="mb-12">
                   <SpotlightCard className="group cursor-pointer">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                      <div className="h-64 lg:h-auto overflow-hidden bg-zinc-900 shrink-0 relative">
+                      <div className="h-64 lg:h-auto overflow-hidden bg-black/5 shrink-0 relative">
                         <img src={featured.img} alt={featured.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
                       </div>
-                      <div className="p-8 lg:p-12 flex flex-col justify-center relative z-10 bg-zinc-950/80 backdrop-blur-xl lg:bg-transparent">
+                      <div className="p-8 lg:p-12 flex flex-col justify-center relative z-10 bg-white/80 backdrop-blur-xl lg:bg-transparent">
                         <div className="flex items-center gap-3 mb-6">
-                          <span className="text-[10px] font-bold px-3 py-1 bg-accent/20 text-accent border border-accent/30 rounded-md uppercase tracking-widest">
+                          <span className="text-[10px] font-bold px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-md uppercase tracking-widest">
                             {featured.tag}
                           </span>
                           <span className="text-xs text-zinc-500">{featured.date}</span>
                         </div>
-                        <h2 className="text-3xl lg:text-4xl font-bold mb-4 leading-snug text-white tracking-tight group-hover:text-accent transition-colors">
+                        <h2 className="text-3xl lg:text-4xl font-bold mb-4 leading-snug text-zinc-900 tracking-tight group-hover:text-primary transition-colors">
                           {featured.title}
                         </h2>
-                        <p className="text-zinc-400 leading-relaxed text-base font-light mb-8">
+                        <p className="text-zinc-600 leading-relaxed text-base font-light mb-8">
                           {featured.excerpt}
                         </p>
-                        <span className="inline-flex items-center gap-2 text-sm font-bold text-accent group-hover:translate-x-2 transition-transform">
+                        <span className="inline-flex items-center gap-2 text-sm font-bold text-primary group-hover:translate-x-2 transition-transform">
                           Read full story <ArrowRight size={16} />
                         </span>
                       </div>
@@ -177,22 +177,22 @@ export default function News() {
                 {rest.map(n => (
                   <motion.div variants={fadeIn} key={n.id} className="h-full">
                     <SpotlightCard className="group cursor-pointer h-full flex flex-col">
-                      <div className="h-48 overflow-hidden bg-zinc-900 shrink-0 relative">
+                      <div className="h-48 overflow-hidden bg-black/5 shrink-0 relative">
                         <img src={n.img} alt={n.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
                       </div>
                       <div className="p-4 md:p-6 flex-1 flex flex-col relative z-20">
-                        <div className="bg-zinc-950/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex-1 flex flex-col shadow-xl">
+                        <div className="bg-white/80 backdrop-blur-xl border border-black/10 rounded-2xl p-6 flex-1 flex flex-col shadow-xl">
                           <div className="flex items-center justify-between mb-4">
-                            <span className="text-[10px] font-bold px-2.5 py-1 bg-white/5 border border-white/10 text-primary rounded-md uppercase tracking-widest">
+                            <span className="text-[10px] font-bold px-2.5 py-1 bg-black/5 border border-black/10 text-primary rounded-md uppercase tracking-widest">
                               {n.tag}
                             </span>
                             <span className="text-xs text-zinc-500">{n.date}</span>
                           </div>
-                          <h3 className="font-bold text-xl leading-snug mb-3 text-white tracking-tight group-hover:text-primary transition-colors">
+                          <h3 className="font-bold text-xl leading-snug mb-3 text-zinc-900 tracking-tight group-hover:text-primary transition-colors">
                             {n.title}
                           </h3>
-                          <p className="text-sm text-zinc-400 leading-relaxed font-light mb-6 flex-1 line-clamp-3">
+                          <p className="text-sm text-zinc-600 leading-relaxed font-light mb-6 flex-1 line-clamp-3">
                             {n.excerpt}
                           </p>
                           <span className="inline-flex items-center gap-2 text-xs font-bold text-primary group-hover:translate-x-1 transition-transform mt-auto">

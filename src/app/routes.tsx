@@ -7,10 +7,17 @@ import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import News from "./pages/News";
 import Contact from "./pages/Contact";
-import Admin from "./pages/Admin";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import Signup from "./pages/Signup";
+import Account from "./pages/Account";
+
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminSiteContent from "./pages/admin/AdminSiteContent";
+import AdminPrograms from "./pages/admin/AdminPrograms";
+import AdminEvents from "./pages/admin/AdminEvents";
+import AdminMessages from "./pages/admin/AdminMessages";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function NotFound() {
   return (
@@ -31,22 +38,25 @@ function NotFound() {
 }
 
 export const router = createBrowserRouter([
+  // Admin Routes
   {
-    path: "/admin/lead",
-    element: <Admin />,
+    path: "/admin/login",
+    element: <AdminLogin />,
   },
   {
-    path: "login",
-    element: <Login />,
+    path: "/admin",
+    element: <ProtectedRoute />,
+    children: [
+      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "site-content", element: <AdminSiteContent /> },
+      { path: "programs", element: <AdminPrograms /> },
+      { path: "events", element: <AdminEvents /> },
+      { path: "messages", element: <AdminMessages /> },
+      { path: "contact-messages", element: <AdminMessages /> },
+      // Any future protected admin routes go here
+    ],
   },
-  {
-    path: "register",
-    element: <Register />,
-  },
-  {
-    path: "dashboard",
-    element: <Dashboard />,
-  },
+  // Public Routes
   {
     path: "/",
     Component: Layout,
@@ -58,6 +68,9 @@ export const router = createBrowserRouter([
       { path: "gallery", Component: Gallery },
       { path: "news", Component: News },
       { path: "contact", Component: Contact },
+      { path: "login", Component: Login },
+      { path: "signup", Component: Signup },
+      { path: "account", Component: Account },
       { path: "*", Component: NotFound },
     ],
   },

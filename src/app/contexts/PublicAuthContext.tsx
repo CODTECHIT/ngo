@@ -2,17 +2,16 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../../lib/supabase';
 
-type AuthContextType = {
+type PublicAuthContextType = {
   session: Session | null;
   user: User | null;
   loading: boolean;
-  isAdmin: boolean;
   logout: () => Promise<void>;
 };
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const PublicAuthContext = createContext<PublicAuthContextType>({} as PublicAuthContextType);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const PublicAuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,17 +40,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await supabase.auth.signOut();
   };
 
-  const allowedEmails = (import.meta.env.VITE_ADMIN_ALLOWED_EMAILS || "")
-    .split(",")
-    .map((e: string) => e.trim().toLowerCase());
-  
-  const isAdmin = user?.email ? allowedEmails.includes(user.email.toLowerCase()) : false;
-
   return (
-    <AuthContext.Provider value={{ session, user, loading, isAdmin, logout }}>
+    <PublicAuthContext.Provider value={{ session, user, loading, logout }}>
       {children}
-    </AuthContext.Provider>
+    </PublicAuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const usePublicAuth = () => useContext(PublicAuthContext);

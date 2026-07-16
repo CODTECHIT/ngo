@@ -57,8 +57,7 @@ export function useSiteContent() {
     fetchContent();
   }, []);
 
-  // Provide safe defaults so UI doesn't crash or look totally empty before user fills it
-  const safeContent = content || {
+  const defaultContent: SiteContent = {
     id: 1,
     hero_heading: "Empowering Communities for a Brighter Tomorrow",
     hero_subheading: "Join Srishreevision Foundation in creating lasting impact through healthcare, education, and women empowerment.",
@@ -79,5 +78,11 @@ export function useSiteContent() {
     contact_address: "123 Main Street, Hyderabad, Telangana, India"
   };
 
-  return { content: safeContent, loading, originalData: content };
+  // Merge the content from the database with the default content
+  // If the database has a null value for a field, use the default content's value
+  const mergedContent = content 
+    ? { ...defaultContent, ...Object.fromEntries(Object.entries(content).filter(([_, v]) => v !== null)) }
+    : defaultContent;
+
+  return { content: mergedContent as SiteContent, loading, originalData: content };
 }

@@ -50,12 +50,12 @@ function FloatingIslandNav() {
 
   return (
     <div className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-black/5 shadow-sm">
-      <motion.header 
+      <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className="w-full max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        
+
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
           <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center shadow-md group-hover:shadow-lg transition-all shrink-0 bg-white border border-black/5">
             <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-cover scale-[1.35]" />
@@ -64,7 +64,7 @@ function FloatingIslandNav() {
             SRISHREEVISION FOUNDATION
           </span>
         </Link>
-        
+
         <nav className="hidden md:flex items-center gap-2">
           {NAV_LINKS.map(l => {
             const active = l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to);
@@ -72,9 +72,9 @@ function FloatingIslandNav() {
               <Link key={l.to} to={l.to}
                 className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors ${active ? "text-primary" : "text-zinc-700 hover:text-zinc-900"}`}>
                 {active && (
-                  <motion.div 
+                  <motion.div
                     layoutId="nav-indicator"
-                    className="absolute inset-0 bg-primary/10 rounded-full border border-primary/20" 
+                    className="absolute inset-0 bg-primary/10 rounded-full border border-primary/20"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
@@ -83,7 +83,7 @@ function FloatingIslandNav() {
             );
           })}
         </nav>
-        
+
         <div className="hidden md:flex items-center gap-3">
           {user ? (
             <Link to="/account" className="text-sm font-bold px-4 py-2 text-zinc-600 hover:text-zinc-900 transition-colors">
@@ -98,7 +98,7 @@ function FloatingIslandNav() {
             Donate
           </button>
         </div>
-        
+
         <button className="md:hidden text-zinc-900 w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors" onClick={() => setOpen(!open)}>
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -106,7 +106,7 @@ function FloatingIslandNav() {
 
       <AnimatePresence>
         {open && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -144,7 +144,7 @@ function Footer() {
     <footer className="bg-background text-foreground py-12 md:py-24 px-4 md:px-6 border-t border-black/10 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-30" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/10 blur-[150px] rounded-full pointer-events-none" />
-      
+
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-2">
@@ -159,9 +159,9 @@ function Footer() {
               A registered non-profit foundation working in healthcare, education, women empowerment, and community development across Telangana.
             </p>
             <div className="text-zinc-600 text-sm font-light space-y-2">
-              <p><strong className="text-zinc-900 font-medium">Phone:</strong> 9701100974 / 8977910974</p>
+              <p><strong className="text-zinc-900 font-medium">Phone:</strong>8977910974/ 9701100974 </p>
               <p><strong className="text-zinc-900 font-medium">Email:</strong> srishreefoundation@gmail.com</p>
-              <p><strong className="text-zinc-900 font-medium">Address:</strong> 1-11-22, Shop No.3, Golnaka Alwal, Alwal, Tirumalagiri, Hyderabad, T.G - 500010</p>
+              <p><strong className="text-zinc-900 font-medium">Address:</strong> 1-11-22,Golnaka Alwal, Alwal, Tirumalagiri, Hyderabad, T.G - 500010</p>
             </div>
           </div>
           {[
@@ -210,7 +210,7 @@ export function Layout() {
         <Outlet />
       </main>
       <Footer />
-      <a 
+      <a
         href="https://wa.me/919701100974?text=Hi! I would like to know more about Srishreevision Foundation."
         target="_blank"
         rel="noreferrer"

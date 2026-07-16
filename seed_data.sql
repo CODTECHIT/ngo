@@ -1,0 +1,17 @@
+-- Seed Programs
+INSERT INTO programs (title, description, icon_name, image_url, sort_order) VALUES ('Health & Eye Care Camps', 'Free eye check-up camps, spectacle distribution, blood donation drives, and general health screening (sugar, BP, hemoglobin) camps conducted in partnership with local hospitals, Lions Club, and police.', 'heart', 'https://archive.cehjournal.org/wp-content/uploads/2013/04/5591589853_b254109a50_o.jpg', 0);
+INSERT INTO programs (title, description, icon_name, image_url, sort_order) VALUES ('Education & Skill Development', 'Programs aimed at building awareness and skills among youth and farming communities, including safe agricultural practice awareness.', 'book', 'https://srdsindia.org/wp-content/uploads/2021/09/teaching.jpeg', 1);
+INSERT INTO programs (title, description, icon_name, image_url, sort_order) VALUES ('Women Empowerment', 'Initiatives supporting women''s confidence, participation, and self-Sustainabilitywithin local communities.', 'users', 'https://images.deccanchronicle.com/dc-Cover-evutgf5c1ji9f3bioadrrd1q22-20170307231336.Medi.jpeg', 2);
+INSERT INTO programs (title, description, icon_name, image_url, sort_order) VALUES ('Community & Rural Development', 'Outreach programs including drug awareness, polio vaccination awareness, and rural health initiatives, run in partnership with Telangana Police, TGNAB, and Lions Club.', 'globe', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrcFs-CJGepmn6IPdXItKuRt3EYDhm26uOQSb4Dnxt8awYzyYB_zzxtQyB&s=10', 3);
+
+-- Seed Events
+INSERT INTO events (title, description, image_url, event_date, location, status) VALUES ('Free Eye Check-up Camp', '150+ people screened, 45 identified for free spectacles, in partnership with iCare Vision Center.', '/events/eye-camp.jpg', '2025-12-01', 'Dahegam, Telangana', 'completed');
+INSERT INTO events (title, description, image_url, event_date, location, status) VALUES ('Blood Donation & Health Check Camp', 'Free blood donation camp with sugar, BP, and hemoglobin testing, in partnership with Hindu Jagarana Mancha and iCare Vision Center.', '/events/blood-donation.jpg', '2026-06-14', 'Agrasen Bhavan, near Krishna Rao Hospital', 'completed');
+INSERT INTO events (title, description, image_url, event_date, location, status) VALUES ('Drug Awareness Program', 'Awareness drive in partnership with Telangana Police, TGNAB, and Lions Club of International.', '/events/drug-awareness.jpg', '2026-06-26', 'Opp. Fine Hotel, Ambedkar Chowk, Khagaznagar', 'upcoming');
+INSERT INTO events (title, description, image_url, event_date, location, status) VALUES ('Annual Green Earth Drive 2026', 'Join 500+ volunteers for our largest tree plantation event. Refreshments provided for all participants. Certificate of participation issued.', 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=700&h=400&fit=crop&auto=format', '2026-08-12', 'Central Park, Khagaznagar', 'upcoming');
+
+-- Seed Gallery
+INSERT INTO gallery_images (image_url, category, caption, sort_order) VALUES ('/gallery/eye-camp.jpg', 'Eye Care', 'Free Eye Check-up Camp', 0);
+INSERT INTO gallery_images (image_url, category, caption, sort_order) VALUES ('/gallery/blood-donation.jpg', 'Health', 'Blood Donation Camp', 1);
+INSERT INTO gallery_images (image_url, category, caption, sort_order) VALUES ('/gallery/women-empowerment.jpg', 'Women Empowerment', 'Women Empowerment Workshop', 2);
+INSERT INTO gallery_images (image_url, category, caption, sort_order) VALUES ('/gallery/community-outreach.jpg', 'Community', 'Community Outreach', 3);

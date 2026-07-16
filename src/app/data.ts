@@ -19,7 +19,7 @@ export const EVENTS = [
     id: 3, status: "upcoming", category: "Community",
     title: "Drug Awareness Program",
     date: "June 26, 2026", venue: "Opp. Fine Hotel, Ambedkar Chowk, Khagaznagar",
-    desc: "Awareness drive in partnership with Telangana Police, TGNAB, and Lions Club of Bellampalli.",
+    desc: "Awareness drive in partnership with Telangana Police, TGNAB, and Lions Club of International.",
     banner: "/events/drug-awareness.jpg",
     seats: 100, deadline: "June 25, 2026",
   },
@@ -36,10 +36,10 @@ export const EVENTS = [
 export const SERVICES = [
   { slug: "health-eye-care", icon: "Heart", title: "Health & Eye Care Camps", img: "https://archive.cehjournal.org/wp-content/uploads/2013/04/5591589853_b254109a50_o.jpg", color: "bg-teal-50", textColor: "text-teal-700", desc: "Free eye check-up camps, spectacle distribution, and blood donation drives.", details: "Free eye check-up camps, spectacle distribution, blood donation drives, and general health screening (sugar, BP, hemoglobin) camps conducted in partnership with local hospitals, Lions Club, and police." },
   { slug: "education-skill", icon: "BookOpen", title: "Education & Skill Development", img: "https://srdsindia.org/wp-content/uploads/2021/09/teaching.jpeg", color: "bg-sky-50", textColor: "text-sky-700", desc: "Programs aimed at building awareness and skills among youth.", details: "Programs aimed at building awareness and skills among youth and farming communities, including safe agricultural practice awareness." },
-  { slug: "women-empowerment", icon: "Users", title: "Women Empowerment", img: "https://images.deccanchronicle.com/dc-Cover-evutgf5c1ji9f3bioadrrd1q22-20170307231336.Medi.jpeg", color: "bg-orange-50", textColor: "text-orange-700", desc: "Initiatives supporting women's confidence and self-sufficiency.", details: "Initiatives supporting women's confidence, participation, and self-sufficiency within local communities." },
+  { slug: "women-empowerment", icon: "Users", title: "Women Empowerment", img: "https://images.deccanchronicle.com/dc-Cover-evutgf5c1ji9f3bioadrrd1q22-20170307231336.Medi.jpeg", color: "bg-orange-50", textColor: "text-orange-700", desc: "Initiatives supporting women's confidence and self-sufficiency.", details: "Initiatives supporting women's confidence, participation, and self-Sustainabilitywithin local communities." },
   { slug: "community-rural", icon: "Globe", title: "Community & Rural Development", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrcFs-CJGepmn6IPdXItKuRt3EYDhm26uOQSb4Dnxt8awYzyYB_zzxtQyB&s=10", color: "bg-teal-50", textColor: "text-teal-700", desc: "Outreach programs including drug awareness and rural health initiatives.", details: "Outreach programs including drug awareness, polio vaccination awareness, and rural health initiatives, run in partnership with Telangana Police, TGNAB, and Lions Club." },
   { slug: "public-health", icon: "Shield", title: "Public Health Awareness", img: "https://nairshospital.in/wp-content/uploads/2022/11/IMG-20191015-WA0022-1-1024x768.jpg", color: "bg-sky-50", textColor: "text-sky-700", desc: "Campaigns on disease prevention and responsible practices.", details: "Campaigns on responsible pesticide/fertilizer use for farmers, drug-free youth campaigns, and disease prevention (Pulse Polio)." },
-  { slug: "partnerships-outreach", icon: "Handshake", title: "Partnerships & Community Outreach", img: "https://smartvillagemovement.org/wp-content/uploads/2024/03/21.png", color: "bg-orange-50", textColor: "text-orange-700", desc: "Working alongside partners to extend the reach of welfare programs.", details: "Working alongside Lions Club of Bellampalli, iCare Vision Center, Hindu Jagarana Mancha, and Telangana Police to extend the reach of health and welfare programs." },
+  { slug: "partnerships-outreach", icon: "Handshake", title: "Partnerships & Community Outreach", img: "https://smartvillagemovement.org/wp-content/uploads/2024/03/21.png", color: "bg-orange-50", textColor: "text-orange-700", desc: "Working alongside partners to extend the reach of welfare programs.", details: "Working alongside Lions Club of International, iCare Vision Center, Hindu Jagarana Mancha, and Telangana Police to extend the reach of health and welfare programs." },
 ];
 
 export const NEWS = [

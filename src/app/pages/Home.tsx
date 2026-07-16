@@ -105,9 +105,9 @@ function Hero() {
         </motion.div>
 
         <h1 className="text-[2.5rem] leading-tight sm:text-5xl md:text-7xl lg:text-[7rem] font-bold tracking-tight md:leading-[0.95] mb-6 md:mb-8 text-white max-w-5xl flex flex-col md:flex-row flex-wrap justify-center items-center gap-x-3 gap-y-2 md:gap-y-2 drop-shadow-lg">
-          <BlurText text={content.hero_heading.split(',')[0] || "Local Vision,"} delay={150} animateBy="words" direction="top" className="text-center" />
-          {content.hero_heading.split(',')[1] && (
-            <BlurText text={content.hero_heading.split(',')[1]} delay={150} animateBy="words" direction="bottom" className="text-center" />
+          <BlurText text={(content?.hero_heading || "Local Vision,").split(',')[0]} delay={150} animateBy="words" direction="top" className="text-center" />
+          {(content?.hero_heading || "").split(',')[1] && (
+            <BlurText text={(content?.hero_heading || "").split(',')[1]} delay={150} animateBy="words" direction="bottom" className="text-center" />
           )}
         </h1>
 
@@ -141,7 +141,7 @@ function ImpactStats() {
     <section className="relative z-20 mt-8 px-4 md:px-6 max-w-7xl mx-auto">
       <SpotlightCard className="p-8 md:p-12 backdrop-blur-2xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center items-start">
-          {content.stats.map((s, i) => (
+          {(content?.stats || []).map((s: any, i: number) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex flex-col items-center">
               <p className="text-4xl md:text-5xl font-bold text-zinc-900 mb-3 tracking-tight">{s.number}</p>
               <p className="text-xs uppercase tracking-widest text-zinc-600 font-light leading-[1.5]">{s.label}</p>

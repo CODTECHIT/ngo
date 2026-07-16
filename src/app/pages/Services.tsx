@@ -12,7 +12,7 @@ const ICON_MAP: Record<string, React.ElementType> = { BookOpen, Leaf, Users, Glo
 const EXTRA_INFO: Record<string, string[]> = {
   "Health & Eye Care Camps": ["Comprehensive eye screening", "Free prescription spectacles", "Regular blood donation camps"],
   "Education & Skill Development": ["Youth skill-building workshops", "Agricultural best practices", "Career guidance sessions"],
-  "Women Empowerment": ["Confidence-building programs", "Community participation platforms", "Self-sufficiency support"],
+  "Women Empowerment": ["Confidence-building programs", "Community participation platforms", "Self-Sustainabilitysupport"],
   "Community & Rural Development": ["Anti-drug awareness campaigns", "Polio vaccination drives", "Rural outreach initiatives"],
   "Public Health Awareness": ["Safe pesticide usage training", "Youth drug-free campaigns", "Disease prevention drives"],
   "Partnerships & Community Outreach": ["Joint events with local police", "Medical camps with iCare", "Support from Lions Club"],
@@ -33,7 +33,7 @@ export default function Services() {
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#29B6F6", "#4CAF50"]} amplitude={1.2} />
         </div>
-        
+
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
@@ -44,9 +44,9 @@ export default function Services() {
             <BlurText text="Our" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>Services</GradientText>
           </h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
             Six interconnected program streams that together address the root causes of social inequality — not just its symptoms.
@@ -103,7 +103,7 @@ export default function Services() {
       <section className="py-12 md:py-32 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-primary/10 z-0" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[400px] bg-gradient-to-r from-primary via-accent to-primary blur-[150px] opacity-20 rounded-full pointer-events-none" />
-        
+
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-6 tracking-tight">
             Want to Collaborate or Volunteer?

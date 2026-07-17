@@ -11,12 +11,23 @@ type ImageUploaderProps = {
   onUploadComplete: (url: string, publicId: string) => void;
   defaultImage?: string;
   className?: string;
+  acceptVideo?: boolean;
+  acceptMultiple?: boolean;
 };
 
-export function ImageUploader({ onUploadComplete, defaultImage, className = '' }: ImageUploaderProps) {
+export function ImageUploader({ onUploadComplete, defaultImage, className = '', acceptVideo = false, acceptMultiple = false }: ImageUploaderProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(defaultImage || null);
+  const [imageUrls, setImageUrls] = useState<string[]>(defaultImage ? defaultImage.split(',').filter(Boolean) : []);
   const widgetRef = useRef<any>(null);
+  const onUploadCompleteRef = useRef(onUploadComplete);
+
+  useEffect(() => {
+    onUploadCompleteRef.current = onUploadComplete;
+  }, [onUploadComplete]);
+
+  useEffect(() => {
+    setImageUrls(defaultImage ? defaultImage.split(',').filter(Boolean) : []);
+  }, [defaultImage]);
 
   useEffect(() => {
     // Load Cloudinary script if not already loaded
@@ -33,16 +44,24 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '' }
   }, []);
 
   useEffect(() => {
-    if (isLoaded && window.cloudinary) {
+    if (isLoaded && window.cloudinary && !widgetRef.current) {
+      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+      
+      if (!cloudName || !uploadPreset) {
+        console.error("Cloudinary env variables are missing");
+        return;
+      }
+
       widgetRef.current = window.cloudinary.createUploadWidget(
         {
-          cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-          uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+          cloudName,
+          uploadPreset,
           sources: ['local', 'url', 'camera'],
-          multiple: false,
-          maxFiles: 1,
-          resourceType: 'image',
-          clientAllowedFormats: ['jpeg', 'png', 'jpg', 'webp'],
+          multiple: acceptMultiple,
+          maxFiles: acceptMultiple ? 10 : 1,
+          resourceType: acceptVideo ? 'auto' : 'image',
+          clientAllowedFormats: acceptVideo ? ['jpeg', 'png', 'jpg', 'webp', 'mp4', 'webm'] : ['jpeg', 'png', 'jpg', 'webp'],
           styles: {
             palette: {
               window: '#ffffff',
@@ -65,13 +84,16 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '' }
           if (!error && result && result.event === 'success') {
             const url = result.info.secure_url;
             const publicId = result.info.public_id;
-            setImageUrl(url);
-            onUploadComplete(url, publicId);
+            setImageUrls(prev => {
+              const newUrls = acceptMultiple ? [...prev, url] : [url];
+              onUploadCompleteRef.current(newUrls.join(','), publicId);
+              return newUrls;
+            });
           }
         }
       );
     }
-  }, [isLoaded, onUploadComplete]);
+  }, [isLoaded, acceptVideo, acceptMultiple]);
 
   const openWidget = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -82,36 +104,45 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '' }
     }
   };
 
-  const handleRemove = (e: React.MouseEvent) => {
+  const handleRemove = (index: number) => (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setImageUrl(null);
-    onUploadComplete('', '');
+    const newUrls = [...imageUrls];
+    newUrls.splice(index, 1);
+    setImageUrls(newUrls);
+    onUploadCompleteRef.current(newUrls.join(','), '');
   };
 
   return (
     <div className={`w-full ${className}`}>
-      {imageUrl ? (
-        <div className="relative group rounded-xl overflow-hidden border border-black/10 shadow-sm aspect-video bg-black/5 flex items-center justify-center">
-          <img 
-            src={imageUrl} 
-            alt="Uploaded preview" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4">
-            <button 
-              onClick={openWidget}
-              className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-sm font-bold shadow-lg hover:scale-105 transition-transform"
-            >
-              Replace Image
-            </button>
-            <button 
-              onClick={handleRemove}
-              className="absolute top-3 right-3 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg hover:scale-110 transition-all"
-            >
-              <X size={16} />
-            </button>
+      {imageUrls.length > 0 ? (
+        <div className="space-y-4">
+          <div className={`grid gap-4 ${acceptMultiple ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+            {imageUrls.map((url, idx) => (
+              <div key={idx} className="relative group rounded-xl overflow-hidden border border-black/10 shadow-sm aspect-video bg-black/5 flex items-center justify-center">
+                {url.match(/\.(mp4|webm)$/i) || url.includes('/video/upload/') ? (
+                  <video src={url} controls className="w-full h-full object-cover" />
+                ) : (
+                  <img src={url} alt={`Upload ${idx}`} className="w-full h-full object-cover" />
+                )}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4">
+                  {!acceptMultiple && (
+                    <button onClick={openWidget} className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-sm font-bold shadow-lg hover:scale-105 transition-transform">
+                      Replace
+                    </button>
+                  )}
+                  <button onClick={handleRemove(idx)} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg hover:scale-110 transition-all">
+                    <X size={14} />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
+          {acceptMultiple && (
+             <button onClick={openWidget} className="w-full py-3 rounded-xl border-2 border-dashed border-zinc-300 hover:border-primary/50 text-zinc-500 font-semibold text-sm flex items-center justify-center gap-2 hover:bg-black/5 transition-colors">
+               <UploadCloud size={18} /> Add More Images
+             </button>
+          )}
         </div>
       ) : (
         <button
@@ -124,9 +155,9 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '' }
           </div>
           <div className="text-center">
             <p className="font-semibold text-sm text-zinc-700 group-hover:text-primary transition-colors">
-              Click to upload image
+              Click to upload {acceptVideo ? 'media' : 'image'}
             </p>
-            <p className="text-xs mt-1">JPEG, PNG, WebP up to 10MB</p>
+            <p className="text-xs mt-1">{acceptVideo ? 'JPEG, PNG, MP4 up to 50MB' : 'JPEG, PNG, WebP up to 10MB'}</p>
           </div>
         </button>
       )}

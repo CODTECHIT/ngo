@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, NavLink } from 'react-router';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin as supabase } from '../../../lib/supabase';
 import { 
   LogOut, 
   LayoutDashboard, 
@@ -21,8 +21,10 @@ export default function AdminDashboard() {
     events: 0,
     upcomingEvents: 0,
     gallery: 0,
-    unreadMessages: 0
+    unreadMessages: 0,
+    totalRegistrations: 0
   });
+  const [eventBreakdown, setEventBreakdown] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,20 +34,35 @@ export default function AdminDashboard() {
           { count: totalEvents },
           { count: upcomingEvents },
           { count: galleryImages },
-          { count: unreadMessages }
+          { count: unreadMessages },
+          { count: totalRegistrations },
+          { data: eventsData },
+          { data: registrationsData }
         ] = await Promise.all([
           supabase.from('events').select('*', { count: 'exact', head: true }),
           supabase.from('events').select('*', { count: 'exact', head: true }).eq('status', 'upcoming'),
           supabase.from('gallery_images').select('*', { count: 'exact', head: true }),
-          supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('is_read', false)
+          supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('is_read', false),
+          supabase.from('event_registrations').select('*', { count: 'exact', head: true }),
+          supabase.from('events').select('id, title').order('created_at', { ascending: false }),
+          supabase.from('event_registrations').select('event_id')
         ]);
 
         setCounts({
           events: totalEvents || 0,
           upcomingEvents: upcomingEvents || 0,
           gallery: galleryImages || 0,
-          unreadMessages: unreadMessages || 0
+          unreadMessages: unreadMessages || 0,
+          totalRegistrations: totalRegistrations || 0
         });
+
+        if (eventsData && registrationsData) {
+          const breakdown = eventsData.map(evt => {
+            const count = registrationsData.filter(r => r.event_id === evt.id).length;
+            return { title: evt.title, count };
+          });
+          setEventBreakdown(breakdown);
+        }
       } catch (err) {
         console.error("Error fetching dashboard counts:", err);
       } finally {
@@ -58,16 +75,15 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/admin/login');
+    navigate('/admin/ngo/login');
   };
 
   const navLinks = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={18} /> },
-    { name: 'Site Content', path: '/admin/site-content', icon: <FileText size={18} /> },
-    { name: 'Programs', path: '/admin/programs', icon: <List size={18} /> },
-    { name: 'Events', path: '/admin/events', icon: <Calendar size={18} /> },
-    { name: 'Gallery', path: '/admin/gallery', icon: <ImageIcon size={18} /> },
-    { name: 'Contact Messages', path: '/admin/contact-messages', icon: <MessageSquare size={18} /> },
+    { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} /> },
+    { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
+    { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
+    { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
+    { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
   ];
 
   return (
@@ -76,7 +92,7 @@ export default function AdminDashboard() {
       <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
         <div className="p-6 border-b border-black/5 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-black/5 flex items-center justify-center shadow-sm">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-cover scale-[1.35]" />
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
           </div>
           <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
         </div>
@@ -144,6 +160,35 @@ export default function AdminDashboard() {
                 {counts.unreadMessages > 0 && (
                   <div className="absolute top-6 right-6 w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
                 )}
+              </div>
+
+              <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-l-indigo-500 border-y border-r border-black/5">
+                <h3 className="text-zinc-500 text-sm font-bold mb-2 uppercase tracking-wide">Total Registrations</h3>
+                <p className="text-4xl font-bold text-zinc-900">{counts.totalRegistrations}</p>
+              </div>
+            </div>
+          )}
+
+          {!loading && eventBreakdown.length > 0 && (
+            <div className="mt-12">
+              <h2 className="text-xl font-bold text-zinc-900 mb-6 font-['Playfair_Display']">Registrations Per Event</h2>
+              <div className="bg-white rounded-2xl shadow-sm border border-black/5 overflow-hidden">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-black/5 border-b border-black/5">
+                      <th className="py-4 px-6 font-bold text-sm text-zinc-600 uppercase tracking-wider">Event Name</th>
+                      <th className="py-4 px-6 font-bold text-sm text-zinc-600 uppercase tracking-wider w-32 text-right">Registrations</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {eventBreakdown.map((evt, idx) => (
+                      <tr key={idx} className="border-b border-black/5 last:border-0 hover:bg-black/[0.02] transition-colors">
+                        <td className="py-4 px-6 font-medium text-zinc-900">{evt.title}</td>
+                        <td className="py-4 px-6 font-bold text-primary text-right">{evt.count}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}

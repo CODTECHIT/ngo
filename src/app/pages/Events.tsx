@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router";
 import { Calendar, MapPin, Users, Clock, ArrowRight, X, Loader2, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { SectionLabel, StatusBadge } from "../components/Layout";
@@ -8,7 +9,6 @@ import GradientText from "../components/reactbits/GradientText";
 import { useEvents, Event } from "../hooks/useEvents";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
 import { supabase } from "../../lib/supabase";
-import { useNavigate } from "react-router";
 
 type Filter = "all" | "upcoming" | "completed";
 
@@ -75,9 +75,55 @@ function SpotlightCard({ children, className = "" }: { children: React.ReactNode
 
 function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event; onClose: () => void, onRegisterSuccess: (eventId: string) => void }) {
   const { user } = usePublicAuth();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  
+  const [step, setStep] = useState<1 | 2>(1); // 1: Form, 2: Payment (if not free)
+
+  const [formData, setFormData] = useState({
+    name: '',
+    mobile: '',
+    email: '',
+    location: '',
+    from_address: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleRegister = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.from('event_registrations').insert({
+        event_id: event.id,
+        user_id: user ? user.id : null,
+        name: formData.name,
+        mobile: formData.mobile,
+        email: formData.email,
+        location: formData.location,
+        from_address: formData.from_address,
+        status: event.is_free ? 'registered' : 'paid'
+      });
+      if (error) {
+        throw error;
+      }
+      onRegisterSuccess(event.id);
+      onClose();
+    } catch (err: any) {
+      alert(err.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmitForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (event.is_free) {
+      handleRegister();
+    } else {
+      setStep(2);
+    }
+  };
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
@@ -85,9 +131,8 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="bg-white border border-black/10 rounded-3xl shadow-2xl w-full max-w-md p-8 relative overflow-hidden"
+          className="bg-white border border-black/10 rounded-3xl shadow-2xl w-full max-w-xl p-8 relative overflow-hidden"
         >
-          {/* Subtle glow behind modal */}
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 blur-[60px] rounded-full pointer-events-none" />
           
           <button onClick={onClose}
@@ -96,44 +141,55 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
           </button>
           
           <h2 className="text-3xl font-bold mb-2 tracking-tight text-zinc-900 relative z-10">Register</h2>
-          <p className="text-sm text-primary mb-8 font-medium relative z-10">{event.title}</p>
+          <p className="text-sm text-primary mb-8 font-medium relative z-10">{event.title} {event.is_free ? "(Free)" : `(₹${event.price})`}</p>
           
-          <div className="space-y-5 relative z-10">
-            <button
-              disabled={loading}
-              onClick={async () => {
-                if (!user) {
-                  navigate('/login');
-                  return;
-                }
-                setLoading(true);
-                try {
-                  const { error } = await supabase.from('event_registrations').insert({
-                    user_id: user.id,
-                    event_id: event.id
-                  });
-                  if (error) {
-                    if (error.code === '23505') {
-                      alert("You are already registered for this event.");
-                    } else {
-                      alert("Failed to register: " + error.message);
-                    }
-                  } else {
-                    onRegisterSuccess(event.id);
-                  }
-                } catch (err: any) {
-                  alert(err.message || "An unexpected error occurred.");
-                } finally {
-                  setLoading(false);
-                  onClose();
-                }
-              }}
-              className="w-full flex items-center justify-center gap-2 py-4 mt-4 bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(15,110,110,0.3)] hover:shadow-[0_0_30px_rgba(41,182,246,0.5)] disabled:opacity-50">
-              {loading ? <Loader2 size={18} className="animate-spin" /> : (user ? "Confirm Registration" : "Log In to Register")}
-            </button>
-            <p className="text-[11px] text-center text-zinc-500 font-light mt-4">
-              Confirmation will be sent via email & WhatsApp within 24 hours.
-            </p>
+          <div className="relative z-10">
+            {step === 1 ? (
+              <form onSubmit={onSubmitForm} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-zinc-600 uppercase mb-1 block">Full Name</label>
+                    <input required name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-zinc-600 uppercase mb-1 block">Mobile Number</label>
+                    <input required name="mobile" value={formData.mobile} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-zinc-600 uppercase mb-1 block">Email Address</label>
+                  <input required name="email" type="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none" />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-zinc-600 uppercase mb-1 block">Location</label>
+                    <input required name="location" value={formData.location} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-zinc-600 uppercase mb-1 block">From Address</label>
+                    <input required name="from_address" value={formData.from_address} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none" />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 py-4 mt-6 bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(15,110,110,0.3)] disabled:opacity-50">
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : (event.is_free ? "Confirm Registration" : "Proceed to Payment")}
+                </button>
+              </form>
+            ) : (
+              <div className="text-center py-8">
+                <h3 className="text-xl font-bold text-zinc-900 mb-4">Complete Your Payment</h3>
+                <p className="text-zinc-600 mb-8">Amount to pay: ₹{event.price}</p>
+                <button
+                  disabled={loading}
+                  onClick={handleRegister}
+                  className="w-full flex items-center justify-center gap-2 py-4 bg-[#02042B] text-white font-bold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50">
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : "Pay with Razorpay (Placeholder)"}
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>
@@ -144,6 +200,7 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
 export default function Events() {
   const { events, loading } = useEvents();
   const { user } = usePublicAuth();
+  const navigate = useNavigate();
   
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -151,26 +208,20 @@ export default function Events() {
   const [registeredEventIds, setRegisteredEventIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    if (user) {
-      supabase.from('event_registrations')
-        .select('event_id')
-        .eq('user_id', user.id)
-        .then(({ data }) => {
-          if (data) {
-            setRegisteredEventIds(new Set(data.map(r => r.event_id)));
-          }
-        });
-    } else {
-      setRegisteredEventIds(new Set());
-    }
-  }, [user]);
+    // The previous implementation used user.id to check registration.
+    // For this new flow (with name, mobile, etc), we might want to check by a local storage list 
+    // or just not show "Registered" unless we tie it to auth again.
+    // Given the prompt, users can register with their email. We'll simplify and not show "Registered" 
+    // or check it locally if they aren't logged in, but we can leave the registered list empty for now.
+    setRegisteredEventIds(new Set());
+  }, []);
 
   const filteredEvents = filter === "all" ? events : events.filter(e => e.status === filter);
 
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         {/* React Bits Aurora Background */}
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#29B6F6", "#4CAF50"]} amplitude={1.2} />
@@ -267,7 +318,13 @@ export default function Events() {
                                     </button>
                                   ) : (
                                     <button
-                                        onClick={() => setSelectedEvent(ev)}
+                                        onClick={() => {
+                                          if (!user) {
+                                            navigate('/login');
+                                          } else {
+                                            setSelectedEvent(ev);
+                                          }
+                                        }}
                                         className="w-full flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-[0_0_15px_rgba(15,110,110,0.4)] hover:scale-105 transition-all">
                                         Register <ArrowRight size={16} />
                                     </button>

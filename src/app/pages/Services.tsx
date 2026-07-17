@@ -1,13 +1,15 @@
+import { useState, useEffect } from "react";
 import { ArrowRight, BookOpen, Leaf, Users, Globe, Shield, Handshake, CheckCircle, Heart } from "lucide-react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
 import { SectionLabel } from "../components/Layout";
 import { SERVICES } from "../data";
+import { usePrograms } from "../hooks/usePrograms";
 import Aurora from "../components/reactbits/Aurora";
 import BlurText from "../components/reactbits/BlurText";
 import GradientText from "../components/reactbits/GradientText";
 
-const ICON_MAP: Record<string, React.ElementType> = { BookOpen, Leaf, Users, Globe, Shield, Handshake, Heart };
+const ICON_MAP: Record<string, React.ElementType> = { heart: Heart, book: BookOpen, users: Users, globe: Globe, shield: Shield, handshake: Handshake, BookOpen, Leaf, Users, Globe, Shield, Handshake, Heart };
 
 const EXTRA_INFO: Record<string, string[]> = {
   "Health & Eye Care Camps": ["Comprehensive eye screening", "Free prescription spectacles", "Regular blood donation camps"],
@@ -24,11 +26,92 @@ const fadeIn = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
 };
 
+function ServiceCard({ s, index }: { s: any, index: number }) {
+  const Icon = ICON_MAP[s.icon] || Heart;
+  const extras = s.points || [];
+  const reversed = index % 2 !== 0;
+  
+  const images = s.img ? s.img.split(',').filter(Boolean) : [];
+  const [currentImg, setCurrentImg] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentImg((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeIn}
+      className={`grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center`}>
+      <div className={reversed ? "md:order-2" : ""}>
+        <div className={`inline-flex w-16 h-16 rounded-2xl bg-black/5 border border-black/10 shadow-[0_0_15px_rgba(0,0,0,0.05)] items-center justify-center mb-6`}>
+          <Icon size={28} className="text-primary" />
+        </div>
+        <h2 className="text-3xl lg:text-4xl font-bold text-zinc-900 mb-6 tracking-tight">
+          {s.title}
+        </h2>
+        <p className="text-zinc-600 leading-relaxed mb-8 font-light text-lg">
+          {s.details}
+        </p>
+        <ul className="space-y-4 mb-8">
+          {extras.map((e: string) => (
+            <li key={e} className="flex items-center gap-3 text-sm text-zinc-700 font-medium">
+              <CheckCircle size={18} className="text-accent shrink-0" />
+              {e}
+            </li>
+          ))}
+        </ul>
+        <Link to="/contact"
+          className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground rounded-full font-bold text-sm hover:shadow-[0_0_20px_rgba(15,110,110,0.3)] hover:scale-105 transition-all">
+          Get Involved <ArrowRight size={16} />
+        </Link>
+      </div>
+      <div className={`relative rounded-3xl overflow-hidden border border-black/10 bg-black/5 shadow-2xl group ${reversed ? "md:order-1" : ""}`}>
+        <div className={`h-80 lg:h-96 flex items-center justify-center relative z-0`}>
+          {images.map((imgUrl: string, idx: number) => (
+            <img 
+              key={idx}
+              src={imgUrl} 
+              alt={s.title} 
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === currentImg ? 'opacity-100' : 'opacity-0'}`} 
+            />
+          ))}
+          {images.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
+              {images.map((_, idx: number) => (
+                <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentImg ? 'bg-white scale-125' : 'bg-white/50'}`} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Services() {
+  const { programs, loading } = usePrograms();
+  
+  // Use DB programs if available, otherwise fallback to static data
+  const displayServices = programs.length > 0 ? programs.map(p => ({
+    slug: p.id,
+    icon: p.icon_name.toLowerCase(),
+    title: p.title,
+    img: p.image_url,
+    desc: p.description,
+    details: p.description, // programs don't have details column right now
+    points: p.points || []
+  })) : SERVICES.map(s => ({
+    ...s,
+    points: EXTRA_INFO[s.title] || []
+  }));
+
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-24 pb-12 md:pt-32 md:pb-24 px-4 md:px-6 relative overflow-hidden flex flex-col items-center justify-center min-h-[60vh] md:min-h-[80vh]">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-6 relative overflow-hidden flex flex-col items-center justify-center md:min-h-[70vh]">
         {/* React Bits Aurora Background */}
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#29B6F6", "#4CAF50"]} amplitude={1.2} />
@@ -57,45 +140,9 @@ export default function Services() {
       {/* Services detail */}
       <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6 space-y-24">
-          {SERVICES.map((s, i) => {
-            const Icon = ICON_MAP[s.icon];
-            const extras = EXTRA_INFO[s.title] ?? [];
-            const reversed = i % 2 !== 0;
-            return (
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeIn} key={s.slug}
-                className={`grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center`}>
-                <div className={reversed ? "md:order-2" : ""}>
-                  <div className={`inline-flex w-16 h-16 rounded-2xl bg-black/5 border border-black/10 shadow-[0_0_15px_rgba(0,0,0,0.05)] items-center justify-center mb-6`}>
-                    <Icon size={28} className="text-primary" />
-                  </div>
-                  <h2 className="text-3xl lg:text-4xl font-bold text-zinc-900 mb-6 tracking-tight">
-                    {s.title}
-                  </h2>
-                  <p className="text-zinc-600 leading-relaxed mb-8 font-light text-lg">
-                    {s.details}
-                  </p>
-                  <ul className="space-y-4 mb-8">
-                    {extras.map(e => (
-                      <li key={e} className="flex items-center gap-3 text-sm text-zinc-700 font-medium">
-                        <CheckCircle size={18} className="text-accent shrink-0" />
-                        {e}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to="/contact"
-                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground rounded-full font-bold text-sm hover:shadow-[0_0_20px_rgba(15,110,110,0.3)] hover:scale-105 transition-all">
-                    Get Involved <ArrowRight size={16} />
-                  </Link>
-                </div>
-                <div className={`relative rounded-3xl overflow-hidden border border-black/10 bg-white shadow-2xl group ${reversed ? "md:order-1" : ""}`}>
-
-                  <div className={`h-80 lg:h-96 flex items-center justify-center relative z-0`}>
-                    <img src={s.img} alt={s.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+          {displayServices.map((s, i) => (
+            <ServiceCard key={`${s.slug}-${i}`} s={s} index={i} />
+          ))}
         </div>
       </section>
 

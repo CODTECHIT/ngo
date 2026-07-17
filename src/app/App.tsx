@@ -19,7 +19,7 @@ function SplashScreen() {
         transition={{ duration: 1, ease: "easeOut" }}
         className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden shadow-2xl mb-8 border border-black/5"
       >
-        <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-cover scale-[1.35]" />
+        <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain scale-110" />
       </motion.div>
       <div className="w-48 h-1 bg-black/5 rounded-full overflow-hidden mb-4">
         <motion.div 

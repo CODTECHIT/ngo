@@ -7,7 +7,6 @@ import { SectionLabel, StatusBadge } from "../components/Layout";
 import Aurora from "../components/reactbits/Aurora";
 import BlurText from "../components/reactbits/BlurText";
 import GradientText from "../components/reactbits/GradientText";
-import { useSiteContent } from "../hooks/useSiteContent";
 import { useEvents } from "../hooks/useEvents";
 import { usePrograms } from "../hooks/usePrograms";
 import { useGallery } from "../hooks/useGallery";
@@ -77,7 +76,6 @@ function SpotlightCard({ children, className = "" }: { children: React.ReactNode
 
 // ── Hero Section (Animated Mesh & Text Reveal) ────────────────────────────────
 function Hero() {
-  const { content } = useSiteContent();
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -104,15 +102,12 @@ function Hero() {
           </span>
         </motion.div>
 
-        <h1 className="text-[2.5rem] leading-tight sm:text-5xl md:text-7xl lg:text-[7rem] font-bold tracking-tight md:leading-[0.95] mb-6 md:mb-8 text-white max-w-5xl flex flex-col md:flex-row flex-wrap justify-center items-center gap-x-3 gap-y-2 md:gap-y-2 drop-shadow-lg">
-          <BlurText text={(content?.hero_heading || "Local Vision,").split(',')[0]} delay={150} animateBy="words" direction="top" className="text-center" />
-          {(content?.hero_heading || "").split(',')[1] && (
-            <BlurText text={(content?.hero_heading || "").split(',')[1]} delay={150} animateBy="words" direction="bottom" className="text-center" />
-          )}
+        <h1 className="text-[2.5rem] leading-tight sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 md:mb-8 text-white max-w-5xl text-center drop-shadow-lg mx-auto">
+          <BlurText text="Empowering Communities for a Brighter Tomorrow" delay={150} animateBy="words" direction="top" className="justify-center" />
         </h1>
 
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8 }} className="text-base sm:text-lg md:text-2xl text-white/90 font-light max-w-2xl mb-10 px-4 drop-shadow-md">
-          {content.hero_subheading}
+          Join Srishreevision Foundation in creating lasting impact through healthcare, education, and women empowerment.
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1 }} className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 w-full sm:w-auto px-4 md:px-6">
@@ -136,15 +131,20 @@ function Hero() {
 
 // ── Impact Stats (Floating Island style) ──────────────────────────────────────
 function ImpactStats() {
-  const { content } = useSiteContent();
+  const stats = [
+    { label: "Lives Impacted", number: "10,000+" },
+    { label: "Camps Organized", number: "500+" },
+    { label: "Volunteers", number: "1,200+" },
+    { label: "Years Active", number: "25+" }
+  ];
   return (
     <section className="relative z-20 mt-8 px-4 md:px-6 max-w-7xl mx-auto">
       <SpotlightCard className="p-8 md:p-12 backdrop-blur-2xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center items-start">
-          {(content?.stats || []).map((s: any, i: number) => (
-            <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex flex-col items-center">
-              <p className="text-4xl md:text-5xl font-bold text-zinc-900 mb-3 tracking-tight">{s.number}</p>
-              <p className="text-xs uppercase tracking-widest text-zinc-600 font-light leading-[1.5]">{s.label}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 md:gap-12 text-center items-center justify-center">
+          {stats.map((s: any, i: number) => (
+            <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex flex-col items-center justify-center h-full p-2">
+              <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-900 mb-2 md:mb-3 tracking-tight">{s.number}</p>
+              <p className="text-[10px] md:text-xs uppercase tracking-widest text-zinc-600 font-medium leading-[1.5] max-w-[120px]">{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -155,7 +155,6 @@ function ImpactStats() {
 
 // ── About Preview ─────────────────────────────────────────────────────────────
 function AboutPreview() {
-  const { content } = useSiteContent();
   return (
     <section className="py-12 md:py-24 px-4 md:px-6 max-w-7xl mx-auto relative z-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -163,18 +162,18 @@ function AboutPreview() {
           <SectionLabel>Who We Are</SectionLabel>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6">Our Mission & Vision</h2>
           <div className="text-zinc-600 text-lg leading-relaxed mb-6 whitespace-pre-wrap">
-            {content.about_text || "We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development."}
+            We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development.
           </div>
           <Link to="/about" className="inline-flex items-center gap-2 font-bold text-primary hover:text-primary/80 transition-colors uppercase tracking-widest text-sm">
             Read Our Story <ArrowRight size={16} />
           </Link>
         </motion.div>
         <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-          <img src={content.director_photo_url || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2mCijkGTMih5BfvK3XUYBjf6mljaaJ-ICXS8tnagV5KsjlbvD-PfASC4&s=10"} alt="About Us" className="w-full h-full object-cover" />
+          <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2mCijkGTMih5BfvK3XUYBjf6mljaaJ-ICXS8tnagV5KsjlbvD-PfASC4&s=10"} alt="About Us" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-6 left-6 right-6">
-            <p className="text-white text-lg md:text-xl font-medium italic">"{content.director_quote || "Empowering people, changing lives."}"</p>
-            <p className="text-white/80 mt-2 text-sm uppercase tracking-widest font-bold">— {content.director_name || "Director"}</p>
+            <p className="text-white text-lg md:text-xl font-medium italic">"Empowering people, changing lives."</p>
+            <p className="text-white/80 mt-2 text-sm uppercase tracking-widest font-bold">— Director</p>
           </div>
         </motion.div>
       </div>
@@ -190,7 +189,7 @@ function BentoServices() {
     title: p.title,
     desc: p.description,
     icon: ICON_MAP[p.icon_name] || Heart,
-    img: p.image_url
+    img: (p.image_url || '').split(',')[0]
   })) : [
     {
       title: "Health & Eye Care",
@@ -355,14 +354,9 @@ function PromotionalEventAds() {
 }
 // ── Gallery Preview ───────────────────────────────────────────────────────────
 function GalleryPreview() {
-  const { images } = useGallery();
+  const { images, loading } = useGallery();
   
-  const displayImages = images.length > 0 ? images.slice(0, 4) : [
-    { id: "1", image_url: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&q=80" },
-    { id: "2", image_url: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=800&q=80" },
-    { id: "3", image_url: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80" },
-    { id: "4", image_url: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80" }
-  ];
+  const displayImages = images.slice(0, 4);
 
   return (
     <section className="py-12 md:py-24 px-4 md:px-6 max-w-7xl mx-auto">
@@ -377,19 +371,32 @@ function GalleryPreview() {
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {displayImages.map((img, i) => (
-          <motion.div 
-            key={img.id} 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
-            transition={{ delay: i * 0.1 }}
-            className={`relative rounded-2xl overflow-hidden bg-black/5 shadow-sm group ${i === 0 || i === 3 ? 'md:col-span-2 aspect-video' : 'aspect-square'}`}
-          >
-            <img src={img.image_url} alt="Gallery item" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-          </motion.div>
-        ))}
+        {displayImages.length > 0 ? (
+          displayImages.map((img, i) => {
+            const isVideo = img.image_url?.match(/\.(mp4|webm)$/i) || img.image_url?.includes('/video/upload/');
+            return (
+              <motion.div 
+                key={img.id} 
+                initial={{ opacity: 0, y: 20 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                viewport={{ once: true }} 
+                transition={{ delay: i * 0.1 }}
+                className={`relative rounded-2xl overflow-hidden bg-black/5 shadow-sm group aspect-square ${i === 0 || i === 3 ? 'md:col-span-2 md:aspect-video' : ''}`}
+              >
+                {isVideo ? (
+                  <video src={img.image_url} autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                ) : (
+                  <img src={img.image_url} alt={img.caption || "Gallery item"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                )}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none" />
+              </motion.div>
+            );
+          })
+        ) : !loading ? (
+          <div className="col-span-full py-12 text-center text-zinc-500 bg-black/5 rounded-2xl">
+            There are no photos or videos available in the gallery yet.
+          </div>
+        ) : null}
       </div>
     </section>
   );

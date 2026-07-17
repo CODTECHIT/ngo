@@ -13,9 +13,9 @@ import Account from "./pages/Account";
 
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminSiteContent from "./pages/admin/AdminSiteContent";
 import AdminPrograms from "./pages/admin/AdminPrograms";
 import AdminEvents from "./pages/admin/AdminEvents";
+import AdminGallery from "./pages/admin/AdminGallery";
 import AdminMessages from "./pages/admin/AdminMessages";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -40,17 +40,18 @@ function NotFound() {
 export const router = createBrowserRouter([
   // Admin Routes
   {
-    path: "/admin/login",
+    path: "/admin/ngo/login",
     element: <AdminLogin />,
   },
   {
-    path: "/admin",
+    path: "/admin/ngo",
     element: <ProtectedRoute />,
     children: [
+      { index: true, element: <AdminDashboard /> },
       { path: "dashboard", element: <AdminDashboard /> },
-      { path: "site-content", element: <AdminSiteContent /> },
       { path: "programs", element: <AdminPrograms /> },
       { path: "events", element: <AdminEvents /> },
+      { path: "gallery", element: <AdminGallery /> },
       { path: "messages", element: <AdminMessages /> },
       { path: "contact-messages", element: <AdminMessages /> },
       // Any future protected admin routes go here

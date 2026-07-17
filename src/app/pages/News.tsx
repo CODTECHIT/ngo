@@ -80,7 +80,7 @@ export default function News() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-24 pb-12 md:pt-32 md:pb-24 relative overflow-hidden flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 relative overflow-hidden flex items-center justify-center md:min-h-[60vh]">
         {/* Animated Mesh Background */}
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
           <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />

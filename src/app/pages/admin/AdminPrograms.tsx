@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin as supabase } from '../../../lib/supabase';
 import { usePrograms, Program } from '../../hooks/usePrograms';
 import { ImageUploader } from '../../components/ImageUploader';
 import { NavLink } from 'react-router';
@@ -28,6 +28,19 @@ export default function AdminPrograms() {
   const [iconName, setIconName] = useState('heart');
   const [imageUrl, setImageUrl] = useState('');
   const [sortOrder, setSortOrder] = useState<number>(0);
+  const [points, setPoints] = useState<string[]>([]);
+
+  const addPoint = () => setPoints([...points, '']);
+  const updatePoint = (index: number, value: string) => {
+    const newPoints = [...points];
+    newPoints[index] = value;
+    setPoints(newPoints);
+  };
+  const removePoint = (index: number) => {
+    const newPoints = [...points];
+    newPoints.splice(index, 1);
+    setPoints(newPoints);
+  };
 
   const openAddModal = () => {
     setEditingProgram(null);
@@ -36,6 +49,7 @@ export default function AdminPrograms() {
     setIconName('heart');
     setImageUrl('');
     setSortOrder(programs.length); // Default to end of list
+    setPoints([]);
     setIsModalOpen(true);
   };
 
@@ -46,6 +60,7 @@ export default function AdminPrograms() {
     setIconName(prog.icon_name);
     setImageUrl(prog.image_url);
     setSortOrder(prog.sort_order);
+    setPoints(prog.points || []);
     setIsModalOpen(true);
   };
 
@@ -63,7 +78,8 @@ export default function AdminPrograms() {
         description,
         icon_name: iconName,
         image_url: imageUrl,
-        sort_order: sortOrder
+        sort_order: sortOrder,
+        points: points.filter(p => p.trim() !== '')
       };
 
       if (editingProgram) {
@@ -97,12 +113,11 @@ export default function AdminPrograms() {
   };
 
   const navLinks = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={18} /> },
-    { name: 'Site Content', path: '/admin/site-content', icon: <FileText size={18} /> },
-    { name: 'Programs', path: '/admin/programs', icon: <List size={18} /> },
-    { name: 'Events', path: '/admin/events', icon: <Calendar size={18} /> },
-    { name: 'Gallery', path: '/admin/gallery', icon: <ImageIcon size={18} /> },
-    { name: 'Contact Messages', path: '/admin/contact-messages', icon: <MessageSquare size={18} /> },
+    { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} /> },
+    { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
+    { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
+    { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
+    { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
   ];
 
   return (
@@ -110,7 +125,7 @@ export default function AdminPrograms() {
       <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
         <div className="p-6 border-b border-black/5 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-black/5 flex items-center justify-center shadow-sm">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-cover scale-[1.35]" />
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
           </div>
           <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
         </div>
@@ -129,8 +144,8 @@ export default function AdminPrograms() {
         <div className="max-w-5xl mx-auto">
           <header className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 mb-2 font-['Playfair_Display']">Programs</h1>
-              <p className="text-zinc-500">Manage the core programs displayed on the homepage.</p>
+              <h1 className="text-3xl font-bold text-zinc-900 mb-2 font-['Playfair_Display']">Programs & Services</h1>
+              <p className="text-zinc-500">Manage the core programs and services displayed on the website.</p>
             </div>
             <button onClick={openAddModal} className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-bold transition-colors">
               <Plus size={20} /> Add New Program
@@ -144,18 +159,15 @@ export default function AdminPrograms() {
               {programs.map(prog => {
                 const Icon = ICON_MAP[prog.icon_name] || Heart;
                 return (
-                  <div key={prog.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-black/5 flex flex-col group">
-                    <div className="h-48 bg-black/5 relative overflow-hidden shrink-0">
+                  <div key={prog.id} className="bg-white rounded-2xl shadow-sm border border-black/5 overflow-hidden flex flex-col hover:border-primary/30 transition-colors">
+                    <div className="relative h-48 bg-black/5 shrink-0 overflow-hidden">
                       {prog.image_url ? (
-                        <img src={prog.image_url} alt={prog.title} className="w-full h-full object-cover" />
+                        <img src={(prog.image_url || '').split(',')[0]} alt={prog.title} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-zinc-400">No Image</div>
                       )}
                       <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg">
                         <Icon size={18} className="text-primary" />
-                      </div>
-                      <div className="absolute top-4 right-4 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">
-                        Order: {prog.sort_order}
                       </div>
                     </div>
                     <div className="p-6 flex-1 flex flex-col">
@@ -205,6 +217,7 @@ export default function AdminPrograms() {
                   <ImageUploader 
                     defaultImage={imageUrl} 
                     onUploadComplete={(url) => setImageUrl(url)} 
+                    acceptMultiple={true}
                   />
                 </div>
                 <div className="md:col-span-2 space-y-4">
@@ -218,7 +231,7 @@ export default function AdminPrograms() {
                     <textarea value={description} onChange={e => setDescription(e.target.value)} rows={4} required
                       className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none resize-none" />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="block text-sm font-bold text-zinc-700 mb-1">Icon</label>
                       <select value={iconName} onChange={e => setIconName(e.target.value)} required
@@ -229,11 +242,34 @@ export default function AdminPrograms() {
                         <option value="globe">Globe (Community)</option>
                       </select>
                     </div>
-                    <div>
-                      <label className="block text-sm font-bold text-zinc-700 mb-1">Sort Order</label>
-                      <input type="number" value={sortOrder} onChange={e => setSortOrder(parseInt(e.target.value) || 0)} required
-                        className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none" />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-bold text-zinc-700">Key Points / Features</label>
+                      <button type="button" onClick={addPoint} className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                        <Plus size={14} /> Add Point
+                      </button>
                     </div>
+                    {points.length === 0 ? (
+                      <div className="text-sm text-zinc-500 italic bg-black/5 p-4 rounded-xl text-center">No points added.</div>
+                    ) : (
+                      <div className="space-y-2">
+                        {points.map((point, index) => (
+                          <div key={index} className="flex gap-2">
+                            <input 
+                              type="text" 
+                              value={point} 
+                              onChange={e => updatePoint(index, e.target.value)} 
+                              placeholder={`Point ${index + 1}`}
+                              className="w-full px-4 py-2 text-sm rounded-xl border border-zinc-300 focus:ring-2 focus:ring-primary outline-none"
+                            />
+                            <button type="button" onClick={() => removePoint(index)} className="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100">
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

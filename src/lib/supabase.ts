@@ -13,3 +13,13 @@ export const supabase = createClient(
   supabaseUrl || "https://placeholder-url.supabase.co", 
   supabaseAnonKey || "placeholder-key"
 );
+
+export const supabaseAdmin = createClient(
+  supabaseUrl || "https://placeholder-url.supabase.co", 
+  supabaseAnonKey || "placeholder-key",
+  {
+    auth: {
+      storageKey: 'admin-auth-token',
+    }
+  }
+);

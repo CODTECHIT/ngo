@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { SectionLabel } from "../components/Layout";
-import { GALLERY_IMAGES } from "../data";
+import { useGallery, GalleryImage } from "../hooks/useGallery";
 
 // ── Shared Animation Variants ──────────────────────────────────────────────────
 const fadeIn = {
@@ -16,16 +16,17 @@ const staggerContainer = {
 };
 
 export default function Gallery() {
+  const { images, loading } = useGallery();
   const [activeTag, setActiveTag] = useState("All");
-  const [lightbox, setLightbox] = useState<typeof GALLERY_IMAGES[0] | null>(null);
+  const [lightbox, setLightbox] = useState<GalleryImage | null>(null);
 
-  const tags = ["All", ...Array.from(new Set(GALLERY_IMAGES.map(g => g.tag)))];
-  const shown = activeTag === "All" ? GALLERY_IMAGES : GALLERY_IMAGES.filter(g => g.tag === activeTag);
+  const tags = ["All", ...Array.from(new Set(images.map(g => g.category)))];
+  const shown = activeTag === "All" ? images : images.filter(g => g.category === activeTag);
 
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-24 pb-12 md:pt-32 md:pb-24 relative overflow-hidden flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 relative overflow-hidden flex items-center justify-center md:min-h-[60vh]">
         {/* Animated Mesh Background */}
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
           <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
@@ -71,25 +72,38 @@ export default function Gallery() {
             key={activeTag} 
             initial="hidden" animate="visible" variants={staggerContainer} 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shown.map((img, i) => (
-              <motion.div variants={fadeIn} key={i}>
-                <div
-                  onClick={() => setLightbox(img)}
-                  className="relative group overflow-hidden rounded-3xl bg-black/5 cursor-pointer aspect-[4/3] border border-black/5 hover:border-black/20 hover:shadow-[0_0_20px_rgba(0,0,0,0.05)] transition-all duration-500">
-                  <img src={img.src} alt={img.alt}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
-                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-zinc-950/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                  <div className="absolute inset-0 flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <span className="text-white font-bold text-lg leading-snug">
-                      {img.alt}
-                    </span>
-                  </div>
-                  <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    {img.tag}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
+            {shown.length > 0 ? (
+              shown.map((img, i) => {
+                const isVideo = img.image_url?.match(/\.(mp4|webm)$/i) || img.image_url?.includes('/video/upload/');
+                return (
+                  <motion.div variants={fadeIn} key={img.id}>
+                    <div
+                      onClick={() => setLightbox(img)}
+                      className="relative group overflow-hidden rounded-3xl bg-black/5 cursor-pointer aspect-[4/3] border border-black/5 hover:border-black/20 hover:shadow-[0_0_20px_rgba(0,0,0,0.05)] transition-all duration-500">
+                      {isVideo ? (
+                        <video src={img.image_url} autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                      ) : (
+                        <img src={img.image_url} alt={img.caption || "Gallery Image"}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                      )}
+                      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-zinc-950/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                      <div className="absolute inset-0 flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <span className="text-white font-bold text-lg leading-snug line-clamp-2">
+                          {img.caption || img.category}
+                        </span>
+                      </div>
+                      <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                        {img.category}
+                      </span>
+                    </div>
+                  </motion.div>
+                );
+              })
+            ) : !loading ? (
+              <div className="col-span-full py-20 text-center text-zinc-500 bg-black/5 rounded-3xl border border-dashed border-black/10">
+                There are no photos or videos in the gallery yet.
+              </div>
+            ) : null}
           </motion.div>
         </div>
       </section>
@@ -107,13 +121,19 @@ export default function Gallery() {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="relative max-w-5xl w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl" 
+              className="relative max-w-5xl w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black flex items-center justify-center min-h-[50vh]" 
               onClick={e => e.stopPropagation()}>
-              <img src={lightbox.src.replace("w=600&h=450", "w=1200&h=900")} alt={lightbox.alt}
-                className="w-full h-auto max-h-[80vh] object-contain bg-transparent" />
-              <div className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
-                <p className="text-white font-bold text-xl mb-2">{lightbox.alt}</p>
-                <span className="text-[10px] text-accent font-bold uppercase tracking-widest border border-accent/20 bg-accent/10 px-3 py-1 rounded-full">{lightbox.tag}</span>
+              
+              {lightbox.image_url?.match(/\.(mp4|webm)$/i) || lightbox.image_url?.includes('/video/upload/') ? (
+                <video src={lightbox.image_url} controls autoPlay className="w-full h-auto max-h-[80vh] object-contain" />
+              ) : (
+                <img src={lightbox.image_url} alt={lightbox.caption || "Gallery Image"}
+                  className="w-full h-auto max-h-[80vh] object-contain bg-transparent" />
+              )}
+              
+              <div className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
+                <p className="text-white font-bold text-xl mb-2">{lightbox.caption || lightbox.category}</p>
+                <span className="text-[10px] text-accent font-bold uppercase tracking-widest border border-accent/20 bg-accent/10 px-3 py-1 rounded-full">{lightbox.category}</span>
               </div>
               <button
                 onClick={() => setLightbox(null)}

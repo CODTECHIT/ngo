@@ -14,7 +14,7 @@ export function ProtectedRoute() {
   }
 
   if (!user) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin/ngo/login" replace />;
   }
 
   if (!isAdmin) {

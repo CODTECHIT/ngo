@@ -58,7 +58,7 @@ function FloatingIslandNav() {
 
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
           <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center shadow-md group-hover:shadow-lg transition-all shrink-0 bg-white border border-black/5">
-            <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-cover scale-[1.35]" />
+            <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain scale-110" />
           </div>
           <span className="font-bold text-lg md:text-xl tracking-tight text-zinc-900 hidden sm:block uppercase">
             SRISHREEVISION FOUNDATION
@@ -94,9 +94,14 @@ function FloatingIslandNav() {
               Login
             </Link>
           )}
-          <button className="text-sm font-bold px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary/90 hover:shadow-lg transition-all active:scale-95">
+          <a 
+            href="https://wa.me/919701100974?text=I%20wanna%20donate" 
+            target="_blank" 
+            rel="noreferrer"
+            className="text-sm font-bold px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary/90 hover:shadow-lg transition-all active:scale-95 block text-center"
+          >
             Donate
-          </button>
+          </a>
         </div>
 
         <button className="md:hidden text-zinc-900 w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors" onClick={() => setOpen(!open)}>
@@ -128,9 +133,14 @@ function FloatingIslandNav() {
                   Login
                 </Link>
               )}
-              <button className="text-sm font-bold py-3 mt-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white shadow-lg w-full">
+              <a 
+                href="https://wa.me/919701100974?text=I%20wanna%20donate"
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm font-bold py-3 mt-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white shadow-lg w-full block text-center"
+              >
                 Donate Now
-              </button>
+              </a>
             </div>
           </motion.div>
         )}
@@ -150,7 +160,7 @@ function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_30px_rgba(15,110,110,0.2)] shrink-0 bg-white border border-black/5">
-                <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-cover scale-[1.35]" />
+                <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain scale-110" />
               </div>
               <span className="font-bold text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase">SRISHREEVISION FOUNDATION</span>
             </div>

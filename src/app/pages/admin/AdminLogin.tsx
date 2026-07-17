@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Navigate } from 'react-router';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin as supabase } from '../../../lib/supabase';
 import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
 
 export default function AdminLogin() {
@@ -34,7 +34,7 @@ export default function AdminLogin() {
     setLoggingIn(true);
     setError(null);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -43,13 +43,23 @@ export default function AdminLogin() {
       const newAttempts = failedAttempts + 1;
       setFailedAttempts(newAttempts);
       
-      if (newAttempts >= 5) {
+      if (newAttempts >= 3) {
         setCooldownTime(60);
         setError("Too many failed attempts. Please wait 60 seconds before trying again.");
       } else {
         setError(signInError.message);
       }
-    } else {
+    } else if (data?.user) {
+      const allowedEmails = (import.meta.env.VITE_ADMIN_ALLOWED_EMAILS || "")
+        .split(",")
+        .map((e: string) => e.trim().toLowerCase());
+        
+      if (!allowedEmails.includes(data.user.email?.toLowerCase() || '')) {
+         await supabase.auth.signOut();
+         setError("Access denied. This portal is for administrators only.");
+         setLoggingIn(false);
+         return;
+      }
       setFailedAttempts(0);
     }
     
@@ -66,7 +76,7 @@ export default function AdminLogin() {
 
   // If already logged in and admin, redirect to dashboard
   if (user && isAdmin) {
-    return <Navigate to="/admin/dashboard" replace />;
+    return <Navigate to="/admin/ngo/dashboard" replace />;
   }
 
   return (
@@ -74,7 +84,7 @@ export default function AdminLogin() {
       <div className="w-full max-w-md bg-white border border-black/5 rounded-3xl p-8 shadow-xl">
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-full overflow-hidden mx-auto mb-6 shadow-md border border-black/5">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-cover scale-[1.35]" />
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
           </div>
           <h1 className="text-2xl font-bold text-zinc-900 mb-2 font-['Playfair_Display']">Admin Portal</h1>
           <p className="text-zinc-500 text-sm">

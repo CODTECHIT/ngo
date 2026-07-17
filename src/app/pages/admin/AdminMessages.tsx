@@ -22,12 +22,11 @@ export default function AdminMessages() {
   };
 
   const navLinks = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={18} /> },
-    { name: 'Site Content', path: '/admin/site-content', icon: <FileText size={18} /> },
-    { name: 'Programs', path: '/admin/programs', icon: <List size={18} /> },
-    { name: 'Events', path: '/admin/events', icon: <Calendar size={18} /> },
-    { name: 'Gallery', path: '/admin/gallery', icon: <ImageIcon size={18} /> },
-    { name: 'Contact Messages', path: '/admin/contact-messages', icon: <MessageSquare size={18} /> },
+    { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} /> },
+    { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
+    { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
+    { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
+    { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
   ];
 
   return (
@@ -35,7 +34,7 @@ export default function AdminMessages() {
       <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
         <div className="p-6 border-b border-black/5 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-black/5 flex items-center justify-center shadow-sm">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-cover scale-[1.35]" />
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
           </div>
           <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
         </div>

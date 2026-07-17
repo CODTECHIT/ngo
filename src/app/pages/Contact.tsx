@@ -3,7 +3,6 @@ import { supabase } from "../../lib/supabase";
 import { useState } from "react";
 import { motion } from "motion/react";
 import { SectionLabel } from "../components/Layout";
-import { useSiteContent } from "../hooks/useSiteContent";
 
 // ── Shared Animation Variants ──────────────────────────────────────────────────
 const fadeIn = {
@@ -17,7 +16,6 @@ const staggerContainer = {
 };
 
 export default function Contact() {
-  const { content } = useSiteContent();
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +28,7 @@ export default function Contact() {
     const subject = formData.get('subject') as string;
     const message = formData.get('message') as string;
     
+    const form = e.currentTarget;
     try {
       const { error } = await supabase.from('contact_submissions').insert([
         {
@@ -42,12 +41,8 @@ export default function Contact() {
       
       if (error) throw error;
       
-      // WhatsApp redirection can be kept or removed; removing it to streamline the form submission as requested.
-      // const whatsappMessage = `Hello LTS Foundation, my name is ${fname} ${lname}. I am contacting you regarding: ${subject}. Message: ${message}. My email is ${email}.`;
-      // window.open(`https://wa.me/919999999999?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
-      
       setSubmitted(true);
-      e.currentTarget.reset();
+      form.reset();
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
       console.error('Failed to send message', err);
@@ -58,7 +53,7 @@ export default function Contact() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-24 pb-12 md:pt-32 md:pb-24 relative overflow-hidden flex items-center justify-center min-h-[50vh] md:min-h-[60vh]">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 relative overflow-hidden flex items-center justify-center md:min-h-[60vh]">
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
           <div className="absolute top-[10%] right-[20%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           <div className="absolute -bottom-[10%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
@@ -101,9 +96,9 @@ export default function Contact() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[
-                { icon: MapPin, title: "Head Office", lines: content.contact_address ? content.contact_address.split('\n') : ["1-11-22, Shop No. 3, Golnaka Alwal,", "Tirumalagiri, Hyderabad, Telangana - 500010"] },
-                { icon: Phone, title: "Phone", lines: content.contact_phone ? content.contact_phone.split('\n') : ["+91 98765 43210"] },
-                { icon: Mail, title: "Email", lines: content.contact_email ? content.contact_email.split('\n') : ["contact@srishreevision.org"] },
+                { icon: MapPin, title: "Head Office", lines: ["1-11-22, Shop No. 3, Golnaka Alwal,", "Tirumalagiri, Hyderabad, Telangana - 500010"] },
+                { icon: Phone, title: "Phone", lines: ["+91 98765 43210"] },
+                { icon: Mail, title: "Email", lines: ["contact@srishreevision.org"] },
                 { icon: Clock, title: "Working Hours", lines: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sunday: Closed"] }
               ].map((item, i) => (
                 <motion.div variants={fadeIn} key={item.title} className="bg-black/5 border border-black/5 rounded-2xl p-6 hover:border-black/20 hover:bg-black/10 transition-all">
@@ -199,7 +194,7 @@ export default function Contact() {
                 <MapPin size={24} />
               </div>
               <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">Visit Our HQ</h3>
-              <p className="text-zinc-600 font-light mt-2 line-clamp-1">{content.contact_address || "Hyderabad, Telangana"}</p>
+              <p className="text-zinc-600 font-light mt-2 line-clamp-1">{"Hyderabad, Telangana"}</p>
             </div>
           </div>
         </div>

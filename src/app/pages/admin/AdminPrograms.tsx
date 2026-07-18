@@ -124,8 +124,8 @@ export default function AdminPrograms() {
     <div className="min-h-screen bg-black/5 flex flex-col md:flex-row font-['Lato']">
       <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
         <div className="p-6 border-b border-black/5 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-black/5 flex items-center justify-center shadow-sm">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
+          <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
         </div>

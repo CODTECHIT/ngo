@@ -50,11 +50,20 @@ export default function AdminLogin() {
         setError(signInError.message);
       }
     } else if (data?.user) {
-      const allowedEmails = (import.meta.env.VITE_ADMIN_ALLOWED_EMAILS || "")
-        .split(",")
-        .map((e: string) => e.trim().toLowerCase());
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
         
-      if (!allowedEmails.includes(data.user.email?.toLowerCase() || '')) {
+      console.log("DEBUG LOGIN:", {
+        uid: data.user.id,
+        query: ".from('profiles').select('role').eq('id', user.id).single()",
+        result_data: profile,
+        result_error: profileError
+      });
+        
+      if (!profile || profile.role !== 'admin') {
          await supabase.auth.signOut();
          setError("Access denied. This portal is for administrators only.");
          setLoggingIn(false);
@@ -83,8 +92,8 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center bg-background px-6 font-['Lato']">
       <div className="w-full max-w-md bg-white border border-black/5 rounded-3xl p-8 shadow-xl">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full overflow-hidden mx-auto mb-6 shadow-md border border-black/5">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
+          <div className="w-16 h-16 shrink-0 mx-auto mb-6 flex items-center justify-center">
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-zinc-900 mb-2 font-['Playfair_Display']">Admin Portal</h1>
           <p className="text-zinc-500 text-sm">

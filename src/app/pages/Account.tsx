@@ -1,6 +1,6 @@
 import { usePublicAuth } from '../contexts/PublicAuthContext';
 import { Navigate, Link } from 'react-router';
-import { Loader2, User as UserIcon, Mail, LogOut, Phone, Calendar, MapPin, CheckCircle2 } from 'lucide-react';
+import { Loader2, User as UserIcon, Mail, LogOut, Phone, Calendar, MapPin, CheckCircle2, FileText } from 'lucide-react';
 import { SectionLabel, StatusBadge } from '../components/Layout';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
@@ -19,6 +19,7 @@ type EventRegistration = {
     event_date: string;
     location: string;
     status: string;
+    certificate_template_url?: string;
   };
 };
 
@@ -31,6 +32,7 @@ export default function Account() {
 
   const [registrations, setRegistrations] = useState<EventRegistration[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [downloadingCert, setDownloadingCert] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -54,7 +56,7 @@ export default function Account() {
 
       // Fetch registrations
       const { data: regData, error: regError } = await supabase
-        .from('event_registrations')
+        .from('registrations')
         .select(`
           id,
           registered_at,
@@ -62,15 +64,41 @@ export default function Account() {
             title,
             event_date,
             location,
-            status
+            status,
+            certificate_template_url
           )
         `)
         .eq('user_id', user.id)
         .order('registered_at', { ascending: false });
 
+      console.log('Account.tsx fetch registrations:', { regData, regError, userId: user.id });
+
       if (regData) {
-        // Supabase typing workaround for joined tables
-        setRegistrations(regData as any);
+        try {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const processedRegistrations = regData.map((reg: any) => {
+            if (!reg.events) {
+              console.warn("Registration missing events data:", reg);
+              return { ...reg, events: { title: 'Unknown', event_date: new Date().toISOString(), status: 'unknown' } };
+            }
+            const evDate = new Date(reg.events.event_date);
+            const isPast = evDate < today;
+            return {
+              ...reg,
+              events: {
+                ...reg.events,
+                status: isPast ? 'completed' : reg.events.status
+              }
+            };
+          });
+          
+          setRegistrations(processedRegistrations as any);
+        } catch (err) {
+          console.error("Error processing registrations:", err);
+          setRegistrations(regData as any); // fallback
+        }
       }
 
       setLoadingData(false);
@@ -100,6 +128,75 @@ export default function Account() {
     }
     
     setSavingProfile(false);
+  };
+
+  const handleDownloadCertificate = async (reg: EventRegistration) => {
+    try {
+      setDownloadingCert(reg.id);
+      
+      const templateUrl = reg.events.certificate_template_url;
+      if (!templateUrl) throw new Error("No template found");
+
+      // 1. Fetch the PDF array buffer
+      const response = await fetch(templateUrl);
+      const existingPdfBytes = await response.arrayBuffer();
+
+      // 2. Load the PDF document dynamically
+      const { PDFDocument, StandardFonts, rgb } = await import('pdf-lib');
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+      // 3. Get the first page
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+      const { width, height } = firstPage.getSize();
+
+      // 4. Draw text
+      const nameText = profile.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name || 'Participant';
+      const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      
+      const nameWidth = helveticaBold.widthOfTextAtSize(nameText, 36);
+      firstPage.drawText(nameText, {
+        x: (width / 2) - (nameWidth / 2),
+        y: (height / 2), // Approximate center
+        size: 36,
+        font: helveticaBold,
+        color: rgb(0.1, 0.1, 0.1),
+      });
+
+      const eventText = reg.events.title;
+      const eventWidth = helvetica.widthOfTextAtSize(eventText, 20);
+      firstPage.drawText(eventText, {
+        x: (width / 2) - (eventWidth / 2),
+        y: (height / 2) - 40,
+        size: 20,
+        font: helvetica,
+        color: rgb(0.3, 0.3, 0.3),
+      });
+
+      const dateText = `Held on ${new Date(reg.events.event_date).toLocaleDateString()}`;
+      const dateWidth = helvetica.widthOfTextAtSize(dateText, 16);
+      firstPage.drawText(dateText, {
+        x: (width / 2) - (dateWidth / 2),
+        y: (height / 2) - 70,
+        size: 16,
+        font: helvetica,
+        color: rgb(0.4, 0.4, 0.4),
+      });
+
+      // 5. Serialize and trigger download
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `Certificate_${nameText.replace(/\s+/g, '_')}_${eventText.replace(/\s+/g, '_')}.pdf`;
+      link.click();
+    } catch (err) {
+      console.error("Error generating certificate:", err);
+      alert("Failed to generate certificate. Please make sure the template is a valid PDF.");
+    } finally {
+      setDownloadingCert(null);
+    }
   };
 
   if (loading || loadingData) {
@@ -240,6 +337,19 @@ export default function Account() {
                       </div>
                       <div className="shrink-0">
                         <StatusBadge status={reg.events.status as any} />
+                        
+                        {reg.events.status === 'completed' && reg.events.certificate_template_url && (
+                          <div className="mt-3">
+                            <button
+                              onClick={() => handleDownloadCertificate(reg)}
+                              disabled={downloadingCert === reg.id}
+                              className="w-full flex items-center justify-center gap-1.5 text-xs font-bold bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              {downloadingCert === reg.id ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
+                              {downloadingCert === reg.id ? 'Generating...' : 'Download Certificate'}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

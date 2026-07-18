@@ -1,126 +1,87 @@
-import axios from 'axios';
-// Use relative path so it hits Vercel Serverless Functions in prod, and proxy in local dev
-const API_URL = '/api';
-
-function getAuthHeader() {
-  const token = localStorage.getItem('token');
-  return token ? { 'Authorization': `Bearer ${token}` } : {};
-}
+import { supabaseAdmin as supabase } from '../lib/supabase';
 
 export const api = {
-  // Auth
-  register: async (data: any) => {
-    const res = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
-  },
-  login: async (data: any) => {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
-  },
-  getMe: async () => {
-    const res = await fetch(`${API_URL}/auth/me`, {
-      headers: { ...getAuthHeader() }
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
-  },
+  // Auth methods are handled by Supabase directly in components now, 
+  // keeping these as stubs if they are used somewhere accidentally, 
+  // but they should mostly be unused.
+  register: async (data: any) => { throw new Error("Use supabase.auth.signUp instead"); },
+  login: async (data: any) => { throw new Error("Use supabase.auth.signInWithPassword instead"); },
+  getMe: async () => { throw new Error("Use supabase.auth.getUser instead"); },
 
   // Events
   getEvents: async () => {
-    const res = await fetch(`${API_URL}/events`);
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data, error } = await supabase.from('events').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    
+    if (data) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize to start of day
+      return data.map(ev => {
+        const evDate = new Date(ev.event_date);
+        const isPast = evDate < today;
+        return {
+          ...ev,
+          status: isPast ? 'completed' : ev.status
+        };
+      });
+    }
+    return data;
   },
   createEvent: async (data: any) => {
-    const res = await fetch(`${API_URL}/events`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data: result, error } = await supabase.from('events').insert([data]).select().single();
+    if (error) throw error;
+    return result;
   },
   updateEvent: async (id: string, data: any) => {
-    const res = await fetch(`${API_URL}/events/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data: result, error } = await supabase.from('events').update(data).eq('id', id).select().single();
+    if (error) throw error;
+    return result;
   },
   deleteEvent: async (id: string) => {
-    const res = await fetch(`${API_URL}/events/${id}`, {
-      method: 'DELETE',
-      headers: { ...getAuthHeader() }
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { error } = await supabase.from('events').delete().eq('id', id);
+    if (error) throw error;
+    return { success: true };
   },
 
   // Registrations
   registerForEvent: async (eventId: string) => {
-    const res = await fetch(`${API_URL}/registrations`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
-      body: JSON.stringify({ eventId })
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) throw new Error("Not logged in");
+    
+    const { data, error } = await supabase.from('registrations').insert([
+      { event_id: eventId, user_id: userData.user.id }
+    ]).select().single();
+    if (error) throw error;
+    return data;
   },
   getMyRegistrations: async () => {
-    const res = await fetch(`${API_URL}/registrations/me`, {
-      headers: { ...getAuthHeader() }
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) throw new Error("Not logged in");
+
+    const { data, error } = await supabase.from('registrations').select('*, events(*)').eq('user_id', userData.user.id);
+    if (error) throw error;
+    return data;
   },
   getAllRegistrations: async () => {
-    const res = await fetch(`${API_URL}/registrations`, {
-      headers: { ...getAuthHeader() }
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data, error } = await supabase.from('registrations').select('*, events(*), profiles(*)').order('registered_at', { ascending: false });
+    if (error) throw error;
+    return data;
   },
 
   // Messages
   sendMessage: async (data: any) => {
-    const res = await fetch(`${API_URL}/messages`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data: result, error } = await supabase.from('messages').insert([data]).select().single();
+    if (error) throw error;
+    return result;
   },
   getMessages: async () => {
-    const res = await fetch(`${API_URL}/messages`, {
-      headers: { ...getAuthHeader() }
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    const { data, error } = await supabase.from('messages').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
   },
 
   // Upload
   uploadImage: async (file: File) => {
-    const formData = new FormData();
-    formData.append('image', file);
-    const res = await fetch(`${API_URL}/upload`, {
-      method: 'POST',
-      headers: { ...getAuthHeader() },
-      body: formData
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+    throw new Error("Use Cloudinary Upload Widget directly instead of api.uploadImage");
   }
 };

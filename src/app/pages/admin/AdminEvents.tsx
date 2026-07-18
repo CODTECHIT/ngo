@@ -25,6 +25,7 @@ export default function AdminEvents() {
   const [showRegisterButton, setShowRegisterButton] = useState(false);
   const [isFree, setIsFree] = useState(true);
   const [price, setPrice] = useState(0);
+  const [certificateTemplateUrl, setCertificateTemplateUrl] = useState('');
 
   // Registrations state
   const [viewingEvent, setViewingEvent] = useState<Event | null>(null);
@@ -43,6 +44,7 @@ export default function AdminEvents() {
     setShowRegisterButton(false);
     setIsFree(true);
     setPrice(0);
+    setCertificateTemplateUrl('');
     setIsModalOpen(true);
   };
 
@@ -57,6 +59,7 @@ export default function AdminEvents() {
     setShowRegisterButton(evt.show_register_button);
     setIsFree(evt.is_free ?? true);
     setPrice(evt.price ?? 0);
+    setCertificateTemplateUrl(evt.certificate_template_url || '');
     setIsModalOpen(true);
   };
 
@@ -78,7 +81,8 @@ export default function AdminEvents() {
         status,
         show_register_button: showRegisterButton,
         is_free: isFree,
-        price: isFree ? 0 : price
+        price: isFree ? 0 : price,
+        certificate_template_url: certificateTemplateUrl
       };
 
       if (editingEvent) {
@@ -116,7 +120,8 @@ export default function AdminEvents() {
     setSearchQuery('');
     setRegsLoading(true);
     try {
-      const { data, error } = await supabase.from('event_registrations').select('*').eq('event_id', evt.id).order('created_at', { ascending: false });
+      const { data, error } = await supabase.from('registrations').select('*').eq('event_id', evt.id).order('registered_at', { ascending: false });
+      console.log('AdminEvents registrations fetched:', { data, error, evtId: evt.id });
       if (error) throw error;
       setRegistrations(data || []);
     } catch (err) {
@@ -132,7 +137,7 @@ export default function AdminEvents() {
     const csvContent = [
       headers.join(","),
       ...registrations.map(r => 
-        [r.name, r.mobile, r.email, r.location, r.from_address, r.status, new Date(r.created_at).toLocaleString()].map(val => `"${(val || '').toString().replace(/"/g, '""')}"`).join(",")
+        [r.name, r.mobile, r.email, r.location, r.from_address, r.status, new Date(r.registered_at).toLocaleString()].map(val => `"${(val || '').toString().replace(/"/g, '""')}"`).join(",")
       )
     ].join("\n");
     
@@ -158,8 +163,8 @@ export default function AdminEvents() {
     <div className="min-h-screen bg-black/5 flex flex-col md:flex-row font-['Lato']">
       <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
         <div className="p-6 border-b border-black/5 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-black/5 flex items-center justify-center shadow-sm">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
+          <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
         </div>
@@ -276,12 +281,22 @@ export default function AdminEvents() {
             
             <form onSubmit={handleSubmit} className="p-8 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-1">
-                  <label className="block text-sm font-bold text-zinc-700 mb-2">Event Image</label>
-                  <ImageUploader 
-                    defaultImage={imageUrl} 
-                    onUploadComplete={(url) => setImageUrl(url)} 
-                  />
+                <div className="md:col-span-1 space-y-6">
+                  <div>
+                    <label className="block text-sm font-bold text-zinc-700 mb-2">Event Image</label>
+                    <ImageUploader 
+                      defaultImage={imageUrl} 
+                      onUploadComplete={(url) => setImageUrl(url)} 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-zinc-700 mb-2">Certificate (PDF)</label>
+                    <ImageUploader 
+                      defaultImage={certificateTemplateUrl} 
+                      onUploadComplete={(url) => setCertificateTemplateUrl(url)} 
+                      acceptPDF={true}
+                    />
+                  </div>
                 </div>
                 <div className="md:col-span-2 space-y-4">
                   <div>
@@ -445,7 +460,7 @@ export default function AdminEvents() {
                                 </span>
                               </td>
                               <td className="p-4 text-sm text-zinc-600">
-                                {new Date(reg.created_at).toLocaleDateString()}
+                                {new Date(reg.registered_at).toLocaleDateString()}
                               </td>
                             </tr>
                           ))

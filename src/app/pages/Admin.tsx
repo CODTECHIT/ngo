@@ -5,27 +5,97 @@ import { useAuth } from "../contexts/AuthContext";
 import {
   Heart, BarChart2, Calendar, Users, Image, Edit2, Settings,
   LogOut, Bell, ArrowRight, Plus, Trash2, Eye, Upload, Search,
-  DollarSign, TrendingUp, MessageSquare
+  DollarSign, TrendingUp, MessageSquare, FileText
 } from "lucide-react";
-import { ADMIN_EVENTS, ADMIN_REGISTRATIONS, GALLERY_IMAGES } from "../data";
+import { supabaseAdmin as supabase } from '../../lib/supabase';
 import { StatusBadge } from "../components/Layout";
+
+// Extend Window interface for Cloudinary
+declare global {
+  interface Window {
+    cloudinary: any;
+  }
+}
+
+const openCloudinaryWidget = (onSuccess: (info: any) => void) => {
+  if (!window.cloudinary) {
+    alert("Cloudinary widget not loaded yet");
+    return;
+  }
+  const widget = window.cloudinary.createUploadWidget(
+    {
+      cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+      uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+      sources: ['local', 'url', 'camera'],
+      multiple: false
+    },
+    (error: any, result: any) => {
+      if (!error && result && result.event === "success") {
+        onSuccess(result.info);
+      }
+    }
+  );
+  widget.open();
+};
 
 type AdminTab = "dashboard" | "events" | "registrations" | "gallery" | "content" | "settings" | "messages";
 
 function AdminDashboard() {
-  const metrics = [
-    { label: "Total Registrations", value: "1,284", change: "+12%", icon: Users, color: "text-blue-400 bg-blue-500/10 border-blue-500/20" },
-    { label: "Events This Month", value: "7", change: "+3", icon: Calendar, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
-    { label: "Website Visitors", value: "18,340", change: "+8%", icon: TrendingUp, color: "text-sky-500 bg-sky-500/10 border-sky-500/20" },
+  const [metrics, setMetrics] = useState({
+    totalRegistrations: 0,
+    eventsThisMonth: 0,
+    messagesCount: 0
+  });
+  const [recentRegistrations, setRecentRegistrations] = useState<any[]>([]);
+  const [eventCapacity, setEventCapacity] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [{ count: regCount }, { count: eventsCount }, { count: messagesCount }, { data: recentRegs }, { data: eventsData }] = await Promise.all([
+        supabase.from('registrations').select('*', { count: 'exact', head: true }),
+        supabase.from('events').select('*', { count: 'exact', head: true }),
+        supabase.from('messages').select('*', { count: 'exact', head: true }),
+        supabase.from('registrations').select('*, events(*), profiles(*)').order('registered_at', { ascending: false }).limit(5),
+        supabase.from('events').select('*').order('created_at', { ascending: false }).limit(3)
+      ]);
+
+      setMetrics({
+        totalRegistrations: regCount || 0,
+        eventsThisMonth: eventsCount || 0,
+        messagesCount: messagesCount || 0
+      });
+      setRecentRegistrations(recentRegs || []);
+
+      if (eventsData) {
+        const capacityData = await Promise.all(eventsData.map(async (ev) => {
+          const { count } = await supabase.from('registrations').select('*', { count: 'exact', head: true }).eq('event_id', ev.id);
+          return {
+            id: ev.id,
+            title: ev.title,
+            capacity: ev.seats || 100,
+            registrations: count || 0
+          };
+        }));
+        setEventCapacity(capacityData);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const displayMetrics = [
+    { label: "Total Registrations", value: metrics.totalRegistrations.toString(), change: "Active", icon: Users, color: "text-blue-400 bg-blue-500/10 border-blue-500/20" },
+    { label: "Total Events", value: metrics.eventsThisMonth.toString(), change: "Active", icon: Calendar, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
+    { label: "Total Messages", value: metrics.messagesCount.toString(), change: "Active", icon: MessageSquare, color: "text-amber-500 bg-amber-500/10 border-amber-500/20" },
   ];
+
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-bold mb-1 text-zinc-900 tracking-tight">Dashboard Overview</h2>
-        <p className="text-zinc-500 text-sm font-light">Last updated: July 14, 2025 · 09:41 AM</p>
+        <p className="text-zinc-500 text-sm font-light">Real-time Data</p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        {metrics.map(m => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        {displayMetrics.map(m => (
           <div key={m.label} className="bg-black/5 rounded-2xl border border-black/5 p-6 hover:bg-black/10 transition-colors">
             <div className="flex items-start justify-between mb-4">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${m.color}`}>
@@ -44,21 +114,22 @@ function AdminDashboard() {
         <div className="bg-black/5 rounded-2xl border border-black/5 p-6">
           <h3 className="font-bold mb-6 text-zinc-900 tracking-tight">Recent Registrations</h3>
           <div className="space-y-4">
-            {ADMIN_REGISTRATIONS.map(r => (
+            {recentRegistrations.map(r => (
               <div key={r.id} className="flex items-center justify-between pb-4 border-b border-black/5 last:border-0 last:pb-0">
                 <div>
-                  <p className="text-sm font-bold text-zinc-900">{r.name}</p>
-                  <p className="text-xs text-zinc-500">{r.event}</p>
+                  <p className="text-sm font-bold text-zinc-900">{r.profiles?.full_name}</p>
+                  <p className="text-xs text-zinc-500">{r.events?.title}</p>
                 </div>
                 <StatusBadge status={r.status} />
               </div>
             ))}
+            {recentRegistrations.length === 0 && <p className="text-sm text-zinc-500">No registrations found.</p>}
           </div>
         </div>
         <div className="bg-black/5 rounded-2xl border border-black/5 p-6">
           <h3 className="font-bold mb-6 text-zinc-900 tracking-tight">Event Capacity</h3>
           <div className="space-y-6">
-            {ADMIN_EVENTS.slice(0, 3).map(ev => {
+            {eventCapacity.map(ev => {
               const pct = Math.round((ev.registrations / ev.capacity) * 100);
               return (
                 <div key={ev.id}>
@@ -75,6 +146,7 @@ function AdminDashboard() {
                 </div>
               );
             })}
+            {eventCapacity.length === 0 && <p className="text-sm text-zinc-500">No events to display.</p>}
           </div>
         </div>
       </div>
@@ -87,12 +159,46 @@ function AdminEventsTab() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const [bannerUrl, setBannerUrl] = useState("");
+  const [bannerPublicId, setBannerPublicId] = useState("");
+  const [certificateTemplateUrl, setCertificateTemplateUrl] = useState("");
+  const [formData, setFormData] = useState({
+    title: "", category: "", event_date: "", venue: "", seats: "", registration_deadline: "", description: ""
+  });
+
+  const loadEvents = () => {
+    setLoading(true);
     api.getEvents()
       .then(res => setEvents(res))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadEvents();
   }, []);
+
+  const handleSaveEvent = async () => {
+    try {
+      await api.createEvent({
+        ...formData,
+        seats: parseInt(formData.seats),
+        banner_url: bannerUrl,
+        banner_public_id: bannerPublicId,
+        certificate_template_url: certificateTemplateUrl,
+        status: "upcoming"
+      });
+      setShowForm(false);
+      setFormData({ title: "", category: "", event_date: "", venue: "", seats: "", registration_deadline: "", description: "" });
+      setBannerUrl("");
+      setBannerPublicId("");
+      setCertificateTemplateUrl("");
+      loadEvents();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save event");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -108,27 +214,67 @@ function AdminEventsTab() {
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none" />
           <h3 className="text-xl font-bold text-zinc-900 mb-6 tracking-tight relative z-10">Create New Event</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-            {["Event Title", "Category", "Date", "Venue", "Capacity", "Registration Deadline"].map(f => (
-              <div key={f}>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">{f}</label>
-                <input className="w-full px-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/10 transition-colors placeholder:text-zinc-500"
-                  placeholder={f} />
-              </div>
-            ))}
+            {Object.keys(formData).map(f => {
+              if (f === "description") return null;
+              return (
+                <div key={f}>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">{f.replace('_', ' ')}</label>
+                  <input 
+                    type={f.includes('date') || f === 'registration_deadline' ? 'date' : f === 'seats' ? 'number' : 'text'}
+                    value={(formData as any)[f]} 
+                    onChange={e => setFormData({...formData, [f]: e.target.value})}
+                    className="w-full px-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/10 transition-colors placeholder:text-zinc-500"
+                    placeholder={f} />
+                </div>
+              );
+            })}
             <div className="md:col-span-2">
               <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Description</label>
-              <textarea rows={3} className="w-full px-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/10 transition-colors resize-none placeholder:text-zinc-500" placeholder="Event details..." />
+              <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/10 transition-colors resize-none placeholder:text-zinc-500" placeholder="Event details..." />
             </div>
             <div className="md:col-span-2">
-              <div className="border-2 border-dashed border-black/10 rounded-xl p-8 text-center cursor-pointer hover:border-primary/50 transition-colors bg-black/[0.02]">
-                <Upload size={24} className="mx-auto mb-3 text-zinc-500" />
-                <p className="text-sm font-medium text-zinc-700">Click to upload event banner</p>
-                <p className="text-xs text-zinc-500 mt-1">1920x1080 recommended</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div 
+                  onClick={() => openCloudinaryWidget((info) => {
+                    setBannerUrl(info.secure_url);
+                    setBannerPublicId(info.public_id);
+                  })}
+                  className="border-2 border-dashed border-black/10 rounded-xl p-8 text-center cursor-pointer hover:border-primary/50 transition-colors bg-black/[0.02] flex flex-col justify-center">
+                  {bannerUrl ? (
+                    <img src={bannerUrl} alt="Banner" className="h-32 mx-auto object-contain rounded" />
+                  ) : (
+                    <>
+                      <Upload size={24} className="mx-auto mb-3 text-zinc-500" />
+                      <p className="text-sm font-medium text-zinc-700">Click to upload event banner</p>
+                      <p className="text-xs text-zinc-500 mt-1">1920x1080 recommended</p>
+                    </>
+                  )}
+                </div>
+                
+                <div 
+                  onClick={() => openCloudinaryWidget((info) => {
+                    setCertificateTemplateUrl(info.secure_url);
+                  })}
+                  className="border-2 border-dashed border-black/10 rounded-xl p-8 text-center cursor-pointer hover:border-primary/50 transition-colors bg-black/[0.02] flex flex-col justify-center">
+                  {certificateTemplateUrl ? (
+                    <div className="text-emerald-600 flex flex-col items-center">
+                      <FileText size={40} className="mb-3" />
+                      <p className="text-sm font-medium">Certificate PDF Uploaded</p>
+                      <a href={certificateTemplateUrl} target="_blank" rel="noopener noreferrer" className="text-xs underline mt-2 text-primary" onClick={e => e.stopPropagation()}>View PDF</a>
+                    </div>
+                  ) : (
+                    <>
+                      <FileText size={24} className="mx-auto mb-3 text-zinc-500" />
+                      <p className="text-sm font-medium text-zinc-700">Upload Certificate Template (PDF)</p>
+                      <p className="text-xs text-zinc-500 mt-1">Required for participant downloads</p>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
           <div className="flex gap-4 mt-8 relative z-10">
-            <button className="px-8 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:shadow-[0_0_15px_rgba(15,110,110,0.3)] transition-all">
+            <button onClick={handleSaveEvent} className="px-8 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:shadow-[0_0_15px_rgba(15,110,110,0.3)] transition-all">
               Save Event
             </button>
             <button onClick={() => setShowForm(false)}
@@ -151,15 +297,18 @@ function AdminEventsTab() {
             {loading ? <tr><td colSpan={5} className="p-8 text-center">Loading events...</td></tr> : 
              events.length === 0 ? <tr><td colSpan={5} className="p-8 text-center">No events found.</td></tr> :
              events.map(ev => (
-              <tr key={ev._id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
+              <tr key={ev.id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
                 <td className="px-6 py-4 font-bold text-zinc-900">{ev.title}</td>
-                <td className="px-6 py-4 text-xs font-medium text-zinc-600">{ev.date}</td>
+                <td className="px-6 py-4 text-xs font-medium text-zinc-600">{new Date(ev.event_date).toLocaleDateString()}</td>
                 <td className="px-6 py-4 text-xs font-medium text-zinc-600">{ev.seats}</td>
                 <td className="px-6 py-4"><StatusBadge status={ev.status} /></td>
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
                     <button className="p-2 rounded-lg bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-900"><Edit2 size={14} /></button>
-                    <button className="p-2 rounded-lg bg-black/5 hover:bg-red-500/20 transition-colors text-zinc-500 hover:text-red-600"><Trash2 size={14} /></button>
+                    <button className="p-2 rounded-lg bg-black/5 hover:bg-red-500/20 transition-colors text-zinc-500 hover:text-red-600" onClick={async () => {
+                      await api.deleteEvent(ev.id);
+                      setEvents(events.filter(e => e.id !== ev.id));
+                    }}><Trash2 size={14} /></button>
                   </div>
                 </td>
               </tr>
@@ -210,11 +359,11 @@ function AdminRegistrationsTab() {
             {loading ? <tr><td colSpan={6} className="p-8 text-center">Loading registrations...</td></tr> : 
              registrations.length === 0 ? <tr><td colSpan={6} className="p-8 text-center">No registrations found.</td></tr> :
              registrations.map(r => (
-              <tr key={r._id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
-                <td className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{r._id.substring(0, 6)}</td>
-                <td className="px-6 py-4 font-bold text-zinc-900">{r.userId?.fname} {r.userId?.lname}</td>
-                <td className="px-6 py-4 text-xs font-medium text-zinc-600 max-w-[160px] truncate">{r.eventId?.title}</td>
-                <td className="px-6 py-4 text-xs font-medium text-zinc-600">{new Date(r.registeredAt).toLocaleDateString()}</td>
+              <tr key={r.id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
+                <td className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{r.id.substring(0, 8)}</td>
+                <td className="px-6 py-4 font-bold text-zinc-900">{r.profiles?.full_name}</td>
+                <td className="px-6 py-4 text-xs font-medium text-zinc-600 max-w-[160px] truncate">{r.events?.title}</td>
+                <td className="px-6 py-4 text-xs font-medium text-zinc-600">{new Date(r.registered_at).toLocaleDateString()}</td>
                 <td className="px-6 py-4"><StatusBadge status={r.status} /></td>
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
@@ -270,8 +419,8 @@ function AdminMessagesTab() {
               </tr>
             ) : (
               messages.map((m: any) => (
-                <tr key={m._id} className="border-b border-black/5 hover:bg-black/5 transition-colors group cursor-pointer">
-                  <td className="p-4 text-sm text-zinc-600 whitespace-nowrap">{new Date(m.date).toLocaleDateString()}</td>
+                <tr key={m.id} className="border-b border-black/5 hover:bg-black/5 transition-colors group cursor-pointer">
+                  <td className="p-4 text-sm text-zinc-600 whitespace-nowrap">{new Date(m.created_at).toLocaleDateString()}</td>
                   <td className="p-4 text-sm font-bold text-zinc-900 whitespace-nowrap">{m.fname} {m.lname}</td>
                   <td className="p-4 text-sm text-zinc-600 whitespace-nowrap">{m.email}</td>
                   <td className="p-4 text-sm font-bold text-primary whitespace-nowrap">{m.subject}</td>
@@ -282,6 +431,80 @@ function AdminMessagesTab() {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+function AdminGalleryTab() {
+  const [images, setImages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadImages = () => {
+    setLoading(true);
+    supabase.from('gallery_images').select('*').order('created_at', { ascending: false })
+      .then(({ data, error }) => {
+        if (!error && data) setImages(data);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadImages();
+  }, []);
+
+  const handleUpload = () => {
+    openCloudinaryWidget(async (info) => {
+      try {
+        await supabase.from('gallery_images').insert([{
+          image_url: info.secure_url,
+          public_id: info.public_id,
+          tag: 'Gallery'
+        }]);
+        loadImages();
+      } catch (err) {
+        console.error("Upload error", err);
+      }
+    });
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await supabase.from('gallery_images').delete().eq('id', id);
+      setImages(images.filter(img => img.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">Gallery Management</h2>
+        <button onClick={handleUpload} className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:shadow-[0_0_15px_rgba(15,110,110,0.3)] transition-all">
+          <Upload size={16} /> Upload Media
+        </button>
+      </div>
+      <div onClick={handleUpload} className="border-2 border-dashed border-black/10 rounded-2xl p-12 text-center cursor-pointer hover:border-primary/50 transition-colors bg-black/[0.02]">
+        <div className="w-16 h-16 bg-black/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-black/10">
+          <Upload size={24} className="text-zinc-500" />
+        </div>
+        <p className="font-bold text-zinc-900 mb-2">Click to upload photos or videos</p>
+        <p className="text-xs font-medium text-zinc-600">JPG, PNG, MP4 · Max 50MB each</p>
+      </div>
+      {loading ? <p className="text-zinc-500">Loading gallery...</p> : 
+       images.length === 0 ? <p className="text-zinc-500">No images in gallery.</p> : (
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {images.map((img) => (
+          <div key={img.id} className="relative group rounded-2xl overflow-hidden bg-black/5 aspect-square border border-black/5 hover:border-black/20 transition-all">
+            <img src={img.image_url} alt="Gallery" className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-60 transition-all duration-500" />
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onClick={() => handleDelete(img.id)} className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-red-500/80 hover:border-red-500 hover:scale-110 transition-all"><Trash2 size={16} /></button>
+            </div>
+            <span className="absolute bottom-3 left-3 bg-black/80 border border-white/10 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest rounded-md">{img.tag}</span>
+          </div>
+        ))}
+      </div>
+      )}
     </div>
   );
 }
@@ -363,35 +586,7 @@ export default function Admin() {
           {activeTab === "events" && <AdminEventsTab />}
           {activeTab === "registrations" && <AdminRegistrationsTab />}
           {activeTab === "messages" && <AdminMessagesTab />}
-          {activeTab === "gallery" && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">Gallery Management</h2>
-                <button className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:shadow-[0_0_15px_rgba(15,110,110,0.3)] transition-all">
-                  <Upload size={16} /> Upload Media
-                </button>
-              </div>
-              <div className="border-2 border-dashed border-black/10 rounded-2xl p-12 text-center cursor-pointer hover:border-primary/50 transition-colors bg-black/[0.02]">
-                <div className="w-16 h-16 bg-black/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-black/10">
-                  <Upload size={24} className="text-zinc-500" />
-                </div>
-                <p className="font-bold text-zinc-900 mb-2">Drag & drop photos or videos</p>
-                <p className="text-xs font-medium text-zinc-600">JPG, PNG, MP4 · Max 50MB each</p>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {GALLERY_IMAGES.map((img, i) => (
-                  <div key={i} className="relative group rounded-2xl overflow-hidden bg-black/5 aspect-square border border-black/5 hover:border-black/20 transition-all">
-                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-60 transition-all duration-500" />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-black/80 hover:scale-110 transition-all"><Edit2 size={16} /></button>
-                      <button className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-red-500/80 hover:border-red-500 hover:scale-110 transition-all"><Trash2 size={16} /></button>
-                    </div>
-                    <span className="absolute bottom-3 left-3 bg-black/80 border border-white/10 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest rounded-md">{img.tag}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {activeTab === "gallery" && <AdminGalleryTab />}
           {activeTab === "content" && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">Content Management</h2>

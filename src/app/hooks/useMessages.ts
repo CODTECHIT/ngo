@@ -11,35 +11,30 @@ export type ContactMessage = {
   created_at: string;
 };
 
-// Simple in-memory cache
-let cachedMessages: ContactMessage[] | null = null;
-let fetchPromise: Promise<ContactMessage[] | null> | null = null;
-
 export function useMessages(forceRefresh = false) {
-  const [messages, setMessages] = useState<ContactMessage[]>(cachedMessages || []);
-  const [loading, setLoading] = useState(!cachedMessages);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchMessages = async (ignoreCache = false) => {
+  const fetchMessages = async () => {
     try {
-      if (ignoreCache) {
-        setLoading(true);
-      } else if (cachedMessages) {
-        setLoading(false);
-        return;
-      }
+      setLoading(true);
 
-      if (!fetchPromise || ignoreCache) {
-        fetchPromise = supabase
-          .from('contact_submissions')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .then(({ data }) => data);
-      }
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: false });
       
-      const data = await fetchPromise;
+      if (error) throw error;
+      
       if (data) {
-        cachedMessages = data;
-        setMessages(data);
+        // Map new schema to the expected format
+        const formattedData = data.map((msg: any) => ({
+          ...msg,
+          name: `${msg.fname || ''} ${msg.lname || ''}`.trim() || 'Anonymous',
+          // Try to extract phone from message if it's there
+          phone: msg.message?.match(/\[Phone: (.*?)\]/)?.[1] || '',
+        }));
+        setMessages(formattedData);
       }
     } catch (err) {
       console.error("Error fetching messages:", err);
@@ -49,21 +44,21 @@ export function useMessages(forceRefresh = false) {
   };
 
   useEffect(() => {
-    fetchMessages(forceRefresh);
+    fetchMessages();
   }, [forceRefresh]);
 
   const markAsRead = async (id: string, isRead: boolean) => {
     try {
       const { error } = await supabase
-        .from('contact_submissions')
+        .from('messages')
         .update({ is_read: isRead })
         .eq('id', id);
       if (error) throw error;
-      fetchMessages(true);
+      fetchMessages();
     } catch (err) {
       console.error("Error updating message status:", err);
     }
   };
 
-  return { messages, loading, refetch: () => fetchMessages(true), markAsRead };
+  return { messages, loading, refetch: fetchMessages, markAsRead };
 }

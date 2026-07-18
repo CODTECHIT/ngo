@@ -93,7 +93,7 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
   const handleRegister = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase.from('event_registrations').insert({
+      const { error } = await supabase.from('registrations').insert({
         event_id: event.id,
         user_id: user ? user.id : null,
         name: formData.name,

@@ -16,12 +16,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const fetchProfileRole = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
+    
+    if (data && data.role === 'admin') {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  };
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) fetchProfileRole(session.user.id);
       setLoading(false);
     });
 
@@ -31,6 +47,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfileRole(session.user.id);
+      } else {
+        setIsAdmin(false);
+      }
       setLoading(false);
     });
 
@@ -40,12 +61,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     await supabase.auth.signOut();
   };
-
-  const allowedEmails = (import.meta.env.VITE_ADMIN_ALLOWED_EMAILS || "")
-    .split(",")
-    .map((e: string) => e.trim().toLowerCase());
-  
-  const isAdmin = user?.email ? allowedEmails.includes(user.email.toLowerCase()) : false;
 
   return (
     <AuthContext.Provider value={{ session, user, loading, isAdmin, logout }}>

@@ -57,8 +57,8 @@ function FloatingIslandNav() {
         className="w-full max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
 
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
-          <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center shadow-md group-hover:shadow-lg transition-all shrink-0 bg-white border border-black/5">
-            <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain scale-110" />
+          <div className="w-16 h-16 shrink-0 flex items-center justify-center transition-transform group-hover:scale-105">
+            <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-lg md:text-xl tracking-tight text-zinc-900 hidden sm:block uppercase">
             SRISHREEVISION FOUNDATION
@@ -159,8 +159,8 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center shadow-[0_0_30px_rgba(15,110,110,0.2)] shrink-0 bg-white border border-black/5">
-                <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain scale-110" />
+              <div className="w-16 h-16 shrink-0 flex items-center justify-center">
+                <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain" />
               </div>
               <span className="font-bold text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase">SRISHREEVISION FOUNDATION</span>
             </div>

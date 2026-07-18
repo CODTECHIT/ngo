@@ -42,10 +42,10 @@ export default function AdminDashboard() {
           supabase.from('events').select('*', { count: 'exact', head: true }),
           supabase.from('events').select('*', { count: 'exact', head: true }).eq('status', 'upcoming'),
           supabase.from('gallery_images').select('*', { count: 'exact', head: true }),
-          supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('is_read', false),
-          supabase.from('event_registrations').select('*', { count: 'exact', head: true }),
+          supabase.from('messages').select('*', { count: 'exact', head: true }).eq('is_read', false),
+          supabase.from('registrations').select('*', { count: 'exact', head: true }),
           supabase.from('events').select('id, title').order('created_at', { ascending: false }),
-          supabase.from('event_registrations').select('event_id')
+          supabase.from('registrations').select('event_id')
         ]);
 
         setCounts({
@@ -91,8 +91,8 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
         <div className="p-6 border-b border-black/5 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-black/5 flex items-center justify-center shadow-sm">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain scale-110" />
+          <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
         </div>

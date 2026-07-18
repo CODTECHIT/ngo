@@ -11,30 +11,19 @@ export type GalleryImage = {
   created_at: string;
 };
 
-let cachedGallery: GalleryImage[] | null = null;
-let fetchPromise: Promise<GalleryImage[] | null> | null = null;
-
 export function useGallery(forceRefresh = false) {
-  const [images, setImages] = useState<GalleryImage[]>(cachedGallery || []);
-  const [loading, setLoading] = useState(!cachedGallery);
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchGallery = async (ignoreCache = false) => {
+  const fetchGallery = async () => {
     try {
-      if (ignoreCache) {
-        setLoading(true);
-      } else if (cachedGallery) {
-        setLoading(false);
-        return;
-      }
+      setLoading(true);
 
-      if (!fetchPromise || ignoreCache) {
-        fetchPromise = supabase
-          .from('gallery_images')
-          .select('*')
-          .order('sort_order', { ascending: true })
-          .order('created_at', { ascending: false })
-          .then(({ data }) => data);
-      }
+      const { data, error } = await supabase
+        .from('gallery_images')
+        .select('*')
+        .order('sort_order', { ascending: true })
+        .order('created_at', { ascending: false });
       
       const fallbackGallery: GalleryImage[] = [
         { id: "g1", image_url: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&q=80", category: "Health", caption: "Community Health Camp 2025", sort_order: 1, created_at: new Date().toISOString() },
@@ -44,18 +33,13 @@ export function useGallery(forceRefresh = false) {
         { id: "g5", image_url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80", category: "Health", caption: "Blood Donation Drive", sort_order: 5, created_at: new Date().toISOString() }
       ];
 
-      let data = null;
-      try {
-        data = await fetchPromise;
-      } catch (e) {
-        console.error("Database connection failed, using fallback data.");
+      if (error) {
+        console.error("Database connection failed, using fallback data.", error);
       }
 
       if (data && data.length > 0) {
-        cachedGallery = data;
         setImages(data);
       } else {
-        cachedGallery = fallbackGallery;
         setImages(fallbackGallery);
       }
     } catch (err) {
@@ -66,8 +50,8 @@ export function useGallery(forceRefresh = false) {
   };
 
   useEffect(() => {
-    fetchGallery(forceRefresh);
+    fetchGallery();
   }, [forceRefresh]);
 
-  return { images, loading, refetch: () => fetchGallery(true) };
+  return { images, loading, refetch: fetchGallery };
 }

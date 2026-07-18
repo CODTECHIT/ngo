@@ -13,9 +13,10 @@ type ImageUploaderProps = {
   className?: string;
   acceptVideo?: boolean;
   acceptMultiple?: boolean;
+  acceptPDF?: boolean;
 };
 
-export function ImageUploader({ onUploadComplete, defaultImage, className = '', acceptVideo = false, acceptMultiple = false }: ImageUploaderProps) {
+export function ImageUploader({ onUploadComplete, defaultImage, className = '', acceptVideo = false, acceptMultiple = false, acceptPDF = false }: ImageUploaderProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>(defaultImage ? defaultImage.split(',').filter(Boolean) : []);
   const widgetRef = useRef<any>(null);
@@ -60,8 +61,8 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
           sources: ['local', 'url', 'camera'],
           multiple: acceptMultiple,
           maxFiles: acceptMultiple ? 10 : 1,
-          resourceType: acceptVideo ? 'auto' : 'image',
-          clientAllowedFormats: acceptVideo ? ['jpeg', 'png', 'jpg', 'webp', 'mp4', 'webm'] : ['jpeg', 'png', 'jpg', 'webp'],
+          resourceType: acceptPDF ? 'raw' : acceptVideo ? 'auto' : 'image',
+          clientAllowedFormats: acceptPDF ? ['pdf'] : acceptVideo ? ['jpeg', 'png', 'jpg', 'webp', 'mp4', 'webm'] : ['jpeg', 'png', 'jpg', 'webp'],
           styles: {
             palette: {
               window: '#ffffff',
@@ -93,7 +94,7 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
         }
       );
     }
-  }, [isLoaded, acceptVideo, acceptMultiple]);
+  }, [isLoaded, acceptVideo, acceptMultiple, acceptPDF]);
 
   const openWidget = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -120,7 +121,12 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
           <div className={`grid gap-4 ${acceptMultiple ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
             {imageUrls.map((url, idx) => (
               <div key={idx} className="relative group rounded-xl overflow-hidden border border-black/10 shadow-sm aspect-video bg-black/5 flex items-center justify-center">
-                {url.match(/\.(mp4|webm)$/i) || url.includes('/video/upload/') ? (
+                {url.match(/\.pdf$/i) || acceptPDF ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-100 text-zinc-500">
+                    <span className="font-bold text-lg mb-1">PDF</span>
+                    <span className="text-xs">Document</span>
+                  </div>
+                ) : url.match(/\.(mp4|webm)$/i) || url.includes('/video/upload/') ? (
                   <video src={url} controls className="w-full h-full object-cover" />
                 ) : (
                   <img src={url} alt={`Upload ${idx}`} className="w-full h-full object-cover" />
@@ -155,9 +161,9 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
           </div>
           <div className="text-center">
             <p className="font-semibold text-sm text-zinc-700 group-hover:text-primary transition-colors">
-              Click to upload {acceptVideo ? 'media' : 'image'}
+              Click to upload {acceptPDF ? 'PDF' : acceptVideo ? 'media' : 'image'}
             </p>
-            <p className="text-xs mt-1">{acceptVideo ? 'JPEG, PNG, MP4 up to 50MB' : 'JPEG, PNG, WebP up to 10MB'}</p>
+            <p className="text-xs mt-1">{acceptPDF ? 'PDF up to 10MB' : acceptVideo ? 'JPEG, PNG, MP4 up to 50MB' : 'JPEG, PNG, WebP up to 10MB'}</p>
           </div>
         </button>
       )}

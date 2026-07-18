@@ -13,32 +13,21 @@ export type Event = {
   is_free: boolean;
   price: number;
   created_at: string;
+  certificate_template_url?: string;
 };
 
-// Simple in-memory cache
-let cachedEvents: Event[] | null = null;
-let fetchPromise: Promise<Event[] | null> | null = null;
-
 export function useEvents(forceRefresh = false) {
-  const [events, setEvents] = useState<Event[]>(cachedEvents || []);
-  const [loading, setLoading] = useState(!cachedEvents);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchEvents = async (ignoreCache = false) => {
+  const fetchEvents = async () => {
     try {
-      if (ignoreCache) {
-        setLoading(true);
-      } else if (cachedEvents) {
-        setLoading(false);
-        return;
-      }
-
-      if (!fetchPromise || ignoreCache) {
-        fetchPromise = supabase
-          .from('events')
-          .select('*')
-          .order('event_date', { ascending: false })
-          .then(({ data }) => data);
-      }
+      setLoading(true);
+      
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('event_date', { ascending: false });
       
       const fallbackEvents: Event[] = [
         {
@@ -69,20 +58,30 @@ export function useEvents(forceRefresh = false) {
         }
       ];
 
-      let data = null;
-      try {
-        data = await fetchPromise;
-      } catch (e) {
-        console.error("Database connection failed, using fallback data.");
+      if (error) {
+        console.error("Database connection failed, using fallback data.", error);
       }
 
+      let processedData = fallbackEvents;
+
       if (data && data.length > 0) {
-        cachedEvents = data;
-        setEvents(data);
-      } else {
-        cachedEvents = fallbackEvents;
-        setEvents(fallbackEvents);
+        processedData = data;
       }
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+      // Dynamically compute status based on date
+      const finalData = processedData.map(ev => {
+        const evDate = new Date(ev.event_date);
+        const isPast = evDate < today;
+        return {
+          ...ev,
+          status: isPast ? 'completed' : ev.status
+        };
+      });
+
+      setEvents(finalData as Event[]);
     } catch (err) {
       console.error("Error fetching events:", err);
     } finally {
@@ -91,8 +90,8 @@ export function useEvents(forceRefresh = false) {
   };
 
   useEffect(() => {
-    fetchEvents(forceRefresh);
+    fetchEvents();
   }, [forceRefresh]);
 
-  return { events, loading, refetch: () => fetchEvents(true) };
+  return { events, loading, refetch: fetchEvents };
 }

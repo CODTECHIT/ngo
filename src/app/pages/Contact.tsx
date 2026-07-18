@@ -30,12 +30,13 @@ export default function Contact() {
     
     const form = e.currentTarget;
     try {
-      const { error } = await supabase.from('contact_submissions').insert([
+      const { error } = await supabase.from('messages').insert([
         {
-          name: `${fname} ${lname}`,
+          fname,
+          lname,
           email,
-          phone,
-          message: subject ? `[Subject: ${subject}]\n\n${message}` : message
+          subject,
+          message: phone ? `[Phone: ${phone}]\n\n${message}` : message
         }
       ]);
       

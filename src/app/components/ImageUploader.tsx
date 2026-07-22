@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { UploadCloud, X, Image as ImageIcon } from 'lucide-react';
+import { UploadCloud, X, Image as ImageIcon, FileText } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -61,7 +61,7 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
           sources: ['local', 'url', 'camera'],
           multiple: acceptMultiple,
           maxFiles: acceptMultiple ? 10 : 1,
-          resourceType: acceptPDF ? 'raw' : acceptVideo ? 'auto' : 'image',
+          resourceType: acceptPDF ? 'auto' : acceptVideo ? 'auto' : 'image',
           clientAllowedFormats: acceptPDF ? ['pdf'] : acceptVideo ? ['jpeg', 'png', 'jpg', 'webp', 'mp4', 'webm'] : ['jpeg', 'png', 'jpg', 'webp'],
           styles: {
             palette: {
@@ -87,7 +87,10 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
             const publicId = result.info.public_id;
             setImageUrls(prev => {
               const newUrls = acceptMultiple ? [...prev, url] : [url];
-              onUploadCompleteRef.current(newUrls.join(','), publicId);
+              const joined = newUrls.join(',');
+              setTimeout(() => {
+                onUploadCompleteRef.current(joined, publicId);
+              }, 0);
               return newUrls;
             });
           }
@@ -110,8 +113,11 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
     e.stopPropagation();
     const newUrls = [...imageUrls];
     newUrls.splice(index, 1);
+    const joined = newUrls.join(',');
     setImageUrls(newUrls);
-    onUploadCompleteRef.current(newUrls.join(','), '');
+    setTimeout(() => {
+      onUploadCompleteRef.current(joined, '');
+    }, 0);
   };
 
   return (
@@ -119,30 +125,51 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
       {imageUrls.length > 0 ? (
         <div className="space-y-4">
           <div className={`grid gap-4 ${acceptMultiple ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
-            {imageUrls.map((url, idx) => (
-              <div key={idx} className="relative group rounded-xl overflow-hidden border border-black/10 shadow-sm aspect-video bg-black/5 flex items-center justify-center">
-                {url.match(/\.pdf$/i) || acceptPDF ? (
-                  <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-100 text-zinc-500">
-                    <span className="font-bold text-lg mb-1">PDF</span>
-                    <span className="text-xs">Document</span>
-                  </div>
-                ) : url.match(/\.(mp4|webm)$/i) || url.includes('/video/upload/') ? (
-                  <video src={url} controls className="w-full h-full object-cover" />
-                ) : (
-                  <img src={url} alt={`Upload ${idx}`} className="w-full h-full object-cover" />
-                )}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4">
-                  {!acceptMultiple && (
-                    <button onClick={openWidget} className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-sm font-bold shadow-lg hover:scale-105 transition-transform">
-                      Replace
-                    </button>
+            {imageUrls.map((url, idx) => {
+              const isPdf = Boolean(
+                url && (
+                  url.match(/\.pdf$/i) || 
+                  url.includes('/raw/upload/') || 
+                  url.includes('.pdf') || 
+                  acceptPDF
+                )
+              );
+              const isVideo = !isPdf && (url.match(/\.(mp4|webm)$/i) || url.includes('/video/upload/'));
+
+              return (
+                <div key={idx} className="relative group rounded-xl overflow-hidden border border-black/10 shadow-sm aspect-video bg-black/5 flex items-center justify-center">
+                  {isPdf ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-100 text-zinc-600 p-4 text-center">
+                      <FileText className="w-8 h-8 text-red-500 mb-1" />
+                      <span className="font-bold text-xs text-zinc-800 truncate max-w-full">PDF Document</span>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] font-semibold text-primary hover:underline mt-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Open File ↗
+                      </a>
+                    </div>
+                  ) : isVideo ? (
+                    <video src={url} controls className="w-full h-full object-cover" />
+                  ) : (
+                    <img src={url} alt={`Upload ${idx}`} className="w-full h-full object-cover" />
                   )}
-                  <button onClick={handleRemove(idx)} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg hover:scale-110 transition-all">
-                    <X size={14} />
-                  </button>
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4">
+                    {!acceptMultiple && (
+                      <button onClick={openWidget} className="px-4 py-2 bg-white text-zinc-900 rounded-lg text-sm font-bold shadow-lg hover:scale-105 transition-transform">
+                        Replace
+                      </button>
+                    )}
+                    <button onClick={handleRemove(idx)} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg hover:scale-110 transition-all">
+                      <X size={14} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           {acceptMultiple && (
              <button onClick={openWidget} className="w-full py-3 rounded-xl border-2 border-dashed border-zinc-300 hover:border-primary/50 text-zinc-500 font-semibold text-sm flex items-center justify-center gap-2 hover:bg-black/5 transition-colors">
@@ -170,3 +197,4 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
     </div>
   );
 }
+

@@ -134,66 +134,212 @@ export default function Account() {
     try {
       setDownloadingCert(reg.id);
       
-      const templateUrl = reg.events.certificate_template_url;
-      if (!templateUrl) throw new Error("No template found");
-
-      // 1. Fetch the PDF array buffer
-      const response = await fetch(templateUrl);
-      const existingPdfBytes = await response.arrayBuffer();
-
-      // 2. Load the PDF document dynamically
       const { PDFDocument, StandardFonts, rgb } = await import('pdf-lib');
-      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+      let pdfDoc: any = null;
+      let firstPage: any = null;
+      let width = 842;
+      let height = 595;
 
-      // 3. Get the first page
-      const pages = pdfDoc.getPages();
-      const firstPage = pages[0];
-      const { width, height } = firstPage.getSize();
-
-      // 4. Draw text
+      const templateUrl = reg.events.certificate_template_url;
       const nameText = profile.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name || 'Participant';
-      const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-      const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      
-      const nameWidth = helveticaBold.widthOfTextAtSize(nameText, 36);
-      firstPage.drawText(nameText, {
-        x: (width / 2) - (nameWidth / 2),
-        y: (height / 2), // Approximate center
-        size: 36,
-        font: helveticaBold,
-        color: rgb(0.1, 0.1, 0.1),
-      });
+      const eventText = reg.events.title || 'Special Event';
+      const eventDateStr = reg.events.event_date ? new Date(reg.events.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recent Event';
 
-      const eventText = reg.events.title;
-      const eventWidth = helvetica.widthOfTextAtSize(eventText, 20);
-      firstPage.drawText(eventText, {
-        x: (width / 2) - (eventWidth / 2),
-        y: (height / 2) - 40,
-        size: 20,
-        font: helvetica,
-        color: rgb(0.3, 0.3, 0.3),
-      });
+      let loadedFromTemplate = false;
 
-      const dateText = `Held on ${new Date(reg.events.event_date).toLocaleDateString()}`;
-      const dateWidth = helvetica.widthOfTextAtSize(dateText, 16);
-      firstPage.drawText(dateText, {
-        x: (width / 2) - (dateWidth / 2),
-        y: (height / 2) - 70,
-        size: 16,
-        font: helvetica,
-        color: rgb(0.4, 0.4, 0.4),
-      });
+      if (templateUrl) {
+        const cleanUrl = templateUrl.trim();
+        const rawCandidateUrls: string[] = [];
 
-      // 5. Serialize and trigger download
-      const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `Certificate_${nameText.replace(/\s+/g, '_')}_${eventText.replace(/\s+/g, '_')}.pdf`;
-      link.click();
+        if (cleanUrl.includes('cloudinary.com')) {
+          if (cleanUrl.includes('/image/upload/')) {
+            // Put PNG and JPG image transformations FIRST for instant 0.1s loading without 401 errors
+            rawCandidateUrls.push(cleanUrl.replace(/\.pdf$/i, '.png'));
+            rawCandidateUrls.push(cleanUrl.replace(/\.pdf$/i, '.jpg'));
+            rawCandidateUrls.push(cleanUrl.replace('/image/upload/', '/image/upload/pg_1,f_png/'));
+            rawCandidateUrls.push(cleanUrl);
+          } else if (cleanUrl.includes('/raw/upload/')) {
+            rawCandidateUrls.push(cleanUrl.replace('/raw/upload/', '/image/upload/pg_1,f_png/'));
+            rawCandidateUrls.push(cleanUrl.replace('/raw/upload/', '/image/upload/'));
+            rawCandidateUrls.push(cleanUrl);
+          } else {
+            rawCandidateUrls.push(cleanUrl);
+          }
+        } else {
+          rawCandidateUrls.push(cleanUrl);
+        }
+
+        const candidateUrls: string[] = [];
+        for (const item of rawCandidateUrls) {
+          candidateUrls.push(item);
+          candidateUrls.push(`https://corsproxy.io/?${encodeURIComponent(item)}`);
+        }
+
+        const uniqueCandidates = Array.from(new Set(candidateUrls));
+        let bytes: ArrayBuffer | null = null;
+
+        for (const candidateUrl of uniqueCandidates) {
+          try {
+            const response = await fetch(candidateUrl);
+            if (response.ok) {
+              const resBuffer = await response.arrayBuffer();
+              if (resBuffer && resBuffer.byteLength > 0) {
+                // Verify response is not an HTML error string
+                const checkHeader = new Uint8Array(resBuffer.slice(0, 5));
+                const isHtml = checkHeader[0] === 0x3C; // '<' character (<!DOCTYPE)
+                if (!isHtml) {
+                  bytes = resBuffer;
+                  console.log("Successfully loaded certificate template from:", candidateUrl);
+                  break;
+                }
+              }
+            }
+          } catch (e) {
+            console.warn("Attempt failed for candidate URL:", candidateUrl, e);
+          }
+        }
+
+        if (bytes) {
+          try {
+            const header = new Uint8Array(bytes.slice(0, 4));
+            const isPdfBytes = header[0] === 0x25 && header[1] === 0x50 && header[2] === 0x44 && header[3] === 0x46; // %PDF
+
+            if (isPdfBytes) {
+              pdfDoc = await PDFDocument.load(bytes);
+              const pages = pdfDoc.getPages();
+              firstPage = pages[0];
+              const size = firstPage.getSize();
+              width = size.width;
+              height = size.height;
+              loadedFromTemplate = true;
+            } else {
+              // Try embedding as PNG or JPG
+              pdfDoc = await PDFDocument.create();
+              let embeddedImage: any = null;
+              try {
+                embeddedImage = await pdfDoc.embedPng(bytes);
+              } catch {
+                try {
+                  embeddedImage = await pdfDoc.embedJpg(bytes);
+                } catch {
+                  embeddedImage = null;
+                }
+              }
+
+              if (embeddedImage) {
+                width = embeddedImage.width;
+                height = embeddedImage.height;
+                firstPage = pdfDoc.addPage([width, height]);
+                firstPage.drawImage(embeddedImage, { x: 0, y: 0, width, height });
+                loadedFromTemplate = true;
+              }
+            }
+          } catch (parseErr) {
+            console.error("Error parsing downloaded template bytes:", parseErr);
+          }
+        }
+      }
+
+      if (loadedFromTemplate && firstPage && pdfDoc) {
+        const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+        const timesItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
+        const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+        const navyColor = rgb(0.08, 0.22, 0.42); // Elegant Deep Navy
+        const goldColor = rgb(0.83, 0.68, 0.21); // Accent Gold
+        const grayColor = rgb(0.28, 0.28, 0.28); // Dark Charcoal Gray
+        const subGrayColor = rgb(0.4, 0.4, 0.4); // Medium Gray
+
+        // Dynamic scale factor relative to a standard 842pt landscape canvas
+        const scale = width / 842;
+
+        // 1. Participant Name (Refined, Executive Times-Roman Serif)
+        const nameFontSize = Math.round(32 * scale);
+        const nameWidth = timesBold.widthOfTextAtSize(nameText, nameFontSize);
+        firstPage.drawText(nameText, {
+          x: (width / 2) - (nameWidth / 2),
+          y: height * 0.525,
+          size: nameFontSize,
+          font: timesBold,
+          color: navyColor,
+        });
+
+        // Gold Underline beneath name (proportional length & thickness)
+        const lineHalfWidth = Math.max((nameWidth / 2) + (35 * scale), 140 * scale);
+        firstPage.drawLine({
+          start: { x: (width / 2) - lineHalfWidth, y: height * 0.50 },
+          end: { x: (width / 2) + lineHalfWidth, y: height * 0.50 },
+          thickness: Math.max(1.8 * scale, 1.5),
+          color: goldColor,
+        });
+
+        // 2. Official Wording Line 1
+        const wording1 = "for their valuable participation and dedicated contribution in the event";
+        const w1Size = Math.round(13 * scale);
+        const w1Width = timesItalic.widthOfTextAtSize(wording1, w1Size);
+        firstPage.drawText(wording1, {
+          x: (width / 2) - (w1Width / 2),
+          y: height * 0.445,
+          size: w1Size,
+          font: timesItalic,
+          color: grayColor,
+        });
+
+        // 3. Event Title (Bold, Highlighted, Proportional)
+        const evFontSize = Math.round(22 * scale);
+        const evWidth = helveticaBold.widthOfTextAtSize(eventText, evFontSize);
+        firstPage.drawText(eventText, {
+          x: (width / 2) - (evWidth / 2),
+          y: height * 0.375,
+          size: evFontSize,
+          font: helveticaBold,
+          color: navyColor,
+        });
+
+        // 4. Official Wording Line 2
+        const wording2 = "organized by Srishreevision Foundation, in recognition of their sincere effort towards community welfare.";
+        const w2Size = Math.round(10.5 * scale);
+        const w2Width = timesItalic.widthOfTextAtSize(wording2, w2Size);
+        firstPage.drawText(wording2, {
+          x: (width / 2) - (w2Width / 2),
+          y: height * 0.32,
+          size: w2Size,
+          font: timesItalic,
+          color: subGrayColor,
+        });
+
+        // 5. Date Line (Bottom-Left, matching signature scale)
+        const dateText = `DATE: ${eventDateStr}`;
+        const dateFontSize = Math.round(10 * scale);
+        firstPage.drawText(dateText, {
+          x: width * 0.08,
+          y: height * 0.17,
+          size: dateFontSize,
+          font: helveticaBold,
+          color: rgb(0.25, 0.25, 0.25),
+        });
+
+        // Underline beneath date
+        firstPage.drawLine({
+          start: { x: width * 0.08, y: height * 0.155 },
+          end: { x: width * 0.25, y: height * 0.155 },
+          thickness: Math.max(1.2 * scale, 1),
+          color: rgb(0.7, 0.7, 0.7),
+        });
+        // Serialize & Download
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Certificate_${nameText.replace(/\s+/g, '_')}_${eventText.replace(/\s+/g, '_')}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+      } else {
+        alert("Could not load the certificate template uploaded by the organizer. Please ensure a valid certificate template PDF or image was uploaded.");
+      }
     } catch (err) {
       console.error("Error generating certificate:", err);
-      alert("Failed to generate certificate. Please make sure the template is a valid PDF.");
+      alert("An error occurred while generating the certificate. Please try again.");
     } finally {
       setDownloadingCert(null);
     }
@@ -338,16 +484,26 @@ export default function Account() {
                       <div className="shrink-0">
                         <StatusBadge status={reg.events.status as any} />
                         
-                        {reg.events.status === 'completed' && reg.events.certificate_template_url && (
+                        {reg.events.status === 'completed' && (
                           <div className="mt-3">
-                            <button
-                              onClick={() => handleDownloadCertificate(reg)}
-                              disabled={downloadingCert === reg.id}
-                              className="w-full flex items-center justify-center gap-1.5 text-xs font-bold bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
-                            >
-                              {downloadingCert === reg.id ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
-                              {downloadingCert === reg.id ? 'Generating...' : 'Download Certificate'}
-                            </button>
+                            {reg.events.certificate_template_url ? (
+                              <button
+                                onClick={() => handleDownloadCertificate(reg)}
+                                disabled={downloadingCert === reg.id}
+                                className="w-full flex items-center justify-center gap-1.5 text-xs font-bold bg-primary text-white hover:bg-primary/90 px-3.5 py-2 rounded-xl transition-all shadow-sm disabled:opacity-50"
+                              >
+                                {downloadingCert === reg.id ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
+                                {downloadingCert === reg.id ? 'Generating...' : 'Download Certificate'}
+                              </button>
+                            ) : (
+                              <button
+                                disabled={true}
+                                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold bg-zinc-100 text-zinc-400 border border-zinc-200/80 px-3.5 py-2 rounded-xl cursor-not-allowed"
+                              >
+                                <FileText size={14} className="text-zinc-400" />
+                                Certificate Pending
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>

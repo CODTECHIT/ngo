@@ -216,7 +216,7 @@ export default function AdminEvents() {
                           <td className="p-4">
                             <div className="flex items-center gap-4">
                               <div className="w-16 h-12 rounded-lg bg-black/5 overflow-hidden shrink-0 border border-black/10">
-                                {evt.image_url ? (
+                                {evt.image_url && !evt.image_url.includes('/raw/upload/') && !evt.image_url.match(/\.pdf$/i) ? (
                                   <img src={evt.image_url} alt="" className="w-full h-full object-cover" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center text-zinc-400"><ImageIcon size={16} /></div>

@@ -117,6 +117,7 @@ export default function AdminPrograms() {
     { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
     { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
     { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
+    { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} /> },
     { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
   ];
 

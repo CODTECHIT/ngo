@@ -5,7 +5,7 @@ import { ImageUploader } from '../../components/ImageUploader';
 import { NavLink } from 'react-router';
 import { 
   LayoutDashboard, FileText, List, Calendar, Image as ImageIcon, MessageSquare,
-  Plus, Edit2, Trash2, Loader2, X, Video
+  Plus, Edit2, Trash2, Loader2, X, Video, Heart
 } from 'lucide-react';
 
 export default function AdminGallery() {
@@ -90,6 +90,7 @@ export default function AdminGallery() {
     { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
     { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
     { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
+    { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} /> },
     { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
   ];
 

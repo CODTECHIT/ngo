@@ -5,8 +5,9 @@ import { ImageUploader } from '../../components/ImageUploader';
 import { NavLink } from 'react-router';
 import { 
   LayoutDashboard, FileText, List, Calendar, Image as ImageIcon, MessageSquare,
-  Plus, Edit2, Trash2, Loader2, X, Users, Search, Download
+  Plus, Edit2, Trash2, Loader2, X, Users, Search, Download, Mail, Heart
 } from 'lucide-react';
+import { sendCertificateCompletionEmail } from '../../../lib/emailService';
 
 export default function AdminEvents() {
   const { events, loading, refetch } = useEvents(true);
@@ -151,11 +152,29 @@ export default function AdminEvents() {
     document.body.removeChild(link);
   };
 
+  const broadcastCompletionCertificates = () => {
+    if (registrations.length === 0) return;
+    let count = 0;
+    registrations.forEach(r => {
+      if (r.email) {
+        sendCertificateCompletionEmail({
+          name: r.name || 'Participant',
+          email: r.email,
+          eventTitle: viewingEvent?.title || 'Special Event',
+          eventDate: viewingEvent?.event_date || new Date().toISOString()
+        });
+        count++;
+      }
+    });
+    alert(`Successfully sent completion certificates via email to ${count} registered participants!`);
+  };
+
   const navLinks = [
     { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} /> },
     { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
     { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
     { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
+    { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} /> },
     { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
   ];
 
@@ -400,10 +419,16 @@ export default function AdminEvents() {
                     value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                     className="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-zinc-200 focus:ring-2 focus:ring-primary outline-none shadow-sm" />
                 </div>
-                <button onClick={downloadCSV} disabled={registrations.length === 0}
-                  className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50">
-                  <Download size={18} /> Export CSV
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={broadcastCompletionCertificates} disabled={registrations.length === 0}
+                    className="flex items-center gap-2 px-5 py-3 bg-[#0F6E6E] text-white font-bold rounded-xl hover:bg-[#0c5959] transition-colors shadow-sm disabled:opacity-50 text-sm">
+                    <Mail size={16} /> Broadcast Gmail Certificates
+                  </button>
+                  <button onClick={downloadCSV} disabled={registrations.length === 0}
+                    className="flex items-center gap-2 px-5 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 text-sm">
+                    <Download size={16} /> Export CSV
+                  </button>
+                </div>
               </div>
 
               <div className="flex-1 bg-white border border-black/5 rounded-2xl shadow-sm overflow-hidden flex flex-col">

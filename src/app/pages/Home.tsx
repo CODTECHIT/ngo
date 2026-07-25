@@ -419,9 +419,9 @@ function DonationCTA() {
           Every contribution directly funds our grassroots initiatives. No excessive overheads, just pure impact. Eligible for 80G tax exemption.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="flex flex-col sm:flex-row justify-center gap-4">
-          <button className="px-10 py-5 bg-primary text-primary-foreground font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_40px_rgba(15,110,110,0.3)] text-lg">
+          <Link to="/donate" className="px-10 py-5 bg-primary text-primary-foreground font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_40px_rgba(15,110,110,0.3)] text-lg block text-center">
             Donate Now
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>

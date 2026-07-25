@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Navigate } from 'react-router';
+import { Navigate, Link } from 'react-router';
 import { supabaseAdmin as supabase } from '../../../lib/supabase';
 import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
 
@@ -128,7 +128,12 @@ export default function AdminLogin() {
           </div>
           
           <div>
-            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Password</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Password</label>
+              <Link to="/forgot-password" className="text-xs text-primary font-bold hover:underline underline-offset-4">
+                Forgot password?
+              </Link>
+            </div>
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
                 <Lock size={18} />

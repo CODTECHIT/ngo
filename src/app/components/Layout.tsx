@@ -94,14 +94,12 @@ function FloatingIslandNav() {
               Login
             </Link>
           )}
-          <a 
-            href="https://wa.me/919701100974?text=I%20wanna%20donate" 
-            target="_blank" 
-            rel="noreferrer"
+          <Link 
+            to="/donate" 
             className="text-sm font-bold px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary/90 hover:shadow-lg transition-all active:scale-95 block text-center"
           >
             Donate
-          </a>
+          </Link>
         </div>
 
         <button className="md:hidden text-zinc-900 w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors" onClick={() => setOpen(!open)}>
@@ -133,14 +131,13 @@ function FloatingIslandNav() {
                   Login
                 </Link>
               )}
-              <a 
-                href="https://wa.me/919701100974?text=I%20wanna%20donate"
-                target="_blank"
-                rel="noreferrer"
+              <Link 
+                to="/donate"
+                onClick={() => setOpen(false)}
                 className="text-sm font-bold py-3 mt-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white shadow-lg w-full block text-center"
               >
                 Donate Now
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}
@@ -176,7 +173,7 @@ function Footer() {
           </div>
           {[
             { title: "Quick Links", links: [{ label: "About Us", to: "/about" }, { label: "Our Services", to: "/services" }, { label: "Events", to: "/events" }, { label: "Gallery", to: "/gallery" }, { label: "News", to: "/news" }, { label: "Contact", to: "/contact" }] },
-            { title: "Get Involved", links: [{ label: "Volunteer", to: "/contact" }, { label: "Corporate CSR", to: "/contact" }, { label: "Intern with Us", to: "/contact" }, { label: "Fundraise", to: "/contact" }, { label: "Partner NGOs", to: "/contact" }, { label: "Donate", to: "/" }] },
+            { title: "Get Involved", links: [{ label: "Volunteer", to: "/contact" }, { label: "Corporate CSR", to: "/contact" }, { label: "Intern with Us", to: "/contact" }, { label: "Fundraise", to: "/contact" }, { label: "Partner NGOs", to: "/contact" }, { label: "Donate", to: "/donate" }] },
           ].map(col => (
             <div key={col.title}>
               <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-zinc-400 mb-6">

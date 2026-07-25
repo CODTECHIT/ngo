@@ -1,10 +1,11 @@
 import { usePublicAuth } from '../contexts/PublicAuthContext';
 import { Navigate, Link } from 'react-router';
-import { Loader2, User as UserIcon, Mail, LogOut, Phone, Calendar, MapPin, CheckCircle2, FileText } from 'lucide-react';
+import { Loader2, User as UserIcon, Mail, LogOut, Phone, Calendar, MapPin, CheckCircle2, FileText, Heart, Sparkles } from 'lucide-react';
 import { SectionLabel, StatusBadge } from '../components/Layout';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { sendCertificateCompletionEmail } from '../../lib/emailService';
 
 type UserProfile = {
   full_name: string;
@@ -31,6 +32,7 @@ export default function Account() {
   const [profileMessage, setProfileMessage] = useState({ type: '', text: '' });
 
   const [registrations, setRegistrations] = useState<EventRegistration[]>([]);
+  const [donations, setDonations] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [downloadingCert, setDownloadingCert] = useState<string | null>(null);
 
@@ -59,8 +61,11 @@ export default function Account() {
         .from('registrations')
         .select(`
           id,
+          event_id,
+          user_id,
           registered_at,
           events (
+            id,
             title,
             event_date,
             location,
@@ -73,32 +78,74 @@ export default function Account() {
 
       console.log('Account.tsx fetch registrations:', { regData, regError, userId: user.id });
 
-      if (regData) {
-        try {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-          const processedRegistrations = regData.map((reg: any) => {
-            if (!reg.events) {
-              console.warn("Registration missing events data:", reg);
-              return { ...reg, events: { title: 'Unknown', event_date: new Date().toISOString(), status: 'unknown' } };
-            }
-            const evDate = new Date(reg.events.event_date);
-            const isPast = evDate < today;
-            return {
-              ...reg,
-              events: {
-                ...reg.events,
-                status: isPast ? 'completed' : reg.events.status
-              }
-            };
-          });
-          
-          setRegistrations(processedRegistrations as any);
-        } catch (err) {
-          console.error("Error processing registrations:", err);
-          setRegistrations(regData as any); // fallback
+      const dbProcessed = (regData || []).map((reg: any) => {
+        if (!reg.events) {
+          return { ...reg, events: { title: 'Unknown', event_date: new Date().toISOString(), status: 'unknown' } };
         }
+        const evDate = new Date(reg.events.event_date);
+        const isPast = evDate < today;
+        return {
+          ...reg,
+          events: {
+            ...reg.events,
+            status: isPast ? 'completed' : reg.events.status
+          }
+        };
+      });
+
+      // Filter local storage registrations specifically for this logged-in user
+      let userLocalRegs: any[] = [];
+      try {
+        const rawLocalRegs = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
+        userLocalRegs = rawLocalRegs.filter((item: any) => 
+          (item.user_id && item.user_id === user.id) || 
+          (item.email && user.email && item.email.toLowerCase() === user.email.toLowerCase())
+        );
+      } catch {}
+
+      const combinedRegs = [...dbProcessed, ...userLocalRegs];
+      // Map deduplication by unique event identifier (title or event_id)
+      const uniqueRegsMap = new Map();
+      for (const item of combinedRegs) {
+        const key = (item.event_id || item.events?.id || item.events?.title || item.id || '').toString().toLowerCase().trim();
+        if (key && !uniqueRegsMap.has(key)) {
+          uniqueRegsMap.set(key, item);
+        }
+      }
+      setRegistrations(Array.from(uniqueRegsMap.values()) as any);
+
+      // Fetch donations
+      try {
+        const { data: dbDonations } = await supabase.from('donations').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+        
+        let userLocalDonations: any[] = [];
+        try {
+          const rawLocalDons = JSON.parse(localStorage.getItem('ngo_saved_donations') || '[]');
+          userLocalDonations = rawLocalDons.filter((item: any) => 
+            (item.user_id && item.user_id === user.id) || 
+            (item.email && user.email && item.email.toLowerCase() === user.email.toLowerCase())
+          );
+        } catch {}
+
+        const combinedDonations = [...(dbDonations || []), ...userLocalDonations];
+        const uniqueDonsMap = new Map();
+        for (const item of combinedDonations) {
+          const key = item.payment_id || item.id || `${item.cause}-${item.amount}-${item.created_at}`;
+          if (key && !uniqueDonsMap.has(key)) {
+            uniqueDonsMap.set(key, item);
+          }
+        }
+        setDonations(Array.from(uniqueDonsMap.values()));
+      } catch {
+        const rawLocalDons = JSON.parse(localStorage.getItem('ngo_saved_donations') || '[]');
+        const userLocalDonations = rawLocalDons.filter((item: any) => 
+          (item.user_id && item.user_id === user.id) || 
+          (item.email && user.email && item.email.toLowerCase() === user.email.toLowerCase())
+        );
+        setDonations(userLocalDonations);
       }
 
       setLoadingData(false);
@@ -240,6 +287,12 @@ export default function Account() {
         }
       }
 
+      if (!loadedFromTemplate) {
+        alert("Certificate will get soon! The event admin has not published the template yet.");
+        setDownloadingCert(null);
+        return;
+      }
+
       if (loadedFromTemplate && firstPage && pdfDoc) {
         const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
         const timesItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
@@ -334,8 +387,16 @@ export default function Account() {
         link.download = `Certificate_${nameText.replace(/\s+/g, '_')}_${eventText.replace(/\s+/g, '_')}.pdf`;
         document.body.appendChild(link);
         link.click();
+
+        // Trigger Gmail Certificate Delivery Notification
+        sendCertificateCompletionEmail({
+          name: nameText,
+          email: user?.email || 'participant@example.com',
+          eventTitle: eventText,
+          eventDate: reg.events?.event_date || new Date().toISOString()
+        });
       } else {
-        alert("Could not load the certificate template uploaded by the organizer. Please ensure a valid certificate template PDF or image was uploaded.");
+        alert("Could not initialize certificate canvas. Please try again.");
       }
     } catch (err) {
       console.error("Error generating certificate:", err);
@@ -343,6 +404,56 @@ export default function Account() {
     } finally {
       setDownloadingCert(null);
     }
+  };
+
+  const handleDownload80GInvoice = (don: any) => {
+    const printWin = window.open('', '_blank', 'width=800,height=900');
+    if (!printWin) return;
+    const dateStr = don.created_at ? new Date(don.created_at).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : new Date().toLocaleDateString('en-IN', { dateStyle: 'medium' });
+    const donorName = profile.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Valued Donor';
+    
+    printWin.document.write(`
+      <html>
+        <head>
+          <title>Official 80G Tax Invoice - ${don.payment_id || don.transaction_id || don.transactionId || don.id}</title>
+          <style>
+            body { font-family: 'Inter', system-ui, sans-serif; padding: 40px; background: #f8fafc; color: #1e293b; }
+            .card { max-width: 650px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+            .header { background: #0F6E6E; color: white; padding: 24px; border-radius: 12px; text-align: center; margin-bottom: 24px; }
+            .header h1 { margin: 0; font-size: 24px; font-family: 'Playfair Display', serif; }
+            .header p { margin: 4px 0 0; font-size: 13px; opacity: 0.9; }
+            .field { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #cbd5e1; font-size: 14px; }
+            .total { font-size: 20px; font-weight: 800; color: #0F6E6E; }
+            .badge { background: #f0fdfa; border-left: 4px solid #0F6E6E; padding: 12px 16px; margin-top: 24px; border-radius: 6px; font-size: 12px; color: #0f766e; }
+            .btn { display: inline-block; margin-top: 24px; background: #0F6E6E; color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; }
+            @media print { .btn { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="header">
+              <h1>Srishree Vision Foundation</h1>
+              <p>Registered NGO under Section 80G of Income Tax Act</p>
+            </div>
+            <h2>Official 80G Tax Receipt & Invoice</h2>
+            <p>Received with thanks from <strong>${donorName}</strong> (${don.email || user?.email})</p>
+
+            <div class="field"><span>Receipt / TXN ID:</span><strong>${don.payment_id || don.transaction_id || don.transactionId || 'INV-' + don.id}</strong></div>
+            <div class="field"><span>Date & Time:</span><strong>${dateStr}</strong></div>
+            <div class="field"><span>Cause / Purpose:</span><strong>${don.cause || 'General NGO Donation'}</strong></div>
+            <div class="field"><span>Total Donated Amount:</span><strong class="total">₹${Number(don.amount).toLocaleString('en-IN')}</strong></div>
+
+            <div class="badge">
+              <strong>🎯 Eligible for 50% Tax Deduction</strong><br/>
+              Donations to Srishree Vision Foundation qualify for deduction under Section 80G of the Income Tax Act.
+            </div>
+
+            <button class="btn" onclick="window.print()">Print / Download PDF</button>
+          </div>
+        </body>
+      </html>
+    `);
+    printWin.document.close();
   };
 
   if (loading || loadingData) {
@@ -486,24 +597,14 @@ export default function Account() {
                         
                         {reg.events.status === 'completed' && (
                           <div className="mt-3">
-                            {reg.events.certificate_template_url ? (
-                              <button
-                                onClick={() => handleDownloadCertificate(reg)}
-                                disabled={downloadingCert === reg.id}
-                                className="w-full flex items-center justify-center gap-1.5 text-xs font-bold bg-primary text-white hover:bg-primary/90 px-3.5 py-2 rounded-xl transition-all shadow-sm disabled:opacity-50"
-                              >
-                                {downloadingCert === reg.id ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
-                                {downloadingCert === reg.id ? 'Generating...' : 'Download Certificate'}
-                              </button>
-                            ) : (
-                              <button
-                                disabled={true}
-                                className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold bg-zinc-100 text-zinc-400 border border-zinc-200/80 px-3.5 py-2 rounded-xl cursor-not-allowed"
-                              >
-                                <FileText size={14} className="text-zinc-400" />
-                                Certificate Pending
-                              </button>
-                            )}
+                            <button
+                              onClick={() => handleDownloadCertificate(reg)}
+                              disabled={downloadingCert === reg.id}
+                              className="w-full flex items-center justify-center gap-1.5 text-xs font-bold bg-primary text-white hover:bg-primary/90 px-3.5 py-2 rounded-xl transition-all shadow-sm disabled:opacity-50"
+                            >
+                              {downloadingCert === reg.id ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
+                              {downloadingCert === reg.id ? 'Generating...' : 'Download Certificate'}
+                            </button>
                           </div>
                         )}
                       </div>
@@ -513,9 +614,53 @@ export default function Account() {
               )}
             </div>
 
-            <div className="bg-black/5 border border-black/5 rounded-3xl p-8">
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Saved Donations</h3>
-              <p className="text-zinc-500 text-sm font-light">You have no saved donations yet. Make an impact today!</p>
+            <div className="bg-white border border-black/5 rounded-3xl p-8 shadow-xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
+                  <Heart className="text-red-500 fill-red-500" /> Saved Donations & 80G Receipts
+                </h3>
+                <Link to="/donate" className="text-xs font-bold bg-[#0F6E6E] text-white px-4 py-2 rounded-xl hover:bg-[#0c5959] transition-colors shadow-sm flex items-center gap-1">
+                  <Sparkles size={14} /> Make New Donation
+                </Link>
+              </div>
+
+              {donations.length === 0 ? (
+                <div className="text-center py-12 bg-black/5 rounded-2xl border border-dashed border-black/10">
+                  <p className="text-zinc-500 font-medium mb-4">You have no saved donations yet. Make a transformational impact today!</p>
+                  <Link to="/donate" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#0F6E6E] to-[#4CAF50] text-white font-bold py-2.5 px-6 rounded-xl hover:opacity-95 transition-all shadow-md">
+                    Donate Now
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {donations.map((don: any) => (
+                    <div key={don.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl border border-emerald-100 bg-emerald-50/30 hover:bg-emerald-50/60 transition-colors">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                            80G Exempt
+                          </span>
+                          <span className="text-xs text-zinc-400">
+                            {new Date(don.created_at).toLocaleDateString('en-IN', { dateStyle: 'medium' })}
+                          </span>
+                        </div>
+                        <h4 className="font-bold text-zinc-900 text-lg mt-1">{don.cause}</h4>
+                        <div className="text-xs font-mono text-zinc-500 mt-0.5">TXN: {don.payment_id}</div>
+                      </div>
+
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between gap-3 shrink-0">
+                        <div className="text-2xl font-extrabold text-[#0F6E6E]">₹{Number(don.amount).toLocaleString('en-IN')}</div>
+                        <button
+                          onClick={() => handleDownload80GInvoice(don)}
+                          className="flex items-center gap-1.5 text-xs font-bold bg-[#0F6E6E] text-white hover:bg-[#0c5959] px-3.5 py-2 rounded-xl transition-all shadow-sm"
+                        >
+                          <FileText size={14} className="text-emerald-300" /> Download 80G Receipt
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router';
 import { 
   LayoutDashboard, FileText, List, Calendar, Image as ImageIcon, MessageSquare,
-  Loader2, Mail, MailOpen, Phone, Clock, ChevronDown, ChevronUp
+  Loader2, Mail, MailOpen, Phone, Clock, ChevronDown, ChevronUp, Heart
 } from 'lucide-react';
 import { useMessages } from '../../hooks/useMessages';
 
@@ -26,6 +26,7 @@ export default function AdminMessages() {
     { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
     { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
     { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
+    { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} /> },
     { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
   ];
 

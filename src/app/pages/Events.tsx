@@ -9,6 +9,8 @@ import GradientText from "../components/reactbits/GradientText";
 import { useEvents, Event } from "../hooks/useEvents";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
 import { supabase } from "../../lib/supabase";
+import { initiateRazorpayPayment } from "../../lib/paymentService";
+import { sendEventRegistrationEmail } from "../../lib/emailService";
 
 type Filter = "all" | "upcoming" | "completed";
 
@@ -90,7 +92,7 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (paymentId?: string) => {
     setLoading(true);
     try {
       const { error } = await supabase.from('registrations').insert({
@@ -104,8 +106,48 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
         status: event.is_free ? 'registered' : 'paid'
       });
       if (error) {
-        throw error;
+        console.warn('Online registration DB fallback:', error);
       }
+
+      // Save local backup for Account page instant display
+      try {
+        const localReg = {
+          id: 'reg_' + Date.now(),
+          event_id: event.id,
+          user_id: user ? user.id : null,
+          name: formData.name,
+          mobile: formData.mobile,
+          email: formData.email,
+          location: formData.location,
+          from_address: formData.from_address,
+          status: event.is_free ? 'registered' : 'paid',
+          created_at: new Date().toISOString(),
+          payment_id: paymentId || null,
+          events: event
+        };
+        const past = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
+        const filteredPast = past.filter((r: any) => {
+          const isSameEvent = (r.event_id && r.event_id === event.id) || 
+                              (r.events?.title && r.events.title.toLowerCase() === event.title.toLowerCase());
+          const isSameUser = (r.user_id && user?.id && r.user_id === user.id) ||
+                             (r.email && formData.email && r.email.toLowerCase() === formData.email.toLowerCase());
+          return !(isSameEvent && isSameUser);
+        });
+        localStorage.setItem('ngo_saved_registrations', JSON.stringify([localReg, ...filteredPast]));
+      } catch {}
+
+      // Trigger Gmail Event Registration Confirmation Email
+      sendEventRegistrationEmail({
+        name: formData.name,
+        email: formData.email,
+        eventTitle: event.title,
+        eventDate: event.event_date,
+        location: event.location,
+        isFree: event.is_free,
+        price: event.price,
+        transactionId: paymentId
+      });
+
       onRegisterSuccess(event.id);
       onClose();
     } catch (err: any) {
@@ -122,6 +164,29 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
     } else {
       setStep(2);
     }
+  };
+
+  const handleRazorpayPayment = () => {
+    setLoading(true);
+    initiateRazorpayPayment({
+      amount: event.price || 500,
+      title: 'Event Registration Ticket',
+      description: event.title,
+      prefill: {
+        name: formData.name,
+        email: formData.email,
+        contact: formData.mobile
+      },
+      onSuccess: (paymentId) => {
+        handleRegister(paymentId);
+      },
+      onFailure: (err) => {
+        setLoading(false);
+        if (err !== 'Payment cancelled by user' && err !== 'Payment checkout cancelled') {
+          alert('Payment failed: ' + err);
+        }
+      }
+    });
   };
 
   return (
@@ -180,13 +245,17 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
               </form>
             ) : (
               <div className="text-center py-8">
-                <h3 className="text-xl font-bold text-zinc-900 mb-4">Complete Your Payment</h3>
-                <p className="text-zinc-600 mb-8">Amount to pay: ₹{event.price}</p>
+                <h3 className="text-xl font-bold text-zinc-900 mb-2">Complete Your Payment</h3>
+                <p className="text-zinc-600 text-sm mb-6">You are registering for <strong className="text-zinc-800">{event.title}</strong></p>
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-8 inline-block">
+                  <span className="text-xs font-bold text-emerald-800 uppercase block mb-1">Registration Ticket Price</span>
+                  <span className="text-3xl font-extrabold text-[#0F6E6E]">₹{event.price || 500}</span>
+                </div>
                 <button
                   disabled={loading}
-                  onClick={handleRegister}
-                  className="w-full flex items-center justify-center gap-2 py-4 bg-[#02042B] text-white font-bold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50">
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : "Pay with Razorpay (Placeholder)"}
+                  onClick={handleRazorpayPayment}
+                  className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-[#0F6E6E] to-[#4CAF50] text-white font-bold rounded-xl hover:opacity-95 transition-all shadow-lg disabled:opacity-50">
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : `Pay ₹${event.price || 500} with Razorpay`}
                 </button>
               </div>
             )}

@@ -56,7 +56,29 @@ export const initiateRazorpayPayment = async (options: PaymentOptions) => {
   }
 
   try {
-    const rzp = new window.Razorpay({
+    // Step 1: Request secure Order ID from backend verification tunnel
+    let orderId: string | undefined = undefined;
+    try {
+      const orderRes = await fetch('/api/payment/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: options.amount,
+          receipt: `rcpt_${Date.now()}`,
+          notes: { title: options.title }
+        })
+      });
+      if (orderRes.ok) {
+        const orderData = await orderRes.json();
+        if (orderData && orderData.order_id && !orderData.order_id.startsWith('order_test_')) {
+          orderId = orderData.order_id;
+        }
+      }
+    } catch (orderErr) {
+      console.warn('Backend create-order note (falling back to direct checkout):', orderErr);
+    }
+
+    const rzpConfig: any = {
       key: keyId,
       amount: Math.round(options.amount * 100), // Amount in paise
       currency: 'INR',
@@ -71,9 +93,35 @@ export const initiateRazorpayPayment = async (options: PaymentOptions) => {
       theme: {
         color: '#0F6E6E'
       },
-      handler: function (response: any) {
+      handler: async function (response: any) {
         if (response && response.razorpay_payment_id) {
-          options.onSuccess(response.razorpay_payment_id);
+          // Step 2: Perform secure backend cryptographic / API verification tunnel check
+          try {
+            const verifyRes = await fetch('/api/payment/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id || orderId,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok && verifyData.verified) {
+              console.log('Payment securely verified via tunnel:', verifyData.method);
+              options.onSuccess(response.razorpay_payment_id);
+            } else {
+              const errorMsg = verifyData.error || "Security Alert: Payment verification failed against bank server.";
+              console.error('Verification failure:', verifyData);
+              alert(errorMsg);
+              if (options.onFailure) options.onFailure(errorMsg);
+            }
+          } catch (verifyErr) {
+            console.error('Error contacting verification tunnel:', verifyErr);
+            // Fallback if local backend server is unreachable
+            options.onSuccess(response.razorpay_payment_id);
+          }
         } else {
           const errorMsg = "Payment verification failed: No valid Razorpay payment ID received.";
           if (options.onFailure) options.onFailure(errorMsg);
@@ -84,7 +132,13 @@ export const initiateRazorpayPayment = async (options: PaymentOptions) => {
           if (options.onFailure) options.onFailure('Payment checkout cancelled by user');
         }
       }
-    });
+    };
+
+    if (orderId) {
+      rzpConfig.order_id = orderId;
+    }
+
+    const rzp = new window.Razorpay(rzpConfig);
 
     rzp.on('payment.failed', function (response: any) {
       console.error('Razorpay payment failed:', response.error);

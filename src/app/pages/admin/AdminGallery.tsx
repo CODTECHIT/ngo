@@ -3,6 +3,7 @@ import { supabaseAdmin as supabase } from '../../../lib/supabase';
 import { useGallery, GalleryImage } from '../../hooks/useGallery';
 import { ImageUploader } from '../../components/ImageUploader';
 import { NavLink } from 'react-router';
+import { AdminSidebar } from '../../components/AdminSidebar';
 import { 
   LayoutDashboard, FileText, List, Calendar, Image as ImageIcon, MessageSquare,
   Plus, Edit2, Trash2, Loader2, X, Video, Heart
@@ -85,34 +86,9 @@ export default function AdminGallery() {
     }
   };
 
-  const navLinks = [
-    { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} /> },
-    { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
-    { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
-    { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
-    { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} /> },
-    { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
-  ];
-
   return (
     <div className="min-h-screen bg-black/5 flex flex-col md:flex-row font-['Lato']">
-      <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
-        <div className="p-6 border-b border-black/5 flex items-center gap-3">
-          <div className="w-10 h-10 shrink-0 flex items-center justify-center">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
-          </div>
-          <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
-        </div>
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {navLinks.map((link) => (
-            <NavLink key={link.path} to={link.path} className={({ isActive }) => 
-              `flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'text-zinc-600 hover:bg-black/5 hover:text-zinc-900'}`
-            }>
-              {link.icon} {link.name}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
+      <AdminSidebar />
 
       <main className="flex-1 p-6 md:p-12 overflow-y-auto">
         <div className="max-w-6xl mx-auto">

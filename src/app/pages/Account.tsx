@@ -5,7 +5,6 @@ import { SectionLabel, StatusBadge } from '../components/Layout';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { sendCertificateCompletionEmail } from '../../lib/emailService';
 
 type UserProfile = {
   full_name: string;
@@ -388,13 +387,31 @@ export default function Account() {
         document.body.appendChild(link);
         link.click();
 
-        // Trigger Gmail Certificate Delivery Notification
-        sendCertificateCompletionEmail({
-          name: nameText,
-          email: user?.email || 'participant@example.com',
-          eventTitle: eventText,
-          eventDate: reg.events?.event_date || new Date().toISOString()
-        });
+        // Record Certificate Download & Participation Status in Database & LocalStorage
+        const participatedAt = new Date().toISOString();
+        try {
+          await supabase.from('registrations').update({
+            status: 'participated',
+            certificate_issued: true,
+            participated_at: participatedAt
+          }).eq('id', reg.id);
+        } catch (dbErr) {
+          console.warn('Could not update DB registration participation status:', dbErr);
+        }
+
+        try {
+          const past = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
+          const updatedPast = past.map((r: any) => {
+            if (r.id === reg.id || (r.event_id === reg.events?.id && (r.email === user?.email || r.user_id === user?.id))) {
+              return { ...r, status: 'participated', certificate_issued: true, participated_at: participatedAt };
+            }
+            return r;
+          });
+          localStorage.setItem('ngo_saved_registrations', JSON.stringify(updatedPast));
+        } catch {}
+
+        setRegistrations(prev => prev.map(r => r.id === reg.id ? { ...r, status: 'participated', certificate_issued: true, participated_at: participatedAt } : r));
+        window.dispatchEvent(new Event('ngo_registration_updated'));
       } else {
         alert("Could not initialize certificate canvas. Please try again.");
       }
@@ -592,11 +609,17 @@ export default function Account() {
                           </div>
                         </div>
                       </div>
-                      <div className="shrink-0">
+                      <div className="shrink-0 flex flex-col items-end gap-1.5">
                         <StatusBadge status={reg.events.status as any} />
                         
-                        {reg.events.status === 'completed' && (
-                          <div className="mt-3">
+                        {(reg.status === 'participated' || reg.certificate_issued) && (
+                          <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-full inline-flex items-center gap-1 shadow-sm">
+                            🎓 Certificate Awarded & Participated
+                          </span>
+                        )}
+                        
+                        {(reg.events.status === 'completed' || reg.status === 'participated' || reg.certificate_issued) && (
+                          <div className="mt-2 w-full">
                             <button
                               onClick={() => handleDownloadCertificate(reg)}
                               disabled={downloadingCert === reg.id}

@@ -9,6 +9,7 @@ import { initiateRazorpayPayment } from '../../lib/paymentService';
 import { sendDonationInvoiceEmail } from '../../lib/emailService';
 import { supabase } from '../../lib/supabase';
 import { usePublicAuth } from '../contexts/PublicAuthContext';
+import PublicDonorBanner from '../components/PublicDonorBanner';
 
 // Causes / Services with tailored impact statements for each preset amount
 const CAUSES = [
@@ -154,7 +155,7 @@ export default function Donate() {
     }));
   };
 
-  const currentImpact = (selectedCause.impacts as any)[amount] || 
+  const currentImpact = (selectedCause.impacts as any)[amount] ||
     (amount >= 5000 ? `Creates a transformational, large-scale impact in ${selectedCause.name} benefitting dozens of families!` : selectedCause.defaultImpact);
 
   const handleDonateSubmit = async (e: React.FormEvent) => {
@@ -181,7 +182,7 @@ export default function Donate() {
       },
       onSuccess: async (paymentId) => {
         setIsProcessing(false);
-        
+
         // Trigger celebratory confetti
         try {
           confetti({
@@ -193,13 +194,13 @@ export default function Donate() {
             confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } });
             confetti({ particleCount: 100, angle: 120, spread: 55, origin: { x: 1 } });
           }, 400);
-        } catch {}
+        } catch { }
 
         // Save donation to Supabase (if online table exists) & local storage history
         const donationObj = {
           id: 'don_' + Date.now(),
           user_id: user?.id || null,
-          name: formData.isAnonymous ? 'Anonymous Donor' : formData.name,
+          name: formData.name,
           email: formData.email,
           mobile: formData.mobile,
           pan: formData.pan || 'N/A',
@@ -207,11 +208,16 @@ export default function Donate() {
           cause: selectedCause.name,
           payment_id: paymentId,
           status: 'paid',
+          is_anonymous: formData.isAnonymous,
           created_at: new Date().toISOString()
         };
 
         try {
-          await supabase.from('donations').insert([donationObj]);
+          const { error } = await supabase.from('donations').insert([donationObj]);
+          if (error && error.message && (error.message.includes('is_anonymous') || error.message.includes('column'))) {
+            const { is_anonymous, ...fallbackObj } = donationObj;
+            await supabase.from('donations').insert([fallbackObj]);
+          }
         } catch (dbErr) {
           console.warn('Online DB insert fallback:', dbErr);
         }
@@ -219,7 +225,8 @@ export default function Donate() {
         try {
           const past = JSON.parse(localStorage.getItem('ngo_saved_donations') || '[]');
           localStorage.setItem('ngo_saved_donations', JSON.stringify([donationObj, ...past]));
-        } catch {}
+          window.dispatchEvent(new Event('ngo_donation_added'));
+        } catch { }
 
         // Trigger Gmail Invoice Sending
         const invoiceMail = sendDonationInvoiceEmail({
@@ -258,12 +265,12 @@ export default function Donate() {
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-6">
             <Sparkles size={14} className="text-emerald-600 animate-pulse" /> 100% Direct Grassroots Impact • Eligible for 80G Tax Exemption
           </motion.div>
-          
+
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-zinc-900 mb-6 tracking-tight leading-tight">
             <BlurText text="Fund a Vision," delay={100} animateBy="words" direction="top" />{' '}
             <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>Transform a Life</GradientText>
           </h1>
-          
+
           <p className="text-zinc-600 max-w-2xl mx-auto text-base sm:text-lg md:text-xl font-light leading-relaxed">
             Instead of a generic donation, choose a specific cause that touches your heart. Witness exactly how your contribution restores sight, health, and dignity.
           </p>
@@ -273,7 +280,7 @@ export default function Donate() {
       {/* Main Interactive Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          
+
           {/* Left Column: Choose Your Cause (Services) */}
           <div className="lg:col-span-6 space-y-4">
             <div className="flex items-center justify-between mb-2">
@@ -295,18 +302,17 @@ export default function Donate() {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={() => setSelectedCause(cause)}
-                    className={`p-5 rounded-3xl border-2 cursor-pointer transition-all relative overflow-hidden ${
-                      isSelected 
-                        ? `bg-white border-[#0F6E6E] shadow-[0_10px_30px_rgba(15,110,110,0.15)] ring-2 ring-[#0F6E6E]/20` 
+                    className={`p-5 rounded-3xl border-2 cursor-pointer transition-all relative overflow-hidden ${isSelected
+                        ? `bg-white border-[#0F6E6E] shadow-[0_10px_30px_rgba(15,110,110,0.15)] ring-2 ring-[#0F6E6E]/20`
                         : 'bg-white/80 border-black/5 hover:border-black/15 shadow-sm'
-                    }`}
+                      }`}
                   >
                     {isSelected && (
                       <div className="absolute top-0 right-0 bg-gradient-to-l from-[#0F6E6E] to-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider flex items-center gap-1 shadow-sm">
                         <CheckCircle2 size={12} /> Selected Cause
                       </div>
                     )}
-                    
+
                     <div className="flex items-start gap-4">
                       <div className={`p-3.5 rounded-2xl ${isSelected ? 'bg-gradient-to-br ' + cause.color + ' text-white shadow-md' : 'bg-black/5 text-zinc-600'}`}>
                         <Icon size={24} />
@@ -344,11 +350,10 @@ export default function Donate() {
                       key={val}
                       type="button"
                       onClick={() => handleAmountClick(val)}
-                      className={`py-3.5 px-3 rounded-2xl font-extrabold text-base transition-all border-2 flex flex-col items-center justify-center ${
-                        isBtnSelected
+                      className={`py-3.5 px-3 rounded-2xl font-extrabold text-base transition-all border-2 flex flex-col items-center justify-center ${isBtnSelected
                           ? 'bg-[#0F6E6E] text-white border-[#0F6E6E] shadow-[0_4px_15px_rgba(15,110,110,0.3)] scale-[1.02]'
                           : 'bg-zinc-50 hover:bg-zinc-100/80 text-zinc-800 border-zinc-200 hover:border-zinc-300'
-                      }`}
+                        }`}
                     >
                       <span>₹{val.toLocaleString('en-IN')}</span>
                       <span className={`text-[10px] font-medium mt-0.5 ${isBtnSelected ? 'text-emerald-200' : 'text-zinc-400'}`}>
@@ -390,9 +395,8 @@ export default function Donate() {
                       setCustomAmountVal(amount.toString());
                     }}
                     onChange={handleCustomChange}
-                    className={`w-full pl-10 pr-4 py-3.5 rounded-2xl text-lg font-bold outline-none transition-all border-2 ${
-                      isCustomAmount ? 'border-[#0F6E6E] ring-4 ring-[#0F6E6E]/10 bg-white text-zinc-900' : 'border-zinc-200 bg-zinc-50/50 text-zinc-700'
-                    }`}
+                    className={`w-full pl-10 pr-4 py-3.5 rounded-2xl text-lg font-bold outline-none transition-all border-2 ${isCustomAmount ? 'border-[#0F6E6E] ring-4 ring-[#0F6E6E]/10 bg-white text-zinc-900' : 'border-zinc-200 bg-zinc-50/50 text-zinc-700'
+                      }`}
                   />
                 </div>
               </div>
@@ -426,7 +430,7 @@ export default function Donate() {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="e.g. Ashok Mahajan"
+                      placeholder="e.g. user name"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 focus:border-[#0F6E6E] focus:ring-2 focus:ring-[#0F6E6E]/10 outline-none text-sm text-zinc-900 font-medium bg-white"
                     />
                   </div>
@@ -517,6 +521,9 @@ export default function Donate() {
         </div>
       </section>
 
+      {/* Live Community Supporter Wall & Public Banner */}
+      <PublicDonorBanner />
+
       {/* Celebratory Success Modal */}
       <AnimatePresence>
         {successReceipt && (
@@ -530,7 +537,7 @@ export default function Donate() {
               <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <CheckCircle2 size={44} className="animate-bounce" />
               </div>
-              
+
               <div className="inline-block px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-2">
                 🎉 Donation Successful & Saved
               </div>

@@ -32,12 +32,17 @@ const eventRoutes = require('./routes/events');
 const registrationRoutes = require('./routes/registrations');
 const messageRoutes = require('./routes/messages');
 const uploadRoutes = require('./routes/upload');
+const emailRoutes = require('./routes/email');
+const paymentRoutes = require('./routes/payment');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/messages', emailRoutes); // Fallback for /send-email
+app.use('/api/email', emailRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/payment', paymentRoutes);
 
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {

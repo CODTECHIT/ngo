@@ -21,6 +21,7 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminDonations from "./pages/admin/AdminDonations";
+import AdminTeamRoles from "./pages/admin/AdminTeamRoles";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function NotFound() {
@@ -59,6 +60,7 @@ export const router = createBrowserRouter([
       { path: "messages", element: <AdminMessages /> },
       { path: "contact-messages", element: <AdminMessages /> },
       { path: "donations", element: <AdminDonations /> },
+      { path: "team-roles", element: <AdminTeamRoles /> },
       // Any future protected admin routes go here
     ],
   },

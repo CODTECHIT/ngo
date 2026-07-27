@@ -5,7 +5,7 @@ import { supabaseAdmin as supabase } from '../../../lib/supabase';
 import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
 
 export default function AdminLogin() {
-  const { user, loading, isAdmin } = useAuth();
+  const { user, loading, isAdmin, isSuperAdmin } = useAuth();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,8 +34,30 @@ export default function AdminLogin() {
     setLoggingIn(true);
     setError(null);
 
+    const normalizedEmail = email.toLowerCase().trim();
+    const superAdminEmails = ((import.meta as any).env?.VITE_ADMIN_ALLOWED_EMAILS || 'srishreevisionfoundation1@gmail.com')
+      .toLowerCase()
+      .split(',')
+      .map((e: string) => e.trim());
+
+    // 1. Check local RBAC active members list first
+    try {
+      const storedMembers = localStorage.getItem('ngo_rbac_team_members');
+      if (storedMembers) {
+        const members = JSON.parse(storedMembers);
+        const match = members.find((m: any) => m.email?.toLowerCase() === normalizedEmail && m.password === password);
+        if (match) {
+          localStorage.setItem('ngo_rbac_active_session', JSON.stringify(match));
+          window.location.href = match.role === 'super_admin' || match.role === 'admin' ? '/admin/ngo/dashboard' : '/admin/ngo/events';
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("RBAC check error:", err);
+    }
+
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
-      email,
+      email: normalizedEmail,
       password,
     });
 
@@ -50,22 +72,17 @@ export default function AdminLogin() {
         setError(signInError.message);
       }
     } else if (data?.user) {
+      const isEnvSuper = superAdminEmails.includes(normalizedEmail);
+
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', data.user.id)
         .single();
         
-      console.log("DEBUG LOGIN:", {
-        uid: data.user.id,
-        query: ".from('profiles').select('role').eq('id', user.id).single()",
-        result_data: profile,
-        result_error: profileError
-      });
-        
-      if (!profile || profile.role !== 'admin') {
+      if (!isEnvSuper && (!profile || (profile.role !== 'admin' && profile.role !== 'super_admin' && profile.role !== 'event_manager'))) {
          await supabase.auth.signOut();
-         setError("Access denied. This portal is for administrators only.");
+         setError("Access denied. This portal is for authorized administrators or event managers only.");
          setLoggingIn(false);
          return;
       }
@@ -83,9 +100,9 @@ export default function AdminLogin() {
     );
   }
 
-  // If already logged in and admin, redirect to dashboard
+  // If already logged in and admin, redirect to appropriate role portal
   if (user && isAdmin) {
-    return <Navigate to="/admin/ngo/dashboard" replace />;
+    return <Navigate to={isSuperAdmin ? "/admin/ngo/dashboard" : "/admin/ngo/events"} replace />;
   }
 
   return (

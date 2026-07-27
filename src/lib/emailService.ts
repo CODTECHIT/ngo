@@ -46,32 +46,46 @@ export const saveEmailToHistory = (email: EmailNotification) => {
 
 export const sendRealEmail = async (email: EmailNotification) => {
   try {
-    const emailJsServiceId = (import.meta as any).env?.VITE_EMAILJS_SERVICE_ID;
-    const emailJsTemplateId = (import.meta as any).env?.VITE_EMAILJS_TEMPLATE_ID;
-    const emailJsPublicKey = (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY;
+    const res = await fetch('/api/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: email.to,
+        subject: email.subject,
+        html: email.htmlContent,
+        message: email.htmlContent,
+        recipient_name: email.metadata?.name || email.to,
+      })
+    });
 
-    if (emailJsServiceId && emailJsTemplateId && emailJsPublicKey) {
-      await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_id: emailJsServiceId,
-          template_id: emailJsTemplateId,
-          user_id: emailJsPublicKey,
-          template_params: {
-            to_email: email.to,
-            subject: email.subject,
-            message: email.htmlContent,
-            recipient_name: email.metadata?.name || email.to,
-          }
-        })
-      });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      console.warn('Backend SMTP email dispatch note:', errData);
+
+      // Fallback to EmailJS if configured
+      const emailJsServiceId = (import.meta as any).env?.VITE_EMAILJS_SERVICE_ID;
+      const emailJsTemplateId = (import.meta as any).env?.VITE_EMAILJS_TEMPLATE_ID;
+      const emailJsPublicKey = (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY;
+
+      if (emailJsServiceId && emailJsTemplateId && emailJsPublicKey) {
+        await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service_id: emailJsServiceId,
+            template_id: emailJsTemplateId,
+            user_id: emailJsPublicKey,
+            template_params: {
+              to_email: email.to,
+              subject: email.subject,
+              message: email.htmlContent,
+              recipient_name: email.metadata?.name || email.to,
+            }
+          })
+        });
+      }
     } else {
-      fetch('/api/messages/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to: email.to, subject: email.subject, html: email.htmlContent })
-      }).catch(() => {});
+      console.log('Real SMTP email dispatched successfully via backend.');
     }
   } catch (err) {
     console.warn('Real email dispatch note:', err);

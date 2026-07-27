@@ -6,7 +6,7 @@ import { SectionLabel, StatusBadge } from "../components/Layout";
 import Aurora from "../components/reactbits/Aurora";
 import BlurText from "../components/reactbits/BlurText";
 import GradientText from "../components/reactbits/GradientText";
-import { useEvents, Event } from "../hooks/useEvents";
+import { useEvents, type Event } from "../hooks/useEvents";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
 import { supabase } from "../../lib/supabase";
 import { initiateRazorpayPayment } from "../../lib/paymentService";
@@ -134,6 +134,7 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
           return !(isSameEvent && isSameUser);
         });
         localStorage.setItem('ngo_saved_registrations', JSON.stringify([localReg, ...filteredPast]));
+        window.dispatchEvent(new Event('ngo_registration_updated'));
       } catch {}
 
       // Trigger Gmail Event Registration Confirmation Email
@@ -277,13 +278,48 @@ export default function Events() {
   const [registeredEventIds, setRegisteredEventIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    // The previous implementation used user.id to check registration.
-    // For this new flow (with name, mobile, etc), we might want to check by a local storage list 
-    // or just not show "Registered" unless we tie it to auth again.
-    // Given the prompt, users can register with their email. We'll simplify and not show "Registered" 
-    // or check it locally if they aren't logged in, but we can leave the registered list empty for now.
-    setRegisteredEventIds(new Set());
-  }, []);
+    const fetchUserRegistrations = async () => {
+      const ids = new Set<string>();
+      
+      // 1. Check localStorage for registrations made in this browser
+      try {
+        const localRegs = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
+        localRegs.forEach((r: any) => {
+          const isSameUser = user 
+            ? (r.user_id === user.id || (r.email && user.email && r.email.toLowerCase().trim() === user.email.toLowerCase().trim()))
+            : true;
+          if (isSameUser) {
+            const evId = r.event_id || (r.events ? r.events.id : null);
+            if (evId) ids.add(evId);
+          }
+        });
+      } catch (e) {
+        console.error('Error checking local registrations:', e);
+      }
+
+      // 2. Check Supabase database if user is logged in
+      if (user) {
+        try {
+          const { data } = await supabase.from('registrations').select('event_id').eq('user_id', user.id);
+          if (data && data.length > 0) {
+            data.forEach((r: any) => {
+              if (r.event_id) ids.add(r.event_id);
+            });
+          }
+        } catch (e) {
+          console.error('Error fetching database registrations:', e);
+        }
+      }
+
+      setRegisteredEventIds(ids);
+    };
+
+    fetchUserRegistrations();
+
+    const handleUpdate = () => fetchUserRegistrations();
+    window.addEventListener('ngo_registration_updated', handleUpdate);
+    return () => window.removeEventListener('ngo_registration_updated', handleUpdate);
+  }, [user, events]);
 
   const filteredEvents = filter === "all" ? events : events.filter(e => e.status === filter);
 
@@ -417,6 +453,7 @@ export default function Events() {
           onClose={() => setSelectedEvent(null)} 
           onRegisterSuccess={(id) => {
             setRegisteredEventIds(prev => new Set(prev).add(id));
+            window.dispatchEvent(new Event('ngo_registration_updated'));
           }}
         />
       )}

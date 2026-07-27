@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { supabaseAdmin as supabase } from '../../../lib/supabase';
-import { useEvents, Event } from '../../hooks/useEvents';
+import { useEvents, type Event } from '../../hooks/useEvents';
 import { ImageUploader } from '../../components/ImageUploader';
 import { NavLink } from 'react-router';
+import { AdminSidebar } from '../../components/AdminSidebar';
 import { 
   LayoutDashboard, FileText, List, Calendar, Image as ImageIcon, MessageSquare,
   Plus, Edit2, Trash2, Loader2, X, Users, Search, Download, Mail, Heart
 } from 'lucide-react';
-import { sendCertificateCompletionEmail } from '../../../lib/emailService';
 
 export default function AdminEvents() {
   const { events, loading, refetch } = useEvents(true);
@@ -121,13 +121,35 @@ export default function AdminEvents() {
     setSearchQuery('');
     setRegsLoading(true);
     try {
+      let dbData: any[] = [];
       const { data, error } = await supabase.from('registrations').select('*').eq('event_id', evt.id).order('registered_at', { ascending: false });
       console.log('AdminEvents registrations fetched:', { data, error, evtId: evt.id });
-      if (error) throw error;
-      setRegistrations(data || []);
+      if (!error && data) {
+        dbData = data;
+      }
+      
+      const localRegs = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
+      const matchingLocal = localRegs.filter((r: any) => 
+        r.event_id === evt.id || 
+        (r.event_title && evt.title && r.event_title.toLowerCase().trim() === evt.title.toLowerCase().trim())
+      );
+      
+      const combined = [...dbData];
+      matchingLocal.forEach((lr: any) => {
+        if (!combined.some(c => (c.id && c.id === lr.id) || (c.email && lr.email && c.email.toLowerCase() === lr.email.toLowerCase() && c.name === lr.name))) {
+          combined.push(lr);
+        }
+      });
+      console.log('AdminEvents registrations combined (DB + Local fallback):', { count: combined.length, evtId: evt.id });
+      setRegistrations(combined);
     } catch (err) {
       console.error(err);
-      alert("Failed to load registrations.");
+      const localRegs = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
+      const matchingLocal = localRegs.filter((r: any) => 
+        r.event_id === evt.id || 
+        (r.event_title && evt.title && r.event_title.toLowerCase().trim() === evt.title.toLowerCase().trim())
+      );
+      setRegistrations(matchingLocal);
     } finally {
       setRegsLoading(false);
     }
@@ -152,51 +174,45 @@ export default function AdminEvents() {
     document.body.removeChild(link);
   };
 
-  const broadcastCompletionCertificates = () => {
-    if (registrations.length === 0) return;
-    let count = 0;
-    registrations.forEach(r => {
-      if (r.email) {
-        sendCertificateCompletionEmail({
-          name: r.name || 'Participant',
-          email: r.email,
-          eventTitle: viewingEvent?.title || 'Special Event',
-          eventDate: viewingEvent?.event_date || new Date().toISOString()
-        });
-        count++;
-      }
-    });
-    alert(`Successfully sent completion certificates via email to ${count} registered participants!`);
-  };
+  const updateRegistrationParticipation = async (regId: string, email: string | undefined, participated: boolean) => {
+    const participatedAt = participated ? new Date().toISOString() : null;
+    const newStatus = participated ? 'participated' : 'paid';
 
-  const navLinks = [
-    { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} /> },
-    { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} /> },
-    { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} /> },
-    { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} /> },
-    { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} /> },
-    { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} /> },
-  ];
+    try {
+      if (regId && regId !== email && !regId.toString().startsWith('local_')) {
+        await supabase.from('registrations').update({
+          status: newStatus,
+          certificate_issued: participated,
+          participated_at: participatedAt
+        }).eq('id', regId);
+      }
+    } catch (e) {
+      console.warn('DB participation status update error:', e);
+    }
+
+    try {
+      const past = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
+      const updatedPast = past.map((r: any) => {
+        if (r.id === regId || (viewingEvent && r.event_id === viewingEvent.id && (r.email === email || r.id === regId))) {
+          return { ...r, status: newStatus, certificate_issued: participated, participated_at: participatedAt };
+        }
+        return r;
+      });
+      localStorage.setItem('ngo_saved_registrations', JSON.stringify(updatedPast));
+    } catch {}
+
+    setRegistrations(prev => prev.map(r => {
+      if (r.id === regId || (r.email && r.email === email)) {
+        return { ...r, status: newStatus, certificate_issued: participated, participated_at: participatedAt };
+      }
+      return r;
+    }));
+    window.dispatchEvent(new Event('ngo_registration_updated'));
+  };
 
   return (
     <div className="min-h-screen bg-black/5 flex flex-col md:flex-row font-['Lato']">
-      <aside className="w-full md:w-64 bg-white border-r border-black/5 shrink-0 flex flex-col">
-        <div className="p-6 border-b border-black/5 flex items-center gap-3">
-          <div className="w-10 h-10 shrink-0 flex items-center justify-center">
-            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
-          </div>
-          <span className="font-bold text-sm tracking-tight text-zinc-900">ADMIN PORTAL</span>
-        </div>
-        <nav className="flex-1 p-4 space-y-1">
-          {navLinks.map((link) => (
-            <NavLink key={link.path} to={link.path} className={({ isActive }) => 
-              `flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'text-zinc-600 hover:bg-black/5 hover:text-zinc-900'}`
-            }>
-              {link.icon} {link.name}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
+      <AdminSidebar />
 
       <main className="flex-1 p-6 md:p-12 overflow-y-auto">
         <div className="max-w-6xl mx-auto">
@@ -420,10 +436,6 @@ export default function AdminEvents() {
                     className="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-zinc-200 focus:ring-2 focus:ring-primary outline-none shadow-sm" />
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <button onClick={broadcastCompletionCertificates} disabled={registrations.length === 0}
-                    className="flex items-center gap-2 px-5 py-3 bg-[#0F6E6E] text-white font-bold rounded-xl hover:bg-[#0c5959] transition-colors shadow-sm disabled:opacity-50 text-sm">
-                    <Mail size={16} /> Broadcast Gmail Certificates
-                  </button>
                   <button onClick={downloadCSV} disabled={registrations.length === 0}
                     className="flex items-center gap-2 px-5 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 text-sm">
                     <Download size={16} /> Export CSV
@@ -453,7 +465,7 @@ export default function AdminEvents() {
                           (r.mobile || '').includes(searchQuery)
                         ).length === 0 ? (
                           <tr>
-                            <td colSpan={5} className="p-12 text-center text-zinc-500">
+                            <td colSpan={6} className="p-12 text-center text-zinc-500">
                               {registrations.length === 0 ? "No registrations yet." : "No matching registrations found."}
                             </td>
                           </tr>
@@ -476,13 +488,42 @@ export default function AdminEvents() {
                                 <div className="text-xs text-zinc-500 line-clamp-1">{reg.from_address}</div>
                               </td>
                               <td className="p-4">
-                                <span className={`inline-flex px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${
-                                  reg.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 
-                                  reg.status === 'pending_payment' ? 'bg-amber-100 text-amber-700' : 
-                                  'bg-blue-100 text-blue-700'
-                                }`}>
-                                  {reg.status}
-                                </span>
+                                <div className="flex flex-col items-start gap-1">
+                                  <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                    reg.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 
+                                    reg.status === 'pending_payment' ? 'bg-amber-100 text-amber-700' : 
+                                    'bg-blue-100 text-blue-700'
+                                  }`}>
+                                    {reg.status === 'participated' ? 'paid' : reg.status}
+                                  </span>
+                                  {(reg.status === 'participated' || reg.certificate_issued) ? (
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                                        🎓 Attended / Completed
+                                      </span>
+                                      <button
+                                        onClick={() => updateRegistrationParticipation(reg.id, reg.email, false)}
+                                        title="Revoke Attendance Status"
+                                        className="text-[10px] text-zinc-400 hover:text-red-600 underline font-semibold"
+                                      >
+                                        Revoke
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <span className="px-2 py-0.5 rounded text-[10px] bg-zinc-100 text-zinc-500 border border-zinc-200 font-bold uppercase tracking-wider flex items-center gap-1">
+                                        ⏳ Registered Only
+                                      </span>
+                                      <button
+                                        onClick={() => updateRegistrationParticipation(reg.id, reg.email, true)}
+                                        title="Mark as Attended"
+                                        className="text-[10px] text-primary hover:underline font-bold"
+                                      >
+                                        + Mark Attended
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               </td>
                               <td className="p-4 text-sm text-zinc-600">
                                 {new Date(reg.registered_at).toLocaleDateString()}

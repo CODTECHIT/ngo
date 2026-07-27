@@ -26,14 +26,14 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Routes
-const authRoutes = require('./routes/auth');
-const eventRoutes = require('./routes/events');
-const registrationRoutes = require('./routes/registrations');
-const messageRoutes = require('./routes/messages');
-const uploadRoutes = require('./routes/upload');
-const emailRoutes = require('./routes/email');
-const paymentRoutes = require('./routes/payment');
+// Routes - imported from api-lib/ to avoid Vercel treating each file as a separate serverless function
+const authRoutes = require('../api-lib/routes/auth');
+const eventRoutes = require('../api-lib/routes/events');
+const registrationRoutes = require('../api-lib/routes/registrations');
+const messageRoutes = require('../api-lib/routes/messages');
+const uploadRoutes = require('../api-lib/routes/upload');
+const emailRoutes = require('../api-lib/routes/email');
+const paymentRoutes = require('../api-lib/routes/payment');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);

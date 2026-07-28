@@ -40,22 +40,6 @@ export default function AdminLogin() {
       .split(',')
       .map((e: string) => e.trim());
 
-    // 1. Check local RBAC active members list first
-    try {
-      const storedMembers = localStorage.getItem('ngo_rbac_team_members');
-      if (storedMembers) {
-        const members = JSON.parse(storedMembers);
-        const match = members.find((m: any) => m.email?.toLowerCase() === normalizedEmail && m.password === password);
-        if (match) {
-          localStorage.setItem('ngo_rbac_active_session', JSON.stringify(match));
-          window.location.href = match.role === 'super_admin' || match.role === 'admin' ? '/admin/ngo/dashboard' : '/admin/ngo/events';
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn("RBAC check error:", err);
-    }
-
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email: normalizedEmail,
       password,
@@ -73,14 +57,32 @@ export default function AdminLogin() {
       }
     } else if (data?.user) {
       const isEnvSuper = superAdminEmails.includes(normalizedEmail);
+      let rbacRole: string | null = isEnvSuper ? 'super_admin' : null;
 
-      const { data: profile, error: profileError } = await supabase
+      try {
+        const storedMembers = localStorage.getItem('ngo_rbac_team_members');
+        if (storedMembers) {
+          const members = JSON.parse(storedMembers);
+          const match = members.find((m: any) => m.email?.toLowerCase() === normalizedEmail);
+          if (match && match.role) {
+            rbacRole = match.role;
+            await supabase.from('profiles').upsert([
+              { id: data.user.id, full_name: match.name || normalizedEmail, role: match.role }
+            ]);
+          }
+        }
+      } catch (e) {
+        console.warn("Error checking RBAC members:", e);
+      }
+
+      const { data: profile } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', data.user.id)
         .single();
         
-      if (!isEnvSuper && (!profile || (profile.role !== 'admin' && profile.role !== 'super_admin' && profile.role !== 'event_manager'))) {
+      const effectiveRole = profile?.role || rbacRole;
+      if (!isEnvSuper && (!effectiveRole || (effectiveRole !== 'admin' && effectiveRole !== 'super_admin' && effectiveRole !== 'event_manager' && effectiveRole !== 'manager'))) {
          await supabase.auth.signOut();
          setError("Access denied. This portal is for authorized administrators or event managers only.");
          setLoggingIn(false);

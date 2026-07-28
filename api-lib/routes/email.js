@@ -12,7 +12,11 @@ router.post('/send', async (req, res) => {
       return res.status(400).json({ error: 'Recipient email address is required.' });
     }
 
-    const host = process.env.VITE_SMTP_HOST || process.env.SMTP_HOST || 'smtp.gmail.com';
+    let host = process.env.VITE_SMTP_HOST || process.env.SMTP_HOST || 'smtp.gmail.com';
+    if (host.includes('@')) {
+      console.warn(`SMTP_HOST in .env is set to an email address (${host}). Auto-correcting to 'smtp.gmail.com'...`);
+      host = 'smtp.gmail.com';
+    }
     const port = parseInt(process.env.VITE_SMTP_PORT || process.env.SMTP_PORT || '587');
     const user = process.env.VITE_SMTP_USER || process.env.SMTP_USER;
     const pass = process.env.VITE_SMTP_PASS || process.env.SMTP_PASS;

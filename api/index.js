@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
@@ -8,46 +7,18 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/ngo_db';
 
-const connectDB = async () => {
-  if (mongoose.connection.readyState >= 1) return;
-  try {
-    await mongoose.connect(MONGO_URI);
-    console.log('Connected to MongoDB');
-  } catch (err) {
-    console.error('Failed to connect to MongoDB', err);
-  }
-};
-
-// Connect to DB for serverless environments before handling requests
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
-});
-
-// Routes - imported from api-lib/ to avoid Vercel treating each file as a separate serverless function
-const authRoutes = require('../api-lib/routes/auth');
-const eventRoutes = require('../api-lib/routes/events');
-const registrationRoutes = require('../api-lib/routes/registrations');
-const messageRoutes = require('../api-lib/routes/messages');
-const uploadRoutes = require('../api-lib/routes/upload');
+// Utility routes (No MongoDB / Mongoose - 100% Supabase database architecture)
 const emailRoutes = require('../api-lib/routes/email');
 const paymentRoutes = require('../api-lib/routes/payment');
 
-app.use('/api/auth', authRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/registrations', registrationRoutes);
-app.use('/api/messages', messageRoutes);
 app.use('/api/messages', emailRoutes); // Fallback for /send-email
 app.use('/api/email', emailRoutes);
-app.use('/api/upload', uploadRoutes);
 app.use('/api/payment', paymentRoutes);
 
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    connectDB();
+    console.log(`🚀 NGO Backend API Server running on port ${PORT} (100% Supabase - No MongoDB needed)`);
   });
 }
 

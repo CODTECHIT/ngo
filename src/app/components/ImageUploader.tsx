@@ -45,67 +45,92 @@ export function ImageUploader({ onUploadComplete, defaultImage, className = '', 
   }, []);
 
   useEffect(() => {
-    if (isLoaded && window.cloudinary && !widgetRef.current) {
-      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-      
-      if (!cloudName || !uploadPreset) {
-        console.error("Cloudinary env variables are missing");
-        return;
+    return () => {
+      if (widgetRef.current && widgetRef.current.destroy) {
+        try {
+          widgetRef.current.destroy();
+        } catch (e) {}
       }
-
-      widgetRef.current = window.cloudinary.createUploadWidget(
-        {
-          cloudName,
-          uploadPreset,
-          sources: ['local', 'url', 'camera'],
-          multiple: acceptMultiple,
-          maxFiles: acceptMultiple ? 10 : 1,
-          resourceType: acceptPDF ? 'auto' : acceptVideo ? 'auto' : 'image',
-          clientAllowedFormats: acceptPDF ? ['pdf'] : acceptVideo ? ['jpeg', 'png', 'jpg', 'webp', 'mp4', 'webm'] : ['jpeg', 'png', 'jpg', 'webp'],
-          styles: {
-            palette: {
-              window: '#ffffff',
-              sourceBg: '#f4f4f5',
-              windowBorder: '#e4e4e7',
-              tabIcon: '#0F6E6E',
-              inactiveTabIcon: '#a1a1aa',
-              menuIcons: '#0F6E6E',
-              link: '#0F6E6E',
-              action: '#0F6E6E',
-              inProgress: '#4CAF50',
-              complete: '#4CAF50',
-              error: '#ef4444',
-              textDark: '#18181b',
-              textLight: '#ffffff'
-            }
-          }
-        },
-        (error: any, result: any) => {
-          if (!error && result && result.event === 'success') {
-            const url = result.info.secure_url;
-            const publicId = result.info.public_id;
-            setImageUrls(prev => {
-              const newUrls = acceptMultiple ? [...prev, url] : [url];
-              const joined = newUrls.join(',');
-              setTimeout(() => {
-                onUploadCompleteRef.current(joined, publicId);
-              }, 0);
-              return newUrls;
-            });
-          }
-        }
-      );
-    }
-  }, [isLoaded, acceptVideo, acceptMultiple, acceptPDF]);
+    };
+  }, []);
 
   const openWidget = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (widgetRef.current) {
-      widgetRef.current.open();
-    } else {
+    if (!isLoaded || !window.cloudinary) {
       console.warn("Cloudinary widget is not loaded yet.");
+      return;
     }
+
+    if (widgetRef.current && widgetRef.current.destroy) {
+      try {
+        widgetRef.current.destroy();
+      } catch (err) {}
+      widgetRef.current = null;
+    }
+
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+      
+    if (!cloudName || !uploadPreset) {
+      console.error("Cloudinary env variables are missing");
+      return;
+    }
+
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName,
+        uploadPreset,
+        sources: ['local', 'url', 'camera'],
+        multiple: acceptMultiple,
+        maxFiles: acceptMultiple ? 10 : 1,
+        resourceType: acceptPDF ? 'auto' : acceptVideo ? 'auto' : 'image',
+        clientAllowedFormats: acceptPDF ? ['pdf'] : acceptVideo ? ['jpeg', 'png', 'jpg', 'webp', 'mp4', 'webm'] : ['jpeg', 'png', 'jpg', 'webp'],
+        styles: {
+          palette: {
+            window: '#ffffff',
+            sourceBg: '#f4f4f5',
+            windowBorder: '#e4e4e7',
+            tabIcon: '#0F6E6E',
+            inactiveTabIcon: '#a1a1aa',
+            menuIcons: '#0F6E6E',
+            link: '#0F6E6E',
+            action: '#0F6E6E',
+            inProgress: '#4CAF50',
+            complete: '#4CAF50',
+            error: '#ef4444',
+            textDark: '#18181b',
+            textLight: '#ffffff'
+          }
+        }
+      },
+      (error: any, result: any) => {
+        if (!error && result && result.event === 'success') {
+          const url = result.info.secure_url;
+          const publicId = result.info.public_id;
+          setImageUrls(prev => {
+            const newUrls = acceptMultiple ? [...prev, url] : [url];
+            const joined = newUrls.join(',');
+            setTimeout(() => {
+              onUploadCompleteRef.current(joined, publicId);
+            }, 0);
+            return newUrls;
+          });
+        }
+        if (result && (result.event === 'close' || result.event === 'abort')) {
+          if (widget && widget.destroy) {
+            try {
+              widget.destroy();
+            } catch (err) {}
+          }
+          if (widgetRef.current === widget) {
+            widgetRef.current = null;
+          }
+        }
+      }
+    );
+
+    widgetRef.current = widget;
+    widget.open();
   };
 
   const handleRemove = (index: number) => (e: React.MouseEvent) => {

@@ -10,7 +10,6 @@ import GradientText from "../components/reactbits/GradientText";
 import { useEvents } from "../hooks/useEvents";
 import { usePrograms } from "../hooks/usePrograms";
 import { useGallery } from "../hooks/useGallery";
-import PublicDonorBanner from "../components/PublicDonorBanner";
 
 const ICON_MAP: Record<string, React.ElementType> = { BookOpen, Leaf, Users, Globe, Shield, Handshake };
 
@@ -434,7 +433,6 @@ export default function Home() {
     <div className="bg-background">
       <Hero />
       <ImpactStats />
-      <PublicDonorBanner />
       <AboutPreview />
       <BentoServices />
       <PromotionalEventAds />

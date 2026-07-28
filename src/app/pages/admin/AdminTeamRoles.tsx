@@ -86,13 +86,13 @@ export default function AdminTeamRoles() {
 
     const newId = 'rbac_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
 
-    // Try to create in Supabase anonymously without logging out current Super Admin
+    // Create user in Supabase and ensure their profile has the assigned role
     try {
       const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || 'https://lhmhynwpplzyzkhgshzo.supabase.co';
       const supabaseKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
       if (supabaseUrl && supabaseKey) {
-        fetch(`${supabaseUrl}/auth/v1/signup`, {
+        const res = await fetch(`${supabaseUrl}/auth/v1/signup`, {
           method: 'POST',
           headers: {
             'apikey': supabaseKey,
@@ -103,7 +103,14 @@ export default function AdminTeamRoles() {
             password: password,
             data: { full_name: name, role: role }
           })
-        }).catch(err => console.warn("Background Supabase signup note:", err));
+        });
+        const authData = await res.json();
+        const userId = authData?.user?.id || authData?.id;
+        if (userId) {
+          await supabase.from('profiles').upsert([
+            { id: userId, full_name: name, role: role }
+          ]);
+        }
       }
     } catch (err) {
       console.warn("Could not reach Supabase REST API:", err);

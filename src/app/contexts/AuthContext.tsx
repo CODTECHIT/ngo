@@ -26,29 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const determineRoles = async (currentUser: User | null) => {
     if (!currentUser) {
-      try {
-        const activeRbac = localStorage.getItem('ngo_rbac_active_session');
-        if (activeRbac) {
-          const match = JSON.parse(activeRbac);
-          const mockUser: any = { 
-            id: match.id, 
-            email: match.email, 
-            user_metadata: { full_name: match.name } 
-          };
-          setUser(mockUser);
-          const userRole = match.role;
-          setRole(userRole);
-          const isSuper = userRole === 'super_admin' || userRole === 'admin';
-          const isEventMgr = userRole === 'event_manager' || isSuper;
-          setIsAdmin(isSuper || isEventMgr);
-          setIsSuperAdmin(isSuper);
-          setIsEventManager(isEventMgr);
-          return;
-        }
-      } catch (e) {
-        console.warn("Error reading active RBAC session:", e);
-      }
-
+      setUser(null);
       setIsAdmin(false);
       setRole(null);
       setIsSuperAdmin(false);
@@ -85,6 +63,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setIsAdmin(isSuper || isEventMgr);
           setIsSuperAdmin(isSuper);
           setIsEventManager(isEventMgr);
+          // Sync to Supabase profiles in the background
+          supabase.from('profiles').upsert([
+            { id: currentUser.id, full_name: match.name || email, role: userRole }
+          ]).then(res => { if (res.error) console.warn("Background profile sync:", res.error); });
           return;
         }
       }

@@ -9,7 +9,6 @@ import { initiateRazorpayPayment } from '../../lib/paymentService';
 import { sendDonationInvoiceEmail } from '../../lib/emailService';
 import { supabase } from '../../lib/supabase';
 import { usePublicAuth } from '../contexts/PublicAuthContext';
-import PublicDonorBanner from '../components/PublicDonorBanner';
 
 // Causes / Services with tailored impact statements for each preset amount
 const CAUSES = [
@@ -484,7 +483,7 @@ export default function Donate() {
                     className="w-4 h-4 rounded border-zinc-300 text-[#0F6E6E] focus:ring-[#0F6E6E]"
                   />
                   <label htmlFor="isAnonymous" className="text-xs text-zinc-600 font-medium cursor-pointer">
-                    Make this an anonymous donation on public banners
+                    Make this an anonymous donation
                   </label>
                 </div>
 
@@ -521,8 +520,6 @@ export default function Donate() {
         </div>
       </section>
 
-      {/* Live Community Supporter Wall & Public Banner */}
-      <PublicDonorBanner />
 
       {/* Celebratory Success Modal */}
       <AnimatePresence>

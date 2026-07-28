@@ -105,14 +105,25 @@ export default function AdminEvents() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this event?")) return;
+    if (!window.confirm("Are you sure you want to delete this event? This will also delete any attendee registrations linked to it.")) return;
     try {
+      // 1. Delete associated registrations first to avoid foreign key constraint error 23503
+      const { error: regError } = await supabase.from('registrations').delete().eq('event_id', id);
+      if (regError && regError.code !== 'PGRST116') {
+        console.warn("Notice: check on associated registrations before delete:", regError);
+      }
+
+      // 2. Delete the event itself
       const { error } = await supabase.from('events').delete().eq('id', id);
       if (error) throw error;
       await refetch();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error deleting event:", err);
-      alert("Failed to delete event.");
+      if (err?.code === '23503' || err?.message?.includes('foreign key constraint') || err?.details?.includes('still referenced')) {
+        alert("Cannot delete event: It is still referenced by existing attendee records in another database table. Please delete linked attendee records first or enable ON DELETE CASCADE in your Supabase SQL editor.");
+      } else {
+        alert("Failed to delete event: " + (err?.message || JSON.stringify(err)));
+      }
     }
   };
 

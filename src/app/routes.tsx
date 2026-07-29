@@ -5,7 +5,6 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
-import News from "./pages/News";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -18,6 +17,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPrograms from "./pages/admin/AdminPrograms";
 import AdminEvents from "./pages/admin/AdminEvents";
+import AdminNewsTicker from "./pages/admin/AdminNewsTicker";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminDonations from "./pages/admin/AdminDonations";
@@ -56,6 +56,7 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <AdminDashboard /> },
       { path: "programs", element: <AdminPrograms /> },
       { path: "events", element: <AdminEvents /> },
+      { path: "news", element: <AdminNewsTicker /> },
       { path: "gallery", element: <AdminGallery /> },
       { path: "messages", element: <AdminMessages /> },
       { path: "contact-messages", element: <AdminMessages /> },
@@ -74,7 +75,6 @@ export const router = createBrowserRouter([
       { path: "services", Component: Services },
       { path: "events", Component: Events },
       { path: "gallery", Component: Gallery },
-      { path: "news", Component: News },
       { path: "contact", Component: Contact },
       { path: "login", Component: Login },
       { path: "signup", Component: Signup },

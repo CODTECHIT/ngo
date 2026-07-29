@@ -90,8 +90,58 @@ export default function AdminEvents() {
         const { error } = await supabase.from('events').update(payload).eq('id', editingEvent.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('events').insert([payload]);
-        if (error) throw error;
+        let createdEvtId: string | undefined = undefined;
+        const { data: newEvt, error } = await supabase.from('events').insert([payload]).select().single();
+        if (error && error.code !== 'PGRST116') {
+          console.warn("Database insert notice:", error);
+        }
+        if (newEvt) {
+          createdEvtId = newEvt.id;
+        }
+
+        // Auto-create & publish News announcement for this new event
+        const newsTitle = `New Event Announced: ${title}`;
+        const formattedDate = eventDate 
+          ? new Date(eventDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+          : new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        const newsExcerpt = description 
+          ? description.substring(0, 160) + (description.length > 160 ? '...' : '') 
+          : `Join us for ${title}! Scheduled for ${formattedDate}${location ? ` at ${location}` : ''}.`;
+        
+        const newsContent = `${description || ''}\n\nEvent Details:\n• Date: ${formattedDate}\n• Location: ${location || 'Main Venue'}\n• Fee: ${isFree ? 'Free Event' : `₹${price}`}`;
+
+        const newsPayload = {
+          title: newsTitle,
+          excerpt: newsExcerpt,
+          content: newsContent,
+          img: imageUrl || 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&h=380&fit=crop&auto=format',
+          tag: 'Campaign',
+          date: formattedDate,
+          event_id: createdEvtId
+        };
+
+        // 1. Try DB insert
+        try {
+          await supabase.from('news').insert([newsPayload]);
+        } catch (newsDbErr) {
+          console.warn("Could not insert news into database table:", newsDbErr);
+        }
+
+        // 2. Save to LocalStorage backup so it appears instantly regardless of DB table creation
+        try {
+          const LOCAL_STORAGE_KEY = 'ngo_custom_news';
+          const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+          let localItems = stored ? JSON.parse(stored) : [];
+          localItems.unshift({
+            id: 'local_news_' + Date.now(),
+            ...newsPayload,
+            created_at: new Date().toISOString()
+          });
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localItems));
+        } catch (e) {}
+
+        window.dispatchEvent(new Event('ngo_news_updated'));
       }
       
       await refetch();

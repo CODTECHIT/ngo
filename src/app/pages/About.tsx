@@ -122,7 +122,7 @@ export default function About() {
               "CIN No: U85500TS2026NPL209676",
               "PAN: ABSCS4201R",
               "TAN: HYDS90801E",
-              "Registered Address: 1-11-22, Shop No. 3, Golnaka Alwal, Tirumalagiri, Hyderabad, Telangana - 500010"
+              "Registered Address: 1-11-22,   Golnaka Alwal, Tirumalagiri, Hyderabad, Telangana - 500010"
             ].map((text, i) => (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} key={i} className={`flex items-start gap-3 bg-black/5 border border-black/10 rounded-xl p-4 ${i === 4 ? 'md:col-span-2' : ''}`}>
                 <CheckCircle size={18} className="text-accent shrink-0 mt-0.5" />

@@ -27,21 +27,53 @@ export default function Contact() {
     const phone = (formData.get('phone') as string) || '';
     const subject = formData.get('subject') as string;
     const message = formData.get('message') as string;
-    
+
     const form = e.currentTarget;
     try {
-      const { error } = await supabase.from('messages').insert([
-        {
+      // 1. Save to Supabase messages table for Admin Panel
+      try {
+        await supabase.from('messages').insert([
+          {
+            fname,
+            lname,
+            email,
+            subject,
+            message: phone ? `[Phone: ${phone}]\n\n${message}` : message
+          }
+        ]);
+      } catch (dbErr) {
+        console.warn("Supabase insert error:", dbErr);
+      }
+
+      // 2. Save to LocalStorage backup so Admin Panel shows message even if offline/DB fail
+      try {
+        const LOCAL_KEY = 'ngo_saved_messages';
+        const existing = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]');
+        existing.unshift({
+          id: 'local_msg_' + Date.now(),
           fname,
           lname,
           email,
+          phone,
           subject,
-          message: phone ? `[Phone: ${phone}]\n\n${message}` : message
-        }
-      ]);
-      
-      if (error) throw error;
-      
+          message,
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(existing));
+      } catch (e) {}
+
+      // 3. Open WhatsApp with prefilled message text for instant WhatsApp notification to Admin
+      const whatsappText = encodeURIComponent(
+        `*New Contact Message - Srishreevision Foundation*\n\n` +
+        `👤 *Name:* ${fname} ${lname}\n` +
+        `✉️ *Email:* ${email}\n` +
+        `📞 *Phone:* ${phone || 'N/A'}\n` +
+        `📌 *Subject:* ${subject}\n\n` +
+        `💬 *Message:*\n${message}`
+      );
+      const whatsappUrl = `https://wa.me/919701100974?text=${whatsappText}`;
+      window.open(whatsappUrl, '_blank');
+
       setSubmitted(true);
       form.reset();
       setTimeout(() => setSubmitted(false), 5000);
@@ -59,23 +91,23 @@ export default function Contact() {
           <div className="absolute top-[10%] right-[20%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           <div className="absolute -bottom-[10%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
         </div>
-        
+
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Reach Out</SectionLabel>
           </motion.div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
             Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Touch</span>
           </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
             Whether you want to volunteer, partner with us, or learn more about our impact, we would love to hear from you.
@@ -97,9 +129,11 @@ export default function Contact() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[
-                { icon: MapPin, title: "Head Office", lines: ["1-11-22, Shop No. 3, Golnaka Alwal,", "Tirumalagiri, Hyderabad, Telangana - 500010"] },
-                { icon: Phone, title: "Phone", lines: ["+91 98765 43210"] },
-                { icon: Mail, title: "Email", lines: ["contact@srishreevision.org"] },
+                { icon: MapPin, title: "Head Office", lines: ["1-11-22,   Golnaka Alwal,", "Tirumalagiri, Hyderabad, Telangana - 500010"] },
+                {
+                  icon: Phone, title: "Phone", lines: ["+918977910974", "+919701100974"]
+                },
+                { icon: Mail, title: "Email", lines: ["srishreevisionfoundation1@gmail.com"] },
                 { icon: Clock, title: "Working Hours", lines: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sunday: Closed"] }
               ].map((item, i) => (
                 <motion.div variants={fadeIn} key={item.title} className="bg-black/5 border border-black/5 rounded-2xl p-6 hover:border-black/20 hover:bg-black/10 transition-all">
@@ -114,23 +148,15 @@ export default function Contact() {
               ))}
             </div>
 
-            <motion.div variants={fadeIn} className="bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20 rounded-2xl p-8 backdrop-blur-sm">
-              <h3 className="font-bold text-zinc-900 mb-2">Corporate Partnerships</h3>
-              <p className="text-sm text-zinc-700 font-light mb-4">
-                Looking to fulfill your CSR mandate? Download our corporate partnership brochure.
-              </p>
-              <button className="text-sm font-bold text-primary hover:text-zinc-900 transition-colors underline decoration-primary/50 underline-offset-4">
-                Download Brochure PDF
-              </button>
-            </motion.div>
+
           </motion.div>
 
           {/* Contact Form */}
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-white border border-black/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
-            
+
             <h2 className="text-3xl font-bold text-zinc-900 mb-8 tracking-tight">Send a Message</h2>
-            
+
             {submitted ? (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-12 md:py-20 px-4 md:px-6 text-center h-full">
                 <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 border border-emerald-500/30">

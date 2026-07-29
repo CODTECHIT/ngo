@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router';
 import { 
   LayoutDashboard, List, Calendar, Image as ImageIcon, Heart, 
-  MessageSquare, Users, Shield, LogOut 
+  MessageSquare, Users, Shield, LogOut, Megaphone 
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -12,6 +12,7 @@ export function AdminSidebar() {
     { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} />, requireSuper: true },
     { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} />, requireSuper: false },
     { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} />, requireSuper: false },
+    { name: 'News', path: '/admin/ngo/news', icon: <Megaphone size={18} />, requireSuper: false },
     { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} />, requireSuper: false },
     { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} />, requireSuper: true },
     { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} />, requireSuper: false },

@@ -4,6 +4,7 @@ import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, A
 import { motion, AnimatePresence } from "motion/react";
 import { EVENTS } from "../data";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
+import { HeaderTicker } from "./HeaderTicker";
 
 const upcomingEvents = EVENTS.filter(e => e.status === "upcoming" || e.status === "ongoing");
 
@@ -172,7 +173,7 @@ function Footer() {
             </div>
           </div>
           {[
-            { title: "Quick Links", links: [{ label: "About Us", to: "/about" }, { label: "Our Services", to: "/services" }, { label: "Events", to: "/events" }, { label: "Gallery", to: "/gallery" }, { label: "News", to: "/news" }, { label: "Contact", to: "/contact" }] },
+            { title: "Quick Links", links: [{ label: "About Us", to: "/about" }, { label: "Our Services", to: "/services" }, { label: "Events", to: "/events" }, { label: "Gallery", to: "/gallery" }, { label: "Contact", to: "/contact" }] },
             { title: "Get Involved", links: [{ label: "Volunteer", to: "/contact" }, { label: "Corporate CSR", to: "/contact" }, { label: "Intern with Us", to: "/contact" }, { label: "Fundraise", to: "/contact" }, { label: "Partner NGOs", to: "/contact" }, { label: "Donate", to: "/donate" }] },
           ].map(col => (
             <div key={col.title}>
@@ -212,6 +213,7 @@ function Footer() {
 export function Layout() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/30 selection:text-white">
+      <HeaderTicker />
       <FloatingIslandNav />
       <main className="flex-1 relative">
         <Outlet />

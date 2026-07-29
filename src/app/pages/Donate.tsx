@@ -302,8 +302,8 @@ export default function Donate() {
                     whileTap={{ scale: 0.99 }}
                     onClick={() => setSelectedCause(cause)}
                     className={`p-5 rounded-3xl border-2 cursor-pointer transition-all relative overflow-hidden ${isSelected
-                        ? `bg-white border-[#0F6E6E] shadow-[0_10px_30px_rgba(15,110,110,0.15)] ring-2 ring-[#0F6E6E]/20`
-                        : 'bg-white/80 border-black/5 hover:border-black/15 shadow-sm'
+                      ? `bg-white border-[#0F6E6E] shadow-[0_10px_30px_rgba(15,110,110,0.15)] ring-2 ring-[#0F6E6E]/20`
+                      : 'bg-white/80 border-black/5 hover:border-black/15 shadow-sm'
                       }`}
                   >
                     {isSelected && (
@@ -350,8 +350,8 @@ export default function Donate() {
                       type="button"
                       onClick={() => handleAmountClick(val)}
                       className={`py-3.5 px-3 rounded-2xl font-extrabold text-base transition-all border-2 flex flex-col items-center justify-center ${isBtnSelected
-                          ? 'bg-[#0F6E6E] text-white border-[#0F6E6E] shadow-[0_4px_15px_rgba(15,110,110,0.3)] scale-[1.02]'
-                          : 'bg-zinc-50 hover:bg-zinc-100/80 text-zinc-800 border-zinc-200 hover:border-zinc-300'
+                        ? 'bg-[#0F6E6E] text-white border-[#0F6E6E] shadow-[0_4px_15px_rgba(15,110,110,0.3)] scale-[1.02]'
+                        : 'bg-zinc-50 hover:bg-zinc-100/80 text-zinc-800 border-zinc-200 hover:border-zinc-300'
                         }`}
                     >
                       <span>₹{val.toLocaleString('en-IN')}</span>
@@ -441,7 +441,7 @@ export default function Donate() {
                       name="mobile"
                       value={formData.mobile}
                       onChange={handleInputChange}
-                      placeholder="+91 98765 43210"
+                      placeholder="+918977910974"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 focus:border-[#0F6E6E] focus:ring-2 focus:ring-[#0F6E6E]/10 outline-none text-sm text-zinc-900 font-medium bg-white"
                     />
                   </div>

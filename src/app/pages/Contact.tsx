@@ -71,7 +71,7 @@ export default function Contact() {
         `📌 *Subject:* ${subject}\n\n` +
         `💬 *Message:*\n${message}`
       );
-      const whatsappUrl = `https://wa.me/919701100974?text=${whatsappText}`;
+      const whatsappUrl = `https://wa.me/918977910974?text=${whatsappText}`;
       window.open(whatsappUrl, '_blank');
 
       setSubmitted(true);

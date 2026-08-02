@@ -176,7 +176,7 @@ export default function Apply() {
         `🛠 *Service:* ${finalService}\n\n` +
         `💬 *Message:*\n${message || "—"}`
       );
-      window.open(`https://wa.me/919701100974?text=${whatsappText}`, "_blank");
+      window.open(`https://wa.me/918977910974?text=${whatsappText}`, "_blank");
 
       setSubmitted(true);
       form.reset();

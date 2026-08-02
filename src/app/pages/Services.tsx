@@ -63,7 +63,7 @@ function ServiceCard({ s, index }: { s: any, index: number }) {
             </li>
           ))}
         </ul>
-        <Link to="/contact"
+        <Link to="/apply"
           className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground rounded-full font-bold text-sm hover:shadow-[0_0_20px_rgba(15,110,110,0.3)] hover:scale-105 transition-all">
           Get Involved <ArrowRight size={16} />
         </Link>
@@ -111,7 +111,7 @@ export default function Services() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-6 relative overflow-hidden flex flex-col items-center justify-center md:min-h-[70vh]">
+      <section className="pt-24 pb-10 md:pt-28 md:pb-14 px-4 md:px-6 relative overflow-hidden flex flex-col items-center justify-center md:min-h-[45vh]">
         {/* React Bits Aurora Background */}
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#29B6F6", "#4CAF50"]} amplitude={1.2} />
@@ -123,7 +123,7 @@ export default function Services() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Programs</SectionLabel>
           </motion.div>
-          <h1 className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
             <BlurText text="Our" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>Services</GradientText>
           </h1>
@@ -138,7 +138,7 @@ export default function Services() {
       </section>
 
       {/* Services detail */}
-      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
+      <section className="py-8 md:py-14 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6 space-y-24">
           {displayServices.map((s, i) => (
             <ServiceCard key={`${s.slug}-${i}`} s={s} index={i} />

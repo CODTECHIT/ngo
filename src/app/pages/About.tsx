@@ -1,10 +1,40 @@
-import { Heart, Target, Eye, Award, CheckCircle } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Heart, Target, Eye, Award, CheckCircle, Shield, HeartHandshake, Sprout, BookOpen, Users, Globe, Sparkles, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
-import { motion } from "motion/react";
+import { motion, useInView, animate } from "motion/react";
 import { SectionLabel } from "../components/Layout";
 import Aurora from "../components/reactbits/Aurora";
 import BlurText from "../components/reactbits/BlurText";
 import GradientText from "../components/reactbits/GradientText";
+import { PartnersMarquee } from "../components/PartnersMarquee";
+import { STATS } from "../data";
+
+// ── Animated Counter (counts up when scrolled into view) ──────────────────────
+function AnimatedCounter({ value }: { value: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const target = parseInt(value.replace(/[^\d]/g, ""), 10) || 0;
+  const suffix = value.replace(/[\d,]/g, "");
+  const [display, setDisplay] = useState("0");
+
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(0, target, {
+      duration: 2,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => setDisplay(Math.round(v).toLocaleString("en-US")),
+    });
+    return () => controls.stop();
+  }, [inView, target]);
+
+  return (
+    <span ref={ref}>
+      {display}
+      {suffix}
+    </span>
+  );
+}
+
 // ── Shared Animation Variants ──────────────────────────────────────────────────
 const fadeIn = {
   hidden: { opacity: 0, y: 30 },
@@ -16,33 +46,142 @@ const staggerContainer = {
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
 };
 
+// ── Content ────────────────────────────────────────────────────────────────────
+const VALUES = [
+  { icon: Shield, title: "Integrity & Transparency", text: "We operate with complete openness — every rupee, every camp, and every partnership is accountable to the communities we serve." },
+  { icon: Heart, title: "Compassion & Dignity", text: "We meet every person with respect. Our work is rooted in empathy, ensuring help reaches those who need it most." },
+  { icon: HeartHandshake, title: "Collaboration & Partnership", text: "Real change happens together. We work hand-in-hand with police, hospitals, civic bodies, and community volunteers." },
+  { icon: Sprout, title: "Sustainable Impact", text: "We build programs that outlast a single camp — planting seeds of education, health, and self-reliance for generations." },
+];
+
+const FOCUS_AREAS = [
+  { icon: Heart, title: "Health & Eye Care", desc: "Free eye check-up camps, spectacle distribution, blood donation drives, and general health screening for under-served communities.", tag: "Health" },
+  { icon: BookOpen, title: "Education & Skill Development", desc: "Awareness and skill-building programs for youth, plus safe agricultural practice education for farming communities.", tag: "Education" },
+  { icon: Users, title: "Women Empowerment", desc: "Initiatives supporting women's confidence, participation, and self-sustainability within local communities.", tag: "Women" },
+  { icon: Globe, title: "Community & Rural Development", desc: "Drug awareness drives, polio vaccination awareness, and rural health outreach across Telangana.", tag: "Community" },
+];
+
+const MILESTONES = [
+  { year: "Dec 2025", title: "First Health Camp", text: "Our free eye check-up camp in Dahegam screened 150+ people and identified 45 individuals for free spectacles — the spark of our journey." },
+  { year: "Jan 2026", title: "Formal Registration", text: "Srishreevision Foundation was registered (No. 20967/6) as a non-profit to scale up our community health and welfare work." },
+  { year: "Jun 2026", title: "Blood Donation & Health Check Camp", text: "Partnering with Hindu Jagarana Mancha and iCare Vision Center, we hosted free sugar, BP, and hemoglobin testing alongside a blood donation drive." },
+  { year: "Jun 2026", title: "Drug Awareness Program", text: "A youth awareness drive in Khagaznagar, run in partnership with Telangana Police, TGNAB, and Lions Club of International." },
+  { year: "Aug 2026", title: "Annual Green Earth Drive", text: "Our largest planned community event — 500+ volunteers joining a massive tree plantation drive at Central Park, Khagaznagar." },
+];
+
 export default function About() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-6 relative overflow-hidden flex flex-col items-center justify-center md:min-h-[70vh]">
+      <section className="pt-24 pb-10 md:pt-28 md:pb-14 px-4 md:px-6 relative overflow-hidden flex flex-col items-center justify-center md:min-h-[45vh]">
         {/* React Bits Aurora Background */}
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#29B6F6", "#4CAF50"]} amplitude={1.2} />
         </div>
-        
+
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Our Story</SectionLabel>
           </motion.div>
-          <h1 className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
             <BlurText text="About" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>SRISHREEVISION FOUNDATION</GradientText>
           </h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-600 max-w-3xl mx-auto text-lg md:text-xl font-light leading-relaxed">
             We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development.
           </motion.p>
+        </div>
+      </section>
+
+      {/* Who We Are */}
+      <section className="py-8 md:py-14 px-4 md:px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="flex justify-center"><SectionLabel className="justify-center">Who We Are</SectionLabel></div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">A Local Vision with a Mission to Serve</h2>
+            <p className="text-zinc-600 text-lg font-light leading-relaxed">
+              Born in the heart of Hyderabad, Telangana, Srishreevision Foundation exists to close the gap between communities in need and the services that can transform their lives.
+            </p>
+          </div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <motion.div variants={fadeIn} className="bg-white border border-black/10 rounded-3xl p-8 md:p-10 hover:border-primary/30 transition-all">
+              <div className="flex items-center gap-3 mb-5">
+                <Sparkles size={20} className="text-primary" />
+                <h3 className="text-xl font-bold text-zinc-900">Why We Exist</h3>
+              </div>
+              <p className="text-zinc-600 font-light leading-relaxed">
+                Every community has unseen needs — eyes that cannot afford a check-up, families that miss out on essential health screenings, and youth who lack awareness and opportunity. We saw these needs in our own neighbourhoods and chose to act, one camp, one conversation, one life at a time.
+              </p>
+            </motion.div>
+            <motion.div variants={fadeIn} className="bg-white border border-black/10 rounded-3xl p-8 md:p-10 hover:border-primary/30 transition-all">
+              <div className="flex items-center gap-3 mb-5">
+                <Heart size={20} className="text-primary" />
+                <h3 className="text-xl font-bold text-zinc-900">How We Work</h3>
+              </div>
+              <p className="text-zinc-600 font-light leading-relaxed">
+                We partner where expertise lives. Hospitals and vision centers deliver the care, police and civic bodies bring the reach, and our volunteers bring the heart. By pooling these strengths, even a small foundation can create outsized, lasting impact.
+              </p>
+            </motion.div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { label: "Based In", value: "Hyderabad, Telangana" },
+              { label: "Registered", value: "No. 20967/6, Jan 2026" },
+              { label: "Focus", value: "Health, Education, Women, Community" },
+              { label: "Approach", value: "Camps, Awareness, Outreach" },
+            ].map((f, i) => (
+              <motion.div
+                key={f.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-black/[0.03] border border-black/10 rounded-2xl p-5 text-center hover:border-primary/30 transition-all"
+              >
+                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">{f.label}</p>
+                <p className="text-sm font-semibold text-zinc-800">{f.value}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Core Values */}
+      <section className="py-12 md:py-24 px-4 md:px-6 bg-background border-y border-black/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="flex justify-center"><SectionLabel className="justify-center">Core Values</SectionLabel></div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">The Principles That Guide Every Camp</h2>
+            <p className="text-zinc-600 text-lg font-light leading-relaxed">
+              Our values are not posters on a wall — they are the standards we hold ourselves to in every program we run.
+            </p>
+          </div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {VALUES.map((v, i) => (
+              <motion.div
+                key={v.title}
+                variants={fadeIn}
+                transition={{ delay: i * 0.05 }}
+                className="bg-white border border-black/10 rounded-3xl p-8 hover:border-primary/30 hover:shadow-[0_0_30px_rgba(15,110,110,0.08)] transition-all group"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-black/5 flex items-center justify-center mb-6 border border-black/10 group-hover:bg-primary group-hover:border-primary transition-colors">
+                  <v.icon size={26} className="text-primary group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-lg font-bold text-zinc-900 mb-3">{v.title}</h3>
+                <p className="text-zinc-600 text-sm leading-relaxed font-light">{v.text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
@@ -107,6 +246,121 @@ export default function About() {
         </div>
       </section>
 
+      {/* What We Do */}
+      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <SectionLabel>What We Do</SectionLabel>
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900">Our Focus Areas</h2>
+            </div>
+            <Link to="/services" className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors group">
+              Explore all programs <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {FOCUS_AREAS.map((f, i) => (
+              <motion.div
+                key={f.title}
+                variants={fadeIn}
+                transition={{ delay: i * 0.05 }}
+                className="group bg-white border border-black/10 rounded-3xl p-8 hover:border-primary/30 hover:shadow-[0_0_30px_rgba(15,110,110,0.08)] transition-all flex flex-col"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-black/5 flex items-center justify-center mb-6 border border-black/10 group-hover:bg-primary group-hover:border-primary transition-colors">
+                  <f.icon size={26} className="text-primary group-hover:text-white transition-colors" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">{f.tag}</span>
+                <h3 className="text-lg font-bold text-zinc-900 mb-3">{f.title}</h3>
+                <p className="text-zinc-600 text-sm leading-relaxed font-light flex-1">{f.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Our Journey */}
+      <section className="py-12 md:py-24 px-4 md:px-6 bg-background border-y border-black/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-6 relative z-10">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="flex justify-center"><SectionLabel className="justify-center">Our Journey</SectionLabel></div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">From One Camp to a Movement</h2>
+            <p className="text-zinc-600 text-lg font-light leading-relaxed">
+              Every milestone below was made possible by the people who showed up — our volunteers, partners, and the communities who trusted us.
+            </p>
+          </div>
+
+          <div className="relative">
+            <div className="absolute left-4 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 via-accent/40 to-transparent" />
+            <div className="space-y-8">
+              {MILESTONES.map((m, i) => (
+                <motion.div
+                  key={m.title}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="relative pl-12"
+                >
+                  <span className="absolute left-4 top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary ring-4 ring-primary/15" />
+                  <div className="bg-white border border-black/10 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-all">
+                    <span className="text-xs font-bold uppercase tracking-widest text-primary">{m.year}</span>
+                    <h3 className="text-xl font-bold text-zinc-900 mt-2">{m.title}</h3>
+                    <p className="text-zinc-600 font-light mt-2 leading-relaxed">{m.text}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact at a Glance */}
+      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="flex justify-center"><SectionLabel className="justify-center">Impact at a Glance</SectionLabel></div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">Small Team, Real Results</h2>
+            <p className="text-zinc-600 text-lg font-light leading-relaxed">
+              A snapshot of what our grassroots programs have delivered so far.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {STATS.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white border border-black/10 rounded-3xl p-8 text-center hover:border-primary/30 hover:shadow-[0_0_30px_rgba(15,110,110,0.08)] transition-all"
+              >
+                <p className="text-4xl md:text-5xl font-bold text-primary mb-3 tracking-tight"><AnimatedCounter value={s.value} /></p>
+                <p className="text-zinc-600 text-sm font-light leading-relaxed">{s.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Partners */}
+      <section className="py-12 md:py-24 px-4 md:px-6 bg-background border-y border-black/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="flex justify-center"><SectionLabel className="justify-center">Partners</SectionLabel></div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">Stronger Together</h2>
+            <p className="text-zinc-600 text-lg font-light leading-relaxed">
+              Our programs are powered by trusted partners who share their expertise, reach, and resources.
+            </p>
+          </div>
+
+          <PartnersMarquee />
+        </div>
+      </section>
+
       {/* Registration & Compliance */}
       <section className="py-12 md:py-32 px-4 md:px-6 relative z-10">
         <div className="max-w-4xl mx-auto px-6 text-center">
@@ -115,14 +369,14 @@ export default function About() {
           <p className="text-zinc-600 text-lg leading-relaxed font-light mb-12">
             SRISHREEVISION FOUNDATION is formally registered and compliant with all statutory regulations to ensure complete transparency in our operations.
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
             {[
               "Registration No: 20967/6, Dated 14/01/2026",
               "CIN No: U85500TS2026NPL209676",
               "PAN: ABSCS4201R",
               "TAN: HYDS90801E",
-              "Registered Address: 1-11-22,   Golnaka Alwal, Tirumalagiri, Hyderabad, Telangana - 500010"
+              "Registered Address: 1-11-22,   Golnaka Alwal, Tirumaligiri, Hyderabad, Telangana - 500010"
             ].map((text, i) => (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} key={i} className={`flex items-start gap-3 bg-black/5 border border-black/10 rounded-xl p-4 ${i === 4 ? 'md:col-span-2' : ''}`}>
                 <CheckCircle size={18} className="text-accent shrink-0 mt-0.5" />
@@ -130,11 +384,32 @@ export default function About() {
               </motion.div>
             ))}
           </div>
-          
+
           <div className="mt-16">
             <Link to="/contact" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(15,110,110,0.2)]">
               Request Financial Audit Report
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Get Involved CTA */}
+      <section className="pb-24 md:pb-32 px-4 md:px-6 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-6 text-center bg-gradient-to-br from-primary to-accent rounded-[2rem] py-16 md:py-20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 pointer-events-none" />
+          <div className="relative z-10">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">Be Part of the Change</h2>
+            <p className="text-white/85 text-lg font-light mb-10 max-w-2xl mx-auto leading-relaxed">
+              Whether you volunteer your time, partner your expertise, or support with a donation — every contribution takes us one step closer to a thriving, self-reliant community.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link to="/apply?category=volunteer" className="px-8 py-4 bg-white text-primary font-bold rounded-full hover:scale-105 transition-all shadow-lg block text-center">
+                Volunteer With Us
+              </Link>
+              <Link to="/donate" className="px-8 py-4 border-2 border-white/70 text-white font-bold rounded-full hover:bg-white/10 hover:scale-105 transition-all block text-center">
+                Support Our Mission
+              </Link>
+            </div>
           </div>
         </div>
       </section>

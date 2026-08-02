@@ -84,7 +84,7 @@ export default function News() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 relative overflow-hidden flex items-center justify-center md:min-h-[60vh]">
+      <section className="pt-24 pb-10 md:pt-28 md:pb-14 relative overflow-hidden flex items-center justify-center md:min-h-[45vh]">
         {/* Animated Mesh Background */}
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
           <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
@@ -101,7 +101,7 @@ export default function News() {
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
+            className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
             News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Updates</span>
           </motion.h1>
           <motion.p 
@@ -114,7 +114,7 @@ export default function News() {
         </div>
       </section>
 
-      <section className="py-12 md:py-16 relative z-10">
+      <section className="py-8 md:py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           {/* Search + Filter */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col md:flex-row gap-4 mb-16">

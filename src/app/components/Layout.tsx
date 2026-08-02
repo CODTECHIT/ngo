@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, Outlet } from "react-router";
-import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, ArrowRight } from "lucide-react";
+import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, ArrowRight, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { EVENTS } from "../data";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
 import { HeaderTicker } from "./HeaderTicker";
+import { WelcomePopup } from "./WelcomePopup";
+import { StickyNotes } from "./StickyNotes";
+import { ScrollDonationPrompt } from "./ScrollDonationPrompt";
 
 const upcomingEvents = EVENTS.filter(e => e.status === "upcoming" || e.status === "ongoing");
 
@@ -97,7 +100,7 @@ function FloatingIslandNav() {
           )}
           <Link 
             to="/donate" 
-            className="text-sm font-bold px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary/90 hover:shadow-lg transition-all active:scale-95 block text-center"
+            className="donate-dance donate-shine text-sm font-bold px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary/90 hover:shadow-lg transition-all active:scale-95 block text-center"
           >
             Donate
           </Link>
@@ -135,7 +138,7 @@ function FloatingIslandNav() {
               <Link 
                 to="/donate"
                 onClick={() => setOpen(false)}
-                className="text-sm font-bold py-3 mt-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white shadow-lg w-full block text-center"
+                className="donate-dance donate-shine text-sm font-bold py-3 mt-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white shadow-lg w-full block text-center"
               >
                 Donate Now
               </Link>
@@ -160,7 +163,7 @@ function Footer() {
               <div className="w-16 h-16 shrink-0 flex items-center justify-center">
                 <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="font-bold text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase">SRISHREEVISION FOUNDATION</span>
+              <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight">SRISHREEVISION FOUNDATION</span>
             </div>
             <p className="text-zinc-600 text-sm leading-relaxed max-w-sm mb-8 font-light">
               <strong className="block text-zinc-900 mb-2 font-bold">Local Vision, Global Impact</strong>
@@ -174,7 +177,7 @@ function Footer() {
           </div>
           {[
             { title: "Quick Links", links: [{ label: "About Us", to: "/about" }, { label: "Our Services", to: "/services" }, { label: "Events", to: "/events" }, { label: "Gallery", to: "/gallery" }, { label: "Contact", to: "/contact" }] },
-            { title: "Get Involved", links: [{ label: "Volunteer", to: "/contact" }, { label: "Corporate CSR", to: "/contact" }, { label: "Intern with Us", to: "/contact" }, { label: "Fundraise", to: "/contact" }, { label: "Partner NGOs", to: "/contact" }, { label: "Donate", to: "/donate" }] },
+            { title: "Get Involved", links: [{ label: "Volunteer", to: "/apply?category=volunteer" }, { label: "Corporate CSR", to: "/apply?category=csr" }, { label: "Intern with Us", to: "/apply?category=intern" }, { label: "Fundraise", to: "/apply?category=fundraise" }, { label: "Partner NGOs", to: "/apply?category=partner" }, { label: "Donate", to: "/donate" }] },
           ].map(col => (
             <div key={col.title}>
               <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-zinc-400 mb-6">
@@ -198,10 +201,14 @@ function Footer() {
             © 2026 Srishreevision Foundation. All rights reserved.
           </p>
           <div className="flex gap-6">
-            {["Privacy Policy", "Terms of Use", "Grievance Redressal"].map(l => (
-              <span key={l} className="text-zinc-500 text-xs cursor-pointer hover:text-zinc-900 transition-colors font-light">
-                {l}
-              </span>
+            {[
+              { label: "Privacy Policy", hash: "privacy" },
+              { label: "Terms of Use", hash: "terms" },
+              { label: "Grievance Redressal", hash: "grievance" },
+            ].map(l => (
+              <Link key={l.label} to={`/legal#${l.hash}`} className="text-zinc-500 text-xs hover:text-zinc-900 transition-colors font-light">
+                {l.label}
+              </Link>
             ))}
           </div>
         </div>
@@ -211,23 +218,48 @@ function Footer() {
 }
 
 export function Layout() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [location.pathname, location.hash]);
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/30 selection:text-white">
+      <WelcomePopup />
+      <StickyNotes />
+      <ScrollDonationPrompt />
       <HeaderTicker />
       <FloatingIslandNav />
       <main className="flex-1 relative">
         <Outlet />
       </main>
       <Footer />
-      <a
-        href="https://wa.me/919701100974?text=Hi! I would like to know more about Srishreevision Foundation."
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all cursor-pointer"
-        title="Chat with us on WhatsApp"
-      >
-        <MessageCircle size={28} fill="currentColor" />
-      </a>
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+        <a
+          href="tel:+918977910974"
+          className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(15,110,110,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(15,110,110,0.6)] transition-all cursor-pointer"
+          title="Call us now"
+        >
+          <Phone size={26} />
+        </a>
+        <a
+          href="https://wa.me/919701100974?text=Hi! I would like to know more about Srishreevision Foundation."
+          target="_blank"
+          rel="noreferrer"
+          className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all cursor-pointer"
+          title="Chat with us on WhatsApp"
+        >
+          <MessageCircle size={28} fill="currentColor" />
+        </a>
+      </div>
     </div>
   );
 }

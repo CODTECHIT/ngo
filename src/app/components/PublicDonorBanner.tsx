@@ -188,7 +188,7 @@ export default function PublicDonorBanner() {
           </div>
 
           {/* Quick Stats Pill */}
-          <div className="flex items-center gap-4 bg-white p-3.5 sm:p-4 rounded-2xl border border-zinc-200/80 shadow-md shrink-0">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white p-3.5 sm:p-4 rounded-2xl border border-zinc-200/80 shadow-md shrink-0 w-full sm:w-auto">
             <div className="text-center px-3 border-r border-zinc-200">
               <div className="text-xs font-bold uppercase tracking-wider text-zinc-400">Total Contributions</div>
               <div className="text-xl sm:text-2xl font-extrabold text-zinc-900">{totalDonors}</div>

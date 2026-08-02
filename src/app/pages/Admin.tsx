@@ -401,7 +401,7 @@ function AdminMessagesTab() {
           <p className="text-sm text-zinc-600 font-medium">Inquiries from the Contact Form</p>
         </div>
       </div>
-      <div className="bg-white border border-black/10 rounded-3xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-black/10 rounded-3xl overflow-x-auto shadow-xl">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-black/10 bg-black/[0.02]">
@@ -523,9 +523,9 @@ export default function Admin() {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex text-zinc-900">
+    <div className="min-h-screen bg-background flex flex-col lg:flex-row text-zinc-900">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-black/10 flex flex-col shrink-0">
+      <aside className="w-full lg:w-64 bg-white border-r border-black/10 flex flex-col shrink-0">
         <div className="h-20 flex items-center gap-3 px-6 border-b border-black/10">
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(15,110,110,0.3)]">
             <Heart size={14} className="text-primary-foreground" fill="currentColor" />

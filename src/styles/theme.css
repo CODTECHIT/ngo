@@ -112,10 +112,16 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: clip;
   }
 
   html {
     font-size: var(--font-size);
+    overflow-x: clip;
+  }
+
+  #root {
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -159,6 +165,83 @@
 
   .animate-ken-burns {
     animation: kenBurns 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes blinkDot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+  }
+
+  .blink-dot {
+    animation: blinkDot 1s ease-in-out infinite;
+  }
+
+  @keyframes donateDance {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    10% { transform: translateY(-4px) rotate(-2deg); }
+    20% { transform: translateY(-8px) rotate(2deg); }
+    30% { transform: translateY(-4px) rotate(-1deg); }
+    40% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(1.5deg); }
+    60% { transform: translateY(-2px) rotate(-1.5deg); }
+    70% { transform: translateY(-7px) rotate(2deg); }
+    80% { transform: translateY(-3px) rotate(0deg); }
+    90% { transform: translateY(0) rotate(-1deg); }
+  }
+
+  .donate-dance {
+    animation: donateDance 2.8s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes donateShine {
+    0% { transform: translateX(-200%) skewX(-20deg); }
+    60%, 100% { transform: translateX(300%) skewX(-20deg); }
+  }
+
+  .donate-shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .donate-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+    animation: donateShine 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .donate-shine-slow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .donate-shine-slow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    animation: donateShine 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .animate-marquee {
+    animation: marqueeScroll 32s linear infinite;
+  }
+
+  .animate-marquee:hover {
+    animation-play-state: paused;
   }
 
   label {

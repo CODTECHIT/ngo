@@ -14,7 +14,7 @@ import { usePublicAuth } from '../contexts/PublicAuthContext';
 const CAUSES = [
   {
     id: 'vision',
-    name: 'Gift of Sight (Vision Care)',
+    name: 'Vision Care',
     icon: Eye,
     tagline: 'Give Vision, Restore Hope',
     description: 'Sponsor free cataract screenings, diagnostic eye drops, and high-quality prescription spectacles for elderly villagers and children.',
@@ -22,19 +22,17 @@ const CAUSES = [
     bgLight: 'bg-emerald-50/80',
     borderLight: 'border-emerald-200',
     textLight: 'text-emerald-800',
-    impacts: {
-      200: 'Sponsors comprehensive eye screening & diagnostic eye drops for 1 elderly patient.',
-      400: 'Provides high-quality prescription spectacles for an underprivileged child or farmer.',
-      600: 'Funds a complete pre & post-operative cataract screening medicine pack.',
-      1000: 'Sponsors complete eye checkup, spectacles, and care kit for 2 elderly citizens.',
-      2500: 'Funds a specialized village glaucoma & vision screening booth for 15 patients.',
-      5000: 'Sponsors 5 complete cataract surgery care packages with intraocular lens support.'
-    },
+    presets: [
+      { amount: 200, label: 'Spectacles', impact: 'Provide one pair of spectacles to a student.' },
+      { amount: 1000, label: 'School Vision', impact: 'Support vision care initiatives for a school.' },
+      { amount: 2500, label: 'Cataract Surgery', impact: 'Sponsor cataract surgery for one elderly person.' },
+      { amount: 5000, label: 'School Program', impact: 'Donate spectacles for students through a school vision program.' }
+    ],
     defaultImpact: 'Every rupee directly funds rural vision checkups and prevents avoidable blindness in tribal communities.'
   },
   {
     id: 'health',
-    name: 'Rural Health & Life Care',
+    name: 'Rural Healthcare',
     icon: Stethoscope,
     tagline: 'Healthcare to the Doorstep',
     description: 'Fund diagnostic camps, blood sugar/BP testing units, and basic medicine distribution in remote tribal hamlets.',
@@ -42,19 +40,17 @@ const CAUSES = [
     bgLight: 'bg-blue-50/80',
     borderLight: 'border-blue-200',
     textLight: 'text-blue-800',
-    impacts: {
-      200: 'Provides basic essential diagnostic medicine pack for a tribal elder.',
-      400: 'Sponsors blood sugar, hemoglobin, and BP diagnostic testing for 5 villagers.',
-      600: 'Funds 1 month of hypertension and diabetes medication for a senior citizen.',
-      1000: 'Sponsors a complete emergency first-aid and wellness kit for a rural school.',
-      2500: 'Funds a half-day mobile diagnostic health camp screening 25+ villagers.',
-      5000: 'Sponsors comprehensive health checkup and medicine distribution for an entire hamlet.'
-    },
+    presets: [
+      { amount: 200, label: 'Elderly Care', impact: 'Support healthcare for one elderly person.' },
+      { amount: 600, label: 'Health Package', impact: 'Sponsor a health package for 5 people.' },
+      { amount: 2500, label: 'Village Camp', impact: 'Support a village health camp.' },
+      { amount: 5000, label: 'Medicine Drive', impact: 'Sponsor medicine distribution during a village medical camp.' }
+    ],
     defaultImpact: 'Your donation provides essential life-saving diagnostic medical care to underserved rural populations.'
   },
   {
     id: 'women',
-    name: 'Women Empowerment & Skills',
+    name: 'Women Empowerment',
     icon: Users,
     tagline: 'Empower a Woman, Uplift a Family',
     description: 'Provide vocational tailoring equipment, financial literacy training, and self-reliance seed kits to rural women.',
@@ -62,14 +58,12 @@ const CAUSES = [
     bgLight: 'bg-purple-50/80',
     borderLight: 'border-purple-200',
     textLight: 'text-purple-800',
-    impacts: {
-      200: 'Provides tailoring thread, needles, and basic craft tools for 1 trainee.',
-      400: 'Sponsors 1 week of vocational stitching and embroidery training for a rural woman.',
-      600: 'Funds financial literacy and micro-entrepreneurship study materials.',
-      1000: 'Sponsors 1 full month of comprehensive sewing and skill development training.',
-      2500: 'Provides a complete starter tool-kit and fabric roll for a home entrepreneur.',
-      5000: 'Co-sponsors a commercial sewing machine to help a rural woman achieve independence.'
-    },
+    presets: [
+      { amount: 1000, label: 'Stitch Training', impact: 'Sponsor vocational stitching training for 1 woman.' },
+      { amount: 2500, label: '5 Women', impact: 'Sponsor stitching training for 5 women in a village.' },
+      { amount: 5000, label: 'Sewing Machine', impact: "Donate 1 sewing machine to support women's livelihoods." },
+      { amount: 20000, label: '6-Month Program', impact: "Sponsor a 6-month vocational training program. The completion certificate will carry the sponsor's name." }
+    ],
     defaultImpact: 'Empowering women with vocational skills creates sustainable income and strengthens entire communities.'
   },
   {
@@ -82,14 +76,11 @@ const CAUSES = [
     bgLight: 'bg-amber-50/80',
     borderLight: 'border-amber-200',
     textLight: 'text-amber-800',
-    impacts: {
-      200: 'Provides notebooks, stationery, and pens for a student for 3 months.',
-      400: 'Sponsors a durable school bag and geometry study kit for a rural child.',
-      600: 'Funds daily nutritious mid-day fruit and milk supplements for a student for 1 month.',
-      1000: 'Sponsors complete textbooks and study materials for an entire academic year.',
-      2500: 'Funds an interactive digital learning kit and library books for a government school.',
-      5000: 'Sponsors full educational support, uniforms, and nutrition for 3 underprivileged children.'
-    },
+    presets: [
+      { amount: 500, label: 'School Kit', impact: 'Donate a school bag and gift for 1 student.' },
+      { amount: 1000, label: 'Nutrition Day', impact: 'Sponsor a one-day nutrition program for school children.' },
+      { amount: 10000, label: 'Classroom', impact: 'Sponsor a classroom with school bags and textbooks for students.' }
+    ],
     defaultImpact: 'Education is the most powerful tool to break the cycle of poverty. Your gift opens doors to a brighter future.'
   },
   {
@@ -102,24 +93,22 @@ const CAUSES = [
     bgLight: 'bg-teal-50/80',
     borderLight: 'border-teal-200',
     textLight: 'text-teal-800',
-    impacts: {
-      200: 'Plants and nurtures 2 native fruit saplings in a rural community space.',
-      400: 'Sponsors 5 native shade trees with protective tree guards.',
-      600: 'Funds organic manure and drip watering support for 10 saplings for 6 months.',
-      1000: 'Sponsors a green plantation drive planting 15 native trees in a public school.',
-      2500: 'Funds a community water-harvesting trench and 30 tree saplings.',
-      5000: 'Sponsors an entire green grove of 75+ trees with 1-year volunteer maintenance.'
-    },
+    presets: [
+      { amount: 200, label: '2 Saplings', impact: 'Plants and nurtures 2 native fruit saplings in a rural community space.' },
+      { amount: 400, label: '5 Trees', impact: 'Sponsors 5 native shade trees with protective tree guards.' },
+      { amount: 600, label: 'Manure Kit', impact: 'Funds organic manure and drip watering support for 10 saplings for 6 months.' },
+      { amount: 1000, label: '15 Trees', impact: 'Sponsors a green plantation drive planting 15 native trees in a public school.' },
+      { amount: 2500, label: '30 Saplings', impact: 'Funds a community water-harvesting trench and 30 tree saplings.' },
+      { amount: 5000, label: 'Green Grove', impact: 'Sponsors an entire green grove of 75+ trees with 1-year volunteer maintenance.' }
+    ],
     defaultImpact: 'Protecting our environment ensures clean air, water, and sustainable livelihoods for future generations.'
   }
 ];
 
-const PRESET_AMOUNTS = [200, 400, 600, 1000, 2500, 5000];
-
 export default function Donate() {
   const { user } = usePublicAuth();
   const [selectedCause, setSelectedCause] = useState(CAUSES[0]);
-  const [amount, setAmount] = useState<number>(400);
+  const [amount, setAmount] = useState<number>(CAUSES[0].presets[0].amount);
   const [isCustomAmount, setIsCustomAmount] = useState(false);
   const [customAmountVal, setCustomAmountVal] = useState<string>('');
 
@@ -139,6 +128,12 @@ export default function Donate() {
     setAmount(val);
   };
 
+  const handleCauseSelect = (cause: typeof CAUSES[0]) => {
+    setSelectedCause(cause);
+    setIsCustomAmount(false);
+    setAmount(cause.presets[0].amount);
+  };
+
   const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/[^0-9]/g, '');
     setCustomAmountVal(val);
@@ -154,7 +149,8 @@ export default function Donate() {
     }));
   };
 
-  const currentImpact = (selectedCause.impacts as any)[amount] ||
+  const currentPreset = selectedCause.presets.find(p => p.amount === amount);
+  const currentImpact = currentPreset?.impact ||
     (amount >= 5000 ? `Creates a transformational, large-scale impact in ${selectedCause.name} benefitting dozens of families!` : selectedCause.defaultImpact);
 
   const handleDonateSubmit = async (e: React.FormEvent) => {
@@ -254,7 +250,7 @@ export default function Donate() {
   return (
     <div className="bg-background min-h-screen pb-24">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-20 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
+      <section className="pt-24 pb-10 md:pt-28 md:pb-14 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#4CAF50", "#29B6F6"]} amplitude={1.3} />
         </div>
@@ -300,7 +296,7 @@ export default function Donate() {
                     key={cause.id}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    onClick={() => setSelectedCause(cause)}
+                    onClick={() => handleCauseSelect(cause)}
                     className={`p-5 rounded-3xl border-2 cursor-pointer transition-all relative overflow-hidden ${isSelected
                       ? `bg-white border-[#0F6E6E] shadow-[0_10px_30px_rgba(15,110,110,0.15)] ring-2 ring-[#0F6E6E]/20`
                       : 'bg-white/80 border-black/5 hover:border-black/15 shadow-sm'
@@ -329,7 +325,7 @@ export default function Donate() {
           </div>
 
           {/* Right Column: Amount Selector & Donor Checkout Form */}
-          <div className="lg:col-span-6 sticky top-28">
+          <div className="lg:col-span-6 lg:sticky lg:top-28">
             <div className="bg-white rounded-3xl border border-black/10 shadow-2xl p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-[#0F6E6E]/20 to-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
 
@@ -341,27 +337,22 @@ export default function Donate() {
               </p>
 
               {/* Amount Preset Grid */}
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                {PRESET_AMOUNTS.map((val) => {
-                  const isBtnSelected = !isCustomAmount && amount === val;
+              <div className={`grid gap-3 mb-4 ${selectedCause.presets.length % 3 === 0 ? 'grid-cols-2 sm:grid-cols-3' : 'grid-cols-2'}`}>
+                {selectedCause.presets.map((preset) => {
+                  const isBtnSelected = !isCustomAmount && amount === preset.amount;
                   return (
                     <button
-                      key={val}
+                      key={preset.amount}
                       type="button"
-                      onClick={() => handleAmountClick(val)}
+                      onClick={() => handleAmountClick(preset.amount)}
                       className={`py-3.5 px-3 rounded-2xl font-extrabold text-base transition-all border-2 flex flex-col items-center justify-center ${isBtnSelected
                         ? 'bg-[#0F6E6E] text-white border-[#0F6E6E] shadow-[0_4px_15px_rgba(15,110,110,0.3)] scale-[1.02]'
                         : 'bg-zinc-50 hover:bg-zinc-100/80 text-zinc-800 border-zinc-200 hover:border-zinc-300'
                         }`}
                     >
-                      <span>₹{val.toLocaleString('en-IN')}</span>
+                      <span>₹{preset.amount.toLocaleString('en-IN')}</span>
                       <span className={`text-[10px] font-medium mt-0.5 ${isBtnSelected ? 'text-emerald-200' : 'text-zinc-400'}`}>
-                        {val === 200 && 'Screening'}
-                        {val === 400 && 'Spectacles'}
-                        {val === 600 && 'Care Kit'}
-                        {val === 1000 && 'Family Pack'}
-                        {val === 2500 && 'Camp Booth'}
-                        {val === 5000 && 'Surgeries'}
+                        {preset.label}
                       </span>
                     </button>
                   );

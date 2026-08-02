@@ -6,10 +6,12 @@ import Services from "./pages/Services";
 import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
+import Apply from "./pages/Apply";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Account from "./pages/Account";
 import Donate from "./pages/Donate";
+import Legal from "./pages/Legal";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
@@ -20,6 +22,7 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminNewsTicker from "./pages/admin/AdminNewsTicker";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminMessages from "./pages/admin/AdminMessages";
+import AdminApplications from "./pages/admin/AdminApplications";
 import AdminDonations from "./pages/admin/AdminDonations";
 import AdminTeamRoles from "./pages/admin/AdminTeamRoles";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -60,6 +63,7 @@ export const router = createBrowserRouter([
       { path: "gallery", element: <AdminGallery /> },
       { path: "messages", element: <AdminMessages /> },
       { path: "contact-messages", element: <AdminMessages /> },
+      { path: "applications", element: <AdminApplications /> },
       { path: "donations", element: <AdminDonations /> },
       { path: "team-roles", element: <AdminTeamRoles /> },
       // Any future protected admin routes go here
@@ -76,12 +80,14 @@ export const router = createBrowserRouter([
       { path: "events", Component: Events },
       { path: "gallery", Component: Gallery },
       { path: "contact", Component: Contact },
+      { path: "apply", Component: Apply },
       { path: "login", Component: Login },
       { path: "signup", Component: Signup },
       { path: "forgot-password", Component: ForgotPassword },
       { path: "reset-password", Component: ResetPassword },
       { path: "account", Component: Account },
       { path: "donate", Component: Donate },
+      { path: "legal", Component: Legal },
       { path: "*", Component: NotFound },
     ],
   },

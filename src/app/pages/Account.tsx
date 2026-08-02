@@ -642,7 +642,7 @@ export default function Account() {
                 <h3 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
                   <Heart className="text-red-500 fill-red-500" /> Saved Donations & 80G Receipts
                 </h3>
-                <Link to="/donate" className="text-xs font-bold bg-[#0F6E6E] text-white px-4 py-2 rounded-xl hover:bg-[#0c5959] transition-colors shadow-sm flex items-center gap-1">
+                <Link to="/donate" className="donate-dance donate-shine text-xs font-bold bg-[#0F6E6E] text-white px-4 py-2 rounded-xl hover:bg-[#0c5959] transition-colors shadow-sm flex items-center gap-1">
                   <Sparkles size={14} /> Make New Donation
                 </Link>
               </div>
@@ -650,7 +650,7 @@ export default function Account() {
               {donations.length === 0 ? (
                 <div className="text-center py-12 bg-black/5 rounded-2xl border border-dashed border-black/10">
                   <p className="text-zinc-500 font-medium mb-4">You have no saved donations yet. Make a transformational impact today!</p>
-                  <Link to="/donate" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#0F6E6E] to-[#4CAF50] text-white font-bold py-2.5 px-6 rounded-xl hover:opacity-95 transition-all shadow-md">
+                  <Link to="/donate" className="donate-dance donate-shine inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#0F6E6E] to-[#4CAF50] text-white font-bold py-2.5 px-6 rounded-xl hover:opacity-95 transition-all shadow-md">
                     Donate Now
                   </Link>
                 </div>

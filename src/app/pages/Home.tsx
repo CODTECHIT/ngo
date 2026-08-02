@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router";
-import { ArrowRight, ChevronDown, ChevronRight, Calendar, MapPin, Target, Eye, Award, MessageSquare, BookOpen, Leaf, Users, Globe, Shield, Handshake, Heart } from "lucide-react";
-import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
+import { ArrowRight, ChevronDown, ChevronRight, Calendar, MapPin, Target, Eye, Award, MessageSquare, BookOpen, Leaf, Users, Globe, Shield, Handshake, Heart, CheckCircle, Sparkles } from "lucide-react";
+import { motion, useScroll, useTransform, useInView, animate, AnimatePresence } from "motion/react";
 import { EVENTS, SERVICES, TESTIMONIALS, STATS } from "../data";
 import { SectionLabel, StatusBadge } from "../components/Layout";
 import Aurora from "../components/reactbits/Aurora";
@@ -10,6 +10,7 @@ import GradientText from "../components/reactbits/GradientText";
 import { useEvents } from "../hooks/useEvents";
 import { usePrograms } from "../hooks/usePrograms";
 import { useGallery } from "../hooks/useGallery";
+import { PartnersMarquee } from "../components/PartnersMarquee";
 
 const ICON_MAP: Record<string, React.ElementType> = { BookOpen, Leaf, Users, Globe, Shield, Handshake };
 
@@ -81,10 +82,10 @@ function Hero() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="relative min-h-[80vh] md:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-zinc-950 pt-20 md:pt-24 pb-10 md:pb-12">
+    <section className="relative min-h-[75vh] md:min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-zinc-950 pt-20 md:pt-24 pb-10 md:pb-12">
       {/* Background Image with Ken Burns & Overlay */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 animate-ken-burns"
           style={{
             backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070')`,
@@ -102,7 +103,7 @@ function Hero() {
           </span>
         </motion.div>
 
-        <h1 className="text-[2.5rem] leading-tight sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 md:mb-8 text-white max-w-5xl text-center drop-shadow-lg mx-auto">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight mb-6 md:mb-8 text-white max-w-5xl text-center drop-shadow-lg mx-auto">
           <BlurText text="Empowering Communities for a Brighter Tomorrow" delay={150} animateBy="words" direction="top" className="justify-center" />
         </h1>
 
@@ -129,13 +130,37 @@ function Hero() {
   );
 }
 
+// ── Animated Counter (counts up when scrolled into view) ──────────────────────
+function AnimatedCounter({ value, suffix = "" }: { value: number, suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const [display, setDisplay] = useState("0");
+
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(0, value, {
+      duration: 2,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => setDisplay(Math.round(v).toLocaleString("en-US")),
+    });
+    return () => controls.stop();
+  }, [inView, value]);
+
+  return (
+    <span ref={ref}>
+      {display}
+      {suffix}
+    </span>
+  );
+}
+
 // ── Impact Stats (Floating Island style) ──────────────────────────────────────
 function ImpactStats() {
   const stats = [
-    { label: "Lives Impacted", number: "10,000+" },
-    { label: "Camps Organized", number: "500+" },
-    { label: "Volunteers", number: "1,200+" },
-    { label: "Years Active", number: "25+" }
+    { label: "Lives Impacted", value: 10000, suffix: "+" },
+    { label: "Camps", value: 500, suffix: "+" },
+    { label: "Volunteers", value: 1200, suffix: "+" },
+    { label: "Years Active", value: 25, suffix: "+" }
   ];
   return (
     <section className="relative z-20 mt-8 px-4 md:px-6 max-w-7xl mx-auto">
@@ -143,7 +168,7 @@ function ImpactStats() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 md:gap-12 text-center items-center justify-center">
           {stats.map((s: any, i: number) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex flex-col items-center justify-center h-full p-2">
-              <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-900 mb-2 md:mb-3 tracking-tight">{s.number}</p>
+              <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-900 mb-2 md:mb-3 tracking-tight"><AnimatedCounter value={s.value} suffix={s.suffix} /></p>
               <p className="text-[10px] md:text-xs uppercase tracking-widest text-zinc-600 font-medium leading-[1.5] max-w-[120px]">{s.label}</p>
             </motion.div>
           ))}
@@ -155,15 +180,42 @@ function ImpactStats() {
 
 // ── About Preview ─────────────────────────────────────────────────────────────
 function AboutPreview() {
+  const highlights = [
+    "Registered non-profit with full statutory compliance",
+    "Free health & eye-care camps across Telangana",
+    "Education, women empowerment & rural development programs",
+    "Partner-driven outreach with police, hospitals & Lions Club",
+  ];
+
   return (
-    <section className="py-12 md:py-24 px-4 md:px-6 max-w-7xl mx-auto relative z-10">
+    <section className="py-8 md:py-16 px-4 md:px-6 max-w-7xl mx-auto relative z-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
           <SectionLabel>Who We Are</SectionLabel>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6">Our Mission & Vision</h2>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6">Empowering People, Changing Lives</h2>
           <div className="text-zinc-600 text-lg leading-relaxed mb-6 whitespace-pre-wrap">
-            We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development.
+            We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development. Born in Alwal, Hyderabad, we walk alongside the people we serve — one camp, one conversation, one life at a time.
           </div>
+          <div className="text-zinc-600 text-lg leading-relaxed mb-8 whitespace-pre-wrap">
+            Our mission is to empower individuals with better healthcare, foundational education, and essential skills — because we believe that when a person thrives, their whole community moves forward.
+          </div>
+          <ul className="space-y-3.5 mb-8">
+            {highlights.map((h, i) => (
+              <motion.li
+                key={h}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+                className="flex items-start gap-3 text-zinc-700 font-medium"
+              >
+                <span className="w-6 h-6 shrink-0 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center mt-0.5">
+                  <CheckCircle size={15} className="text-accent" />
+                </span>
+                {h}
+              </motion.li>
+            ))}
+          </ul>
           <Link to="/about" className="inline-flex items-center gap-2 font-bold text-primary hover:text-primary/80 transition-colors uppercase tracking-widest text-sm">
             Read Our Story <ArrowRight size={16} />
           </Link>
@@ -184,7 +236,7 @@ function AboutPreview() {
 // ── Bento Grid Services ────────────────────────────────────────────────────────
 function BentoServices() {
   const { programs } = usePrograms();
-  
+
   const displayPrograms = programs.length > 0 ? programs.map(p => ({
     title: p.title,
     desc: p.description,
@@ -249,7 +301,7 @@ function BentoServices() {
             );
           })}
         </motion.div>
-        
+
         <div className="mt-12 text-center">
           <Link to="/services" className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors">
             View all our programs <ArrowRight size={16} />
@@ -307,7 +359,7 @@ function PromotionalEventAds() {
             View All Campaigns
           </Link>
         </div>
-        
+
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {ads.map(event => (
             <motion.div variants={fadeIn} key={event.id} className="h-full">
@@ -323,11 +375,11 @@ function PromotionalEventAds() {
                     </h3>
                     <div className="space-y-3 mb-6">
                       <div className="flex items-start gap-3 text-zinc-600 text-xs font-medium">
-                        <Calendar size={14} className="text-primary shrink-0 mt-0.5" /> 
+                        <Calendar size={14} className="text-primary shrink-0 mt-0.5" />
                         <span>{event.event_date ? new Date(event.event_date).toLocaleDateString() : 'TBD'}</span>
                       </div>
                       <div className="flex items-start gap-3 text-zinc-600 text-xs font-medium">
-                        <MapPin size={14} className="text-primary shrink-0 mt-0.5" /> 
+                        <MapPin size={14} className="text-primary shrink-0 mt-0.5" />
                         <span className="line-clamp-2">{event.location || 'TBA'}</span>
                       </div>
                     </div>
@@ -355,7 +407,7 @@ function PromotionalEventAds() {
 // ── Gallery Preview ───────────────────────────────────────────────────────────
 function GalleryPreview() {
   const { images, loading } = useGallery();
-  
+
   const displayImages = images.slice(0, 4);
 
   return (
@@ -369,17 +421,17 @@ function GalleryPreview() {
           View full gallery <ArrowRight size={16} />
         </Link>
       </div>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {displayImages.length > 0 ? (
           displayImages.map((img, i) => {
             const isVideo = img.image_url?.match(/\.(mp4|webm)$/i) || img.image_url?.includes('/video/upload/');
             return (
-              <motion.div 
-                key={img.id} 
-                initial={{ opacity: 0, y: 20 }} 
-                whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true }} 
+              <motion.div
+                key={img.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className={`relative rounded-2xl overflow-hidden bg-black/5 shadow-sm group aspect-square ${i === 0 || i === 3 ? 'md:col-span-2 md:aspect-video' : ''}`}
               >
@@ -402,24 +454,43 @@ function GalleryPreview() {
   );
 }
 
+// ── Stronger Together (Partners) ──────────────────────────────────────────────
+function StrongerTogether() {
+  return (
+    <section className="py-12 md:py-24 px-4 md:px-6 bg-background border-t border-black/5 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <div className="flex justify-center"><SectionLabel className="justify-center">Partners</SectionLabel></div>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">Stronger Together</h2>
+          <p className="text-zinc-600 text-lg font-light leading-relaxed">
+            Our programs are powered by trusted partners who share their expertise, reach, and resources.
+          </p>
+        </div>
+        <PartnersMarquee />
+      </div>
+    </section>
+  );
+}
+
 // ── Donation CTA ─────────────────────────────────────────────────────────────
 function DonationCTA() {
   return (
-    <section className="py-40 relative overflow-hidden flex items-center justify-center">
+    <section className="py-24 md:py-32 relative overflow-hidden flex items-center justify-center">
       {/* Heavy glow background */}
       <div className="absolute inset-0 bg-white z-0" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[400px] bg-gradient-to-r from-primary via-accent to-primary blur-[100px] opacity-20 rounded-full animate-[pulse_10s_ease-in-out_infinite]" />
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 z-0 mix-blend-multiply" />
-      
+
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-5xl md:text-7xl font-bold text-zinc-900 mb-8 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
+        <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-8 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
           Make a <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>Real Impact</GradientText>
         </motion.h2>
         <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="text-zinc-600 text-xl font-light mb-12 max-w-2xl mx-auto">
           Every contribution directly funds our grassroots initiatives. No excessive overheads, just pure impact. Eligible for 80G tax exemption.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link to="/donate" className="px-10 py-5 bg-primary text-primary-foreground font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_40px_rgba(15,110,110,0.3)] text-lg block text-center">
+          <Link to="/donate" className="donate-dance donate-shine px-10 py-5 bg-primary text-primary-foreground font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_40px_rgba(15,110,110,0.3)] text-lg block text-center">
             Donate Now
           </Link>
         </motion.div>
@@ -437,6 +508,7 @@ export default function Home() {
       <BentoServices />
       <PromotionalEventAds />
       <GalleryPreview />
+      <StrongerTogether />
       <DonationCTA />
     </div>
   );

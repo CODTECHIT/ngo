@@ -86,7 +86,7 @@ export default function Contact() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 relative overflow-hidden flex items-center justify-center md:min-h-[60vh]">
+      <section className="pt-24 pb-10 md:pt-28 md:pb-14 relative overflow-hidden flex items-center justify-center md:min-h-[45vh]">
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
           <div className="absolute top-[10%] right-[20%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           <div className="absolute -bottom-[10%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
@@ -102,7 +102,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
+            className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
             Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Touch</span>
           </motion.h1>
           <motion.p
@@ -116,7 +116,7 @@ export default function Contact() {
       </section>
 
       {/* Main Content */}
-      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
+      <section className="py-8 md:py-14 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact Details */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="space-y-10">

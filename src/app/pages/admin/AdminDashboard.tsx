@@ -15,13 +15,16 @@ import {
   Mail,
   TrendingUp,
   DollarSign,
-  Sparkles
+  Sparkles,
+  ClipboardList
 } from 'lucide-react';
 import { getSentEmails, getUnreadEmailCount } from '../../../lib/emailService';
+import { useApplications } from '../../hooks/useApplications';
 
 export default function AdminDashboard() {
   const { user, isSuperAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const { unreadCount: unreadApplicationsCount, refetch: refetchApplications } = useApplications();
 
   useEffect(() => {
     if (!isSuperAdmin) {
@@ -132,6 +135,9 @@ export default function AdminDashboard() {
     };
 
     fetchCounts();
+    const handler = () => { fetchCounts(); refetchApplications(); };
+    window.addEventListener('ngo_applications_updated', handler);
+    return () => window.removeEventListener('ngo_applications_updated', handler);
   }, []);
 
   return (
@@ -205,8 +211,25 @@ export default function AdminDashboard() {
                   </h3>
                   <p className="text-4xl font-bold text-zinc-900">{counts.unreadMessages}</p>
                   {counts.unreadMessages > 0 && (
-                    <div className="absolute top-6 right-6 w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
+                    <div className="absolute top-6 right-6 w-3 h-3 rounded-full bg-rose-500 blink-dot" />
                   )}
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-l-rose-600 border-y border-r border-black/5 relative overflow-hidden">
+                  <h3 className="text-zinc-500 text-sm font-bold mb-2 uppercase tracking-wide flex items-center gap-1.5">
+                    <ClipboardList size={16} className="text-rose-600" /> New Applications
+                  </h3>
+                  <p className="text-4xl font-bold text-zinc-900">{unreadApplicationsCount}</p>
+                  {unreadApplicationsCount > 0 && (
+                    <div className="absolute top-6 right-6 w-3 h-3 rounded-full bg-rose-600 blink-dot" />
+                  )}
+                  <button
+                    onClick={() => navigate('/admin/ngo/applications')}
+                    className="mt-4 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 py-2 px-3 rounded-xl transition-colors flex items-center justify-between w-full border border-rose-200"
+                  >
+                    <span>Review Applications</span>
+                    <span>➔</span>
+                  </button>
                 </div>
               </div>
             </div>

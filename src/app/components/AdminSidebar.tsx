@@ -1,12 +1,21 @@
 import { NavLink } from 'react-router';
+import { useEffect } from 'react';
 import { 
   LayoutDashboard, List, Calendar, Image as ImageIcon, Heart, 
-  MessageSquare, Users, Shield, LogOut, Megaphone 
+  MessageSquare, Users, Shield, LogOut, Megaphone, ClipboardList
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useApplications } from '../hooks/useApplications';
 
 export function AdminSidebar() {
   const { isSuperAdmin, isEventManager, role, logout } = useAuth();
+  const { unreadCount, refetch } = useApplications();
+
+  useEffect(() => {
+    const handler = () => refetch();
+    window.addEventListener('ngo_applications_updated', handler);
+    return () => window.removeEventListener('ngo_applications_updated', handler);
+  }, [refetch]);
 
   const allLinks = [
     { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} />, requireSuper: true },
@@ -15,6 +24,7 @@ export function AdminSidebar() {
     { name: 'News', path: '/admin/ngo/news', icon: <Megaphone size={18} />, requireSuper: false },
     { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} />, requireSuper: false },
     { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} />, requireSuper: true },
+    { name: 'Applications', path: '/admin/ngo/applications', icon: <ClipboardList size={18} />, requireSuper: false, badge: unreadCount },
     { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} />, requireSuper: false },
     { name: 'Team Roles (RBAC)', path: '/admin/ngo/team-roles', icon: <Users size={18} />, requireSuper: true },
   ];
@@ -43,13 +53,13 @@ export function AdminSidebar() {
         </div>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex md:flex-col gap-1 p-4 overflow-x-auto md:overflow-x-visible md:flex-1">
         {visibleLinks.map((link) => (
           <NavLink
             key={link.path}
             to={link.path}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
+              `flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all shrink-0 md:w-full ${
                 isActive
                   ? 'bg-primary text-white shadow-md shadow-primary/20'
                   : 'text-zinc-600 hover:bg-black/5 hover:text-zinc-900'
@@ -57,7 +67,15 @@ export function AdminSidebar() {
             }
           >
             {link.icon}
-            {link.name}
+            <span className="flex-1">{link.name}</span>
+            {(link.badge ?? 0) > 0 && (
+              <span className="flex items-center gap-1.5 shrink-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 blink-dot" />
+                <span className="text-[10px] font-bold bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full">
+                  {link.badge}
+                </span>
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>

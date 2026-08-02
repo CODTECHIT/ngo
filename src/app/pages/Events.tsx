@@ -326,7 +326,7 @@ export default function Events() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
+      <section className="pt-24 pb-10 md:pt-28 md:pb-14 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         {/* React Bits Aurora Background */}
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#29B6F6", "#4CAF50"]} amplitude={1.2} />
@@ -338,7 +338,7 @@ export default function Events() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Get Involved</SectionLabel>
           </motion.div>
-          <h1 className="text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
             <BlurText text="Events &" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>Programs</GradientText>
           </h1>
@@ -353,7 +353,7 @@ export default function Events() {
       </section>
 
       {/* Filter & Grid */}
-      <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
+      <section className="py-8 md:py-14 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-3 mb-16">
             {(["all", "upcoming", "completed"] as Filter[]).map(f => (

@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
 
 export default function Login() {
   const { user, loading } = usePublicAuth();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
@@ -30,15 +30,15 @@ export default function Login() {
       const allowedEmails = (import.meta.env.VITE_ADMIN_ALLOWED_EMAILS || "")
         .split(",")
         .map((e: string) => e.trim().toLowerCase());
-        
+
       if (allowedEmails.includes(data.user.email?.toLowerCase() || '')) {
-         await supabase.auth.signOut();
-         setError("Administrators must log in through the Admin Portal.");
-         setLoggingIn(false);
-         return;
+        await supabase.auth.signOut();
+        setError("Administrators must log in through the Admin Portal.");
+        setLoggingIn(false);
+        return;
       }
     }
-    
+
     setLoggingIn(false);
   };
 
@@ -63,7 +63,7 @@ export default function Login() {
           <SectionLabel className="justify-center">Welcome Back</SectionLabel>
           <h1 className="text-3xl font-bold text-zinc-900 tracking-tight mt-2">Sign In</h1>
           <p className="text-zinc-500 text-sm mt-2 font-light">
-            Access your saved donations, event registrations, and profile.
+            Access your saved donations, event registrations and profile.
           </p>
         </div>
 
@@ -83,18 +83,18 @@ export default function Login() {
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
                 <Mail size={18} />
               </div>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loggingIn}
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/5 transition-colors disabled:opacity-50"
-                placeholder="you@example.com" 
+                placeholder="you@example.com"
               />
             </div>
           </div>
-          
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Password</label>
@@ -106,14 +106,14 @@ export default function Login() {
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
                 <Lock size={18} />
               </div>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loggingIn}
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/5 transition-colors disabled:opacity-50"
-                placeholder="••••••••" 
+                placeholder="••••••••"
               />
             </div>
           </div>

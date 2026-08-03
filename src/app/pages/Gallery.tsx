@@ -32,26 +32,26 @@ export default function Gallery() {
           <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           <div className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
         </div>
-        
+
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
             <SectionLabel>Visual Story</SectionLabel>
           </motion.div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
             Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Gallery</span>
           </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
-            Photographs and videos from our programs, events, and communities — moments that words alone cannot capture.
+            Photographs and videos from our programs, events and communities   moments that words alone cannot capture.
           </motion.p>
         </div>
       </section>
@@ -68,9 +68,9 @@ export default function Gallery() {
               </button>
             ))}
           </motion.div>
-          <motion.div 
-            key={activeTag} 
-            initial="hidden" animate="visible" variants={staggerContainer} 
+          <motion.div
+            key={activeTag}
+            initial="hidden" animate="visible" variants={staggerContainer}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {shown.length > 0 ? (
               shown.map((img, i) => {
@@ -117,20 +117,20 @@ export default function Gallery() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-6"
             onClick={() => setLightbox(null)}>
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="relative max-w-5xl w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black flex items-center justify-center min-h-[50vh]" 
+              className="relative max-w-5xl w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black flex items-center justify-center min-h-[50vh]"
               onClick={e => e.stopPropagation()}>
-              
+
               {lightbox.image_url?.match(/\.(mp4|webm)$/i) || lightbox.image_url?.includes('/video/upload/') ? (
                 <video src={lightbox.image_url} controls autoPlay className="w-full h-auto max-h-[80vh] object-contain" />
               ) : (
                 <img src={lightbox.image_url} alt={lightbox.caption || "Gallery Image"}
                   className="w-full h-auto max-h-[80vh] object-contain bg-transparent" />
               )}
-              
+
               <div className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
                 <p className="text-white font-bold text-xl mb-2">{lightbox.caption || lightbox.category}</p>
                 <span className="text-[10px] text-accent font-bold uppercase tracking-widest border border-accent/20 bg-accent/10 px-3 py-1 rounded-full">{lightbox.category}</span>

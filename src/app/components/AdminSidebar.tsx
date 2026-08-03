@@ -2,7 +2,7 @@ import { NavLink } from 'react-router';
 import { useEffect } from 'react';
 import { 
   LayoutDashboard, List, Calendar, Image as ImageIcon, Heart, 
-  MessageSquare, Users, Shield, LogOut, Megaphone, ClipboardList
+  MessageSquare, Users, Shield, LogOut, Megaphone, ClipboardList, Newspaper, Award
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useApplications } from '../hooks/useApplications';
@@ -21,10 +21,13 @@ export function AdminSidebar() {
     { name: 'Dashboard', path: '/admin/ngo/dashboard', icon: <LayoutDashboard size={18} />, requireSuper: true },
     { name: 'Programs / Services', path: '/admin/ngo/programs', icon: <List size={18} />, requireSuper: false },
     { name: 'Events', path: '/admin/ngo/events', icon: <Calendar size={18} />, requireSuper: false },
-    { name: 'News', path: '/admin/ngo/news', icon: <Megaphone size={18} />, requireSuper: false },
+    { name: 'News Articles', path: '/admin/ngo/news', icon: <Newspaper size={18} />, requireSuper: false },
+    { name: 'Header News Ticker', path: '/admin/ngo/news/ticker', icon: <Megaphone size={18} />, requireSuper: false },
     { name: 'Gallery', path: '/admin/ngo/gallery', icon: <ImageIcon size={18} />, requireSuper: false },
     { name: 'Donations & Donors', path: '/admin/ngo/donations', icon: <Heart size={18} />, requireSuper: true },
+    { name: 'Pledge Certificates', path: '/admin/ngo/pledges', icon: <Award size={18} />, requireSuper: false },
     { name: 'Applications', path: '/admin/ngo/applications', icon: <ClipboardList size={18} />, requireSuper: false, badge: unreadCount },
+
     { name: 'Contact Messages', path: '/admin/ngo/contact-messages', icon: <MessageSquare size={18} />, requireSuper: false },
     { name: 'Team Roles (RBAC)', path: '/admin/ngo/team-roles', icon: <Users size={18} />, requireSuper: true },
   ];

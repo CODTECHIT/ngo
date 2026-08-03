@@ -71,7 +71,7 @@ export function WelcomePopup() {
                 Namaste and a very warm welcome! We are glad to have you here.
               </p>
               <p className="text-sm md:text-base text-zinc-600 font-light leading-relaxed mb-6">
-                Your kindness can bring <span className="font-medium text-primary">sight, health, education, and hope</span> to those who need it most. Will you join us in making a real difference today?
+                Your kindness can bring <span className="font-medium text-primary">sight, health, education and hope</span> to those who need it most. Will you join us in making a real difference today?
               </p>
 
               <div className="flex flex-col gap-3">

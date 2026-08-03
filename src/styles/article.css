@@ -1,0 +1,200 @@
+/* ── Rich-text article typography ───────────────────────────────────────────
+   Shared by the public news reader, the admin preview and the rich text editor
+   so pasted content renders perfectly aligned on every surface. */
+
+.article-body {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: #3f3f46;
+  word-break: break-word;
+}
+
+.article-body > :first-child { margin-top: 0 !important; }
+.article-body > :last-child { margin-bottom: 0 !important; }
+
+.article-body p {
+  margin: 0 0 1.2em;
+  text-align: left;
+}
+
+.article-body h1,
+.article-body h2,
+.article-body h3,
+.article-body h4,
+.article-body h5,
+.article-body h6 {
+  font-family: 'Playfair Display', serif;
+  color: #18181b;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 1.7em 0 0.6em;
+}
+
+.article-body h1 { font-size: 2rem; }
+.article-body h2 { font-size: 1.7rem; }
+.article-body h3 { font-size: 1.35rem; }
+.article-body h4 { font-size: 1.15rem; }
+
+.article-body ul,
+.article-body ol {
+  margin: 0 0 1.2em;
+  padding-left: 1.6em;
+}
+
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+
+.article-body li {
+  margin-bottom: 0.45em;
+  padding-left: 0.25em;
+}
+
+.article-body li::marker {
+  color: #0F6E6E;
+  font-weight: 700;
+}
+
+.article-body blockquote {
+  margin: 1.5em 0;
+  padding: 0.9em 1.4em;
+  border-left: 4px solid #0F6E6E;
+  border-radius: 0 14px 14px 0;
+  background: #eef7f7;
+  font-style: italic;
+  color: #52525b;
+}
+
+.article-body a {
+  color: #0F6E6E;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.article-body a:hover { color: #0a4f4f; }
+
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  margin: 1.25em auto;
+  display: block;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.08);
+}
+
+.article-body figure {
+  margin: 1.5em 0;
+}
+
+.article-body figure img {
+  margin-bottom: 0.4em;
+}
+
+.article-body figcaption {
+  font-size: 0.8rem;
+  color: #71717a;
+  text-align: center;
+  font-style: italic;
+}
+
+.article-body strong { font-weight: 700; color: #18181b; }
+.article-body em { font-style: italic; }
+.article-body u { text-decoration: underline; text-underline-offset: 3px; }
+.article-body s { text-decoration: line-through; }
+.article-body mark { background: #fde68a; padding: 0 0.15em; border-radius: 3px; }
+.article-body code {
+  font-family: ui-monospace, 'DM Mono', monospace;
+  font-size: 0.85em;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  color: #18181b;
+}
+.article-body pre {
+  background: #18181b;
+  color: #fafafa;
+  padding: 1em 1.2em;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 1.4em 0;
+  font-size: 0.85em;
+  line-height: 1.7;
+}
+.article-body pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+}
+
+.article-body hr {
+  margin: 2em 0;
+  border: none;
+  border-top: 1px solid #e4e4e7;
+}
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  font-size: 0.925rem;
+}
+
+.article-body th,
+.article-body td {
+  border: 1px solid #e4e4e7;
+  padding: 0.65em 0.9em;
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-body th {
+  background: #f4f4f5;
+  font-weight: 700;
+  color: #18181b;
+}
+
+/* Alignment preserved from pasted content */
+.article-body [align='left'], .article-body .align-left { text-align: left; }
+.article-body [align='center'], .article-body .align-center { text-align: center; }
+.article-body [align='right'], .article-body .align-right { text-align: right; }
+.article-body [align='justify'], .article-body .align-justify { text-align: justify; }
+.article-body p[style*='text-align:center'] { text-align: center; }
+.article-body p[style*='text-align:right'] { text-align: right; }
+.article-body p[style*='text-align:justify'] { text-align: justify; }
+
+/* ── Rich text editor surface ────────────────────────────────────────────── */
+
+.rich-editor {
+  padding: 1rem 1.25rem;
+  outline: none;
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+.rich-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #a1a1aa;
+  font-weight: 400;
+  pointer-events: none;
+  display: block;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: #52525b;
+  transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover {
+  background: #e4e4e7;
+  color: #18181b;
+}

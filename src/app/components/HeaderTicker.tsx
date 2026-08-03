@@ -4,11 +4,32 @@ import { supabase } from '../../lib/supabase';
 import { Megaphone, Calendar, CheckCircle2, Sparkles, Radio } from 'lucide-react';
 
 const LOCAL_STORAGE_KEY = 'ngo_news_ticker_message';
+const LOCAL_ANNOUNCEMENTS_KEY = 'ngo_ticker_announcements';
 
 export function HeaderTicker() {
   const { events } = useEvents();
   const [adminMessage, setAdminMessage] = useState<string>('');
+  const [announcements, setAnnouncements] = useState<{ id: string; message: string }[]>([]);
   const [enabled, setEnabled] = useState<boolean>(true);
+
+  const loadAnnouncements = async () => {
+    try {
+      const { data } = await supabase
+        .from('ticker_announcements')
+        .select('id, message')
+        .order('created_at', { ascending: false });
+      if (Array.isArray(data) && data.length > 0) {
+        setAnnouncements(data.map(a => ({ id: a.id, message: a.message })));
+        return;
+      }
+    } catch (e) {}
+
+    // LocalStorage fallback
+    try {
+      const local = localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY);
+      if (local) setAnnouncements(JSON.parse(local));
+    } catch (e) {}
+  };
 
   const loadNewsMessage = async () => {
     try {
@@ -16,15 +37,16 @@ export function HeaderTicker() {
       if (data && data.news_ticker_message !== undefined) {
         setAdminMessage(data.news_ticker_message || '');
         setEnabled(data.news_ticker_enabled !== false);
-        return;
+      } else {
+        // LocalStorage fallback
+        const localVal = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const localEnabled = localStorage.getItem('ngo_news_ticker_enabled');
+        if (localVal !== null) setAdminMessage(localVal);
+        if (localEnabled !== null) setEnabled(localEnabled !== 'false');
       }
     } catch (e) {}
 
-    // LocalStorage fallback
-    const localVal = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const localEnabled = localStorage.getItem('ngo_news_ticker_enabled');
-    if (localVal !== null) setAdminMessage(localVal);
-    if (localEnabled !== null) setEnabled(localEnabled !== 'false');
+    await loadAnnouncements();
   };
 
   useEffect(() => {
@@ -62,6 +84,17 @@ export function HeaderTicker() {
     });
   }
 
+  // Add Multiple Announcements
+  announcements.forEach((a) => {
+    tickerItems.push({
+      id: `ann_${a.id}`,
+      badge: 'NEWS',
+      text: a.message,
+      icon: <Megaphone size={13} className="text-amber-300 shrink-0" />,
+      color: 'bg-amber-500/20 text-amber-300 border-amber-400/30'
+    });
+  });
+
   // Add Upcoming / Ongoing Events
   upcomingAndOngoingEvents.forEach(evt => {
     const formattedDate = evt.event_date ? new Date(evt.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Soon';
@@ -88,7 +121,7 @@ export function HeaderTicker() {
   if (tickerItems.length === 0) return null;
 
   return (
-    <div className="bg-gradient-to-r from-zinc-950 via-teal-950 to-zinc-950 text-white border-b border-teal-900/40 text-xs py-2 shadow-md relative z-40 select-none">
+    <div className="sticky top-0 z-50 bg-gradient-to-r from-zinc-950 via-teal-950 to-zinc-950 text-white border-b border-teal-900/40 text-xs py-2 shadow-md select-none">
       <div className="max-w-7xl mx-auto px-4 flex items-center gap-3">
         {/* Left Glowing Live Badge */}
         <div className="shrink-0 flex items-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-zinc-950 font-black px-3 py-1 rounded-full uppercase text-[10px] tracking-wider shadow-[0_0_12px_rgba(20,184,166,0.5)]">

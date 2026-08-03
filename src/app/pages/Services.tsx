@@ -30,7 +30,7 @@ function ServiceCard({ s, index }: { s: any, index: number }) {
   const Icon = ICON_MAP[s.icon] || Heart;
   const extras = s.points || [];
   const reversed = index % 2 !== 0;
-  
+
   const images = s.img ? s.img.split(',').filter(Boolean) : [];
   const [currentImg, setCurrentImg] = useState(0);
 
@@ -71,11 +71,11 @@ function ServiceCard({ s, index }: { s: any, index: number }) {
       <div className={`relative rounded-3xl overflow-hidden border border-black/10 bg-black/5 shadow-2xl group ${reversed ? "md:order-1" : ""}`}>
         <div className={`h-80 lg:h-96 flex items-center justify-center relative z-0`}>
           {images.map((imgUrl: string, idx: number) => (
-            <img 
+            <img
               key={idx}
-              src={imgUrl} 
-              alt={s.title} 
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === currentImg ? 'opacity-100' : 'opacity-0'}`} 
+              src={imgUrl}
+              alt={s.title}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === currentImg ? 'opacity-100' : 'opacity-0'}`}
             />
           ))}
           {images.length > 1 && (
@@ -93,7 +93,7 @@ function ServiceCard({ s, index }: { s: any, index: number }) {
 
 export default function Services() {
   const { programs, loading } = usePrograms();
-  
+
   // Use DB programs if available, otherwise fallback to static data
   const displayServices = programs.length > 0 ? programs.map(p => ({
     slug: p.id,
@@ -132,7 +132,7 @@ export default function Services() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
-            Six interconnected program streams that together address the root causes of social inequality — not just its symptoms.
+            Six interconnected program streams that together address the root causes of social inequality   not just its symptoms.
           </motion.p>
         </div>
       </section>

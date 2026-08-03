@@ -127,15 +127,15 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
         };
         const past = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
         const filteredPast = past.filter((r: any) => {
-          const isSameEvent = (r.event_id && r.event_id === event.id) || 
-                              (r.events?.title && r.events.title.toLowerCase() === event.title.toLowerCase());
+          const isSameEvent = (r.event_id && r.event_id === event.id) ||
+            (r.events?.title && r.events.title.toLowerCase() === event.title.toLowerCase());
           const isSameUser = (r.user_id && user?.id && r.user_id === user.id) ||
-                             (r.email && formData.email && r.email.toLowerCase() === formData.email.toLowerCase());
+            (r.email && formData.email && r.email.toLowerCase() === formData.email.toLowerCase());
           return !(isSameEvent && isSameUser);
         });
         localStorage.setItem('ngo_saved_registrations', JSON.stringify([localReg, ...filteredPast]));
         window.dispatchEvent(new Event('ngo_registration_updated'));
-      } catch {}
+      } catch { }
 
       // Trigger Gmail Event Registration Confirmation Email
       sendEventRegistrationEmail({
@@ -193,22 +193,22 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           className="bg-white border border-black/10 rounded-3xl shadow-2xl w-full max-w-xl p-8 relative overflow-hidden"
         >
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 blur-[60px] rounded-full pointer-events-none" />
-          
+
           <button onClick={onClose}
             className="absolute top-6 right-6 text-zinc-500 hover:text-zinc-900 transition-colors bg-black/5 rounded-full p-2 border border-black/10 z-20">
             <X size={16} />
           </button>
-          
+
           <h2 className="text-3xl font-bold mb-2 tracking-tight text-zinc-900 relative z-10">Register</h2>
           <p className="text-sm text-primary mb-8 font-medium relative z-10">{event.title} {event.is_free ? "(Free)" : `(₹${event.price})`}</p>
-          
+
           <div className="relative z-10">
             {step === 1 ? (
               <form onSubmit={onSubmitForm} className="space-y-4">
@@ -271,21 +271,21 @@ export default function Events() {
   const { events, loading } = useEvents();
   const { user } = usePublicAuth();
   const navigate = useNavigate();
-  
+
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  
+
   const [registeredEventIds, setRegisteredEventIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchUserRegistrations = async () => {
       const ids = new Set<string>();
-      
+
       // 1. Check localStorage for registrations made in this browser
       try {
         const localRegs = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
         localRegs.forEach((r: any) => {
-          const isSameUser = user 
+          const isSameUser = user
             ? (r.user_id === user.id || (r.email && user.email && r.email.toLowerCase().trim() === user.email.toLowerCase().trim()))
             : true;
           if (isSameUser) {
@@ -331,7 +331,7 @@ export default function Events() {
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-multiply">
           <Aurora colorStops={["#0F6E6E", "#29B6F6", "#4CAF50"]} amplitude={1.2} />
         </div>
-        
+
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
@@ -342,12 +342,12 @@ export default function Events() {
             <BlurText text="Events &" delay={150} animateBy="words" direction="top" />
             <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>Programs</GradientText>
           </h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
-            Join us on the ground — from plantation drives to leadership summits, there is always a way to make a difference.
+            Join us on the ground   from plantation drives to leadership summits, there is always a way to make a difference.
           </motion.p>
         </div>
       </section>
@@ -364,83 +364,84 @@ export default function Events() {
               </button>
             ))}
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             key={filter}
-            initial="hidden" animate="visible" variants={staggerContainer} 
+            initial="hidden" animate="visible" variants={staggerContainer}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loading ? (
-                <div className="col-span-3 flex justify-center text-primary py-20"><Loader2 className="animate-spin w-8 h-8" /></div>
+              <div className="col-span-3 flex justify-center text-primary py-20"><Loader2 className="animate-spin w-8 h-8" /></div>
             ) : filteredEvents.length === 0 ? (
-                <div className="col-span-3 text-center text-zinc-600 py-20">No events found for this category.</div>
+              <div className="col-span-3 text-center text-zinc-600 py-20">No events found for this category.</div>
             ) : (
-                filteredEvents.map((ev: Event) => {
-                    const isRegistered = registeredEventIds.has(ev.id);
-                    
-                    return (
-                    <motion.div variants={fadeIn} key={ev.id} className="h-full">
-                        <SpotlightCard className="group h-full flex flex-col">
-                        <div className="relative h-56 overflow-hidden bg-black/5 shrink-0">
-                            {ev.image_url ? (
-                              <img src={ev.image_url} alt={ev.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-400">No Image</div>
-                            )}
-                            <div className="absolute top-4 left-4 flex gap-2 z-10">
-                                <StatusBadge status={ev.status} />
-                            </div>
+              filteredEvents.map((ev: Event) => {
+                const isRegistered = registeredEventIds.has(ev.id);
+
+                return (
+                  <motion.div variants={fadeIn} key={ev.id} className="h-full">
+                    <SpotlightCard className="group h-full flex flex-col">
+                      <div className="relative h-56 overflow-hidden bg-black/5 shrink-0">
+                        {ev.image_url ? (
+                          <img src={ev.image_url} alt={ev.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-400">No Image</div>
+                        )}
+                        <div className="absolute top-4 left-4 flex gap-2 z-10">
+                          <StatusBadge status={ev.status} />
                         </div>
-                        
-                        <div className="p-4 md:p-6 flex-1 flex flex-col relative z-20">
-                            <div className="bg-white/80 backdrop-blur-xl border border-black/10 rounded-2xl p-6 flex-1 flex flex-col shadow-xl">
-                            <div className="inline-block mb-3">
-                                <span className="bg-black/5 border border-black/10 text-primary text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">
-                                Event
-                                </span>
+                      </div>
+
+                      <div className="p-4 md:p-6 flex-1 flex flex-col relative z-20">
+                        <div className="bg-white/80 backdrop-blur-xl border border-black/10 rounded-2xl p-6 flex-1 flex flex-col shadow-xl">
+                          <div className="inline-block mb-3">
+                            <span className="bg-black/5 border border-black/10 text-primary text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">
+                              Event
+                            </span>
+                          </div>
+                          <h3 className="font-bold text-xl text-zinc-900 leading-snug mb-4 group-hover:text-primary transition-colors tracking-tight line-clamp-2">
+                            {ev.title}
+                          </h3>
+
+                          <div className="space-y-2.5 mb-6 flex-1">
+                            <span className="flex items-center gap-3 text-xs text-zinc-600 font-medium">
+                              <Calendar size={14} className="text-accent shrink-0" /> {new Date(ev.event_date).toLocaleDateString()}
+                            </span>
+                            <span className="flex items-center gap-3 text-xs text-zinc-600 font-medium">
+                              <MapPin size={14} className="text-accent shrink-0" /> {ev.location}
+                            </span>
+                          </div>
+
+                          <p className="text-sm text-zinc-600 leading-relaxed font-light mb-6 line-clamp-3">
+                            {ev.description}
+                          </p>
+
+                          {ev.show_register_button && ev.status === 'upcoming' && (
+                            <div className="pt-5 border-t border-black/10 mt-auto">
+                              {isRegistered ? (
+                                <button disabled className="w-full flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-xl">
+                                  <CheckCircle2 size={16} /> Registered
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    if (!user) {
+                                      navigate('/login');
+                                    } else {
+                                      setSelectedEvent(ev);
+                                    }
+                                  }}
+                                  className="w-full flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-[0_0_15px_rgba(15,110,110,0.4)] hover:scale-105 transition-all">
+                                  Register <ArrowRight size={16} />
+                                </button>
+                              )}
                             </div>
-                            <h3 className="font-bold text-xl text-zinc-900 leading-snug mb-4 group-hover:text-primary transition-colors tracking-tight line-clamp-2">
-                                {ev.title}
-                            </h3>
-                            
-                            <div className="space-y-2.5 mb-6 flex-1">
-                                <span className="flex items-center gap-3 text-xs text-zinc-600 font-medium">
-                                <Calendar size={14} className="text-accent shrink-0" /> {new Date(ev.event_date).toLocaleDateString()}
-                                </span>
-                                <span className="flex items-center gap-3 text-xs text-zinc-600 font-medium">
-                                <MapPin size={14} className="text-accent shrink-0" /> {ev.location}
-                                </span>
-                            </div>
-                            
-                            <p className="text-sm text-zinc-600 leading-relaxed font-light mb-6 line-clamp-3">
-                                {ev.description}
-                            </p>
-                            
-                            {ev.show_register_button && ev.status === 'upcoming' && (
-                                <div className="pt-5 border-t border-black/10 mt-auto">
-                                  {isRegistered ? (
-                                    <button disabled className="w-full flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-xl">
-                                      <CheckCircle2 size={16} /> Registered
-                                    </button>
-                                  ) : (
-                                    <button
-                                        onClick={() => {
-                                          if (!user) {
-                                            navigate('/login');
-                                          } else {
-                                            setSelectedEvent(ev);
-                                          }
-                                        }}
-                                        className="w-full flex items-center justify-center gap-2 text-sm font-bold px-5 py-3 bg-primary text-primary-foreground rounded-xl hover:shadow-[0_0_15px_rgba(15,110,110,0.4)] hover:scale-105 transition-all">
-                                        Register <ArrowRight size={16} />
-                                    </button>
-                                  )}
-                                </div>
-                            )}
-                            </div>
+                          )}
                         </div>
-                        </SpotlightCard>
-                    </motion.div>
-                )})
+                      </div>
+                    </SpotlightCard>
+                  </motion.div>
+                )
+              })
             )}
           </motion.div>
         </div>
@@ -448,9 +449,9 @@ export default function Events() {
 
       {/* Registration modal */}
       {selectedEvent && (
-        <RegistrationModal 
-          event={selectedEvent} 
-          onClose={() => setSelectedEvent(null)} 
+        <RegistrationModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
           onRegisterSuccess={(id) => {
             setRegisteredEventIds(prev => new Set(prev).add(id));
             window.dispatchEvent(new Event('ngo_registration_updated'));

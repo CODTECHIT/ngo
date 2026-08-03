@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router';
-import { 
+import {
   LayoutDashboard, FileText, List, Calendar, Image as ImageIcon, MessageSquare, Heart,
   Loader2, Mail, Phone, Clock, Search, Filter, CheckCircle, DollarSign, Award, ShieldCheck,
   LogOut, Send, Eye, X, Download
@@ -76,7 +76,7 @@ export default function AdminDonations() {
 
   // Filtered donations
   const filteredDonations = donations.filter(d => {
-    const matchesSearch = 
+    const matchesSearch =
       (d.name && d.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (d.email && d.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (d.pan && d.pan.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -103,7 +103,7 @@ export default function AdminDonations() {
                 <Heart className="text-red-500 fill-red-500" /> Donors & Donations Ledger
               </h1>
               <p className="text-zinc-500 text-sm">
-                Complete overview of donor identities, contributed amounts, PAN audit numbers, and 80G receipt delivery.
+                Complete overview of donor identities, contributed amounts, PAN audit numbers and 80G receipt delivery.
               </p>
             </div>
           </header>
@@ -170,11 +170,10 @@ export default function AdminDonations() {
                 <button
                   key={cause}
                   onClick={() => setSelectedCause(cause)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                    selectedCause === cause
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${selectedCause === cause
                       ? 'bg-[#0F6E6E] text-white shadow-sm'
                       : 'bg-black/5 text-zinc-600 hover:bg-black/10'
-                  }`}
+                    }`}
                 >
                   {cause === 'ALL' ? 'All Causes' : cause}
                 </button>
@@ -193,7 +192,7 @@ export default function AdminDonations() {
                 <Heart className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
                 <h3 className="text-lg font-bold text-zinc-800 mb-1">No Donations Found</h3>
                 <p className="text-sm text-zinc-500 max-w-sm mx-auto">
-                  {searchQuery || selectedCause !== 'ALL' 
+                  {searchQuery || selectedCause !== 'ALL'
                     ? "No donation records matched your filter criteria. Try resetting your filters."
                     : "There are no donation records in the system yet. Once donors contribute, their details will appear here."}
                 </p>

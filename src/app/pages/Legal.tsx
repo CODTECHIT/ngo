@@ -78,7 +78,7 @@ function Block({ heading, body, list }: { heading: string; body?: string[]; list
 
 const PRIVACY_CONTENT = {
   intro:
-    "At SRISHREEVISION FOUNDATION, we are committed to protecting the privacy and dignity of the people we serve and those who support us. This Privacy Policy explains what personal information we collect, why we collect it, and how we handle it, in accordance with the Information Technology Act, 2000 and applicable data protection laws in India.",
+    "At SRISHREEVISION FOUNDATION, we are committed to protecting the privacy and dignity of the people we serve and those who support us. This Privacy Policy explains what personal information we collect, why we collect it and how we handle it, in accordance with the Information Technology Act, 2000 and applicable data protection laws in India.",
   blocks: [
     {
       heading: "Information We Collect",
@@ -86,11 +86,11 @@ const PRIVACY_CONTENT = {
         "We collect only the information necessary to run our programmes and provide our services. This may include:",
       ],
       list: [
-        "Personal details you provide voluntarily — name, email address, phone number, and postal address (e.g., when you contact us, register for an event, or subscribe to updates).",
-        "Donation records — name, payment details processed through secure payment gateways, and the amount and purpose of your contribution. We never store full card or bank details on our own systems.",
-        "Beneficiary information — information shared with us during health camps, education programmes and welfare initiatives to the extent required for delivering those services.",
-        "Volunteer information — skills, availability and emergency contact details of volunteers who register with us.",
-        "Technical data — your IP address, browser type and pages visited when you browse our website, collected through analytics tools and cookies.",
+        "Personal details you provide voluntarily   name, email address, phone number and postal address (e.g., when you contact us, register for an event, or subscribe to updates).",
+        "Donation records   name, payment details processed through secure payment gateways and the amount and purpose of your contribution. We never store full card or bank details on our own systems.",
+        "Beneficiary information   information shared with us during health camps, education programmes and welfare initiatives to the extent required for delivering those services.",
+        "Volunteer information   skills, availability and emergency contact details of volunteers who register with us.",
+        "Technical data   your IP address, browser type and pages visited when you browse our website, collected through analytics tools and cookies.",
       ],
     },
     {
@@ -98,7 +98,7 @@ const PRIVACY_CONTENT = {
       body: ["The information we collect is used strictly for purposes connected with our work:"],
       list: [
         "To respond to your enquiries and communicate with you about our programmes, events and initiatives.",
-        "To process donations, issue receipts (including 80G tax exemption certificates), and maintain donor records.",
+        "To process donations, issue receipts (including 80G tax exemption certificates) and maintain donor records.",
         "To register participants and volunteers for our events and camps.",
         "To improve our website, services and outreach based on aggregate usage patterns.",
         "To comply with legal, regulatory and audit obligations of a registered non-profit organisation.",
@@ -124,7 +124,7 @@ const PRIVACY_CONTENT = {
     {
       heading: "Data Security",
       body: [
-        "We take reasonable technical and organisational measures to protect your personal information from unauthorised access, loss, misuse or alteration. These include secure transmission of payment data through certified payment gateways, restricted access to donor and beneficiary records, and regular review of our security practices.",
+        "We take reasonable technical and organisational measures to protect your personal information from unauthorised access, loss, misuse or alteration. These include secure transmission of payment data through certified payment gateways, restricted access to donor and beneficiary records and regular review of our security practices.",
       ],
     },
     {
@@ -204,13 +204,13 @@ const TERMS_CONTENT = {
     {
       heading: "Intellectual Property",
       body: [
-        "All content on this website, including text, graphics, logos, images, and software, is the property of SRISHREEVISION FOUNDATION or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute or create derivative works from any content on this website without prior written permission from the Foundation.",
+        "All content on this website, including text, graphics, logos, images and software, is the property of SRISHREEVISION FOUNDATION or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute or create derivative works from any content on this website without prior written permission from the Foundation.",
       ],
     },
     {
       heading: "Third-Party Links",
       body: [
-        "This website may contain links to external websites operated by our partners or service providers. We are not responsible for the content or practices of these websites, and links are provided for your convenience only.",
+        "This website may contain links to external websites operated by our partners or service providers. We are not responsible for the content or practices of these websites and links are provided for your convenience only.",
       ],
     },
     {
@@ -254,12 +254,12 @@ const TERMS_CONTENT = {
 
 const GRIEVANCE_CONTENT = {
   intro:
-    "SRISHREEVISION FOUNDATION is committed to maintaining the highest standards of transparency, accountability and ethical conduct. This Grievance Redressal Policy provides a clear and accessible mechanism for any person — beneficiary, donor, volunteer, partner or member of the public — to raise a concern or complaint and have it addressed fairly and promptly.",
+    "SRISHREEVISION FOUNDATION is committed to maintaining the highest standards of transparency, accountability and ethical conduct. This Grievance Redressal Policy provides a clear and accessible mechanism for any person   beneficiary, donor, volunteer, partner or member of the public   to raise a concern or complaint and have it addressed fairly and promptly.",
   blocks: [
     {
       heading: "Who Can Raise a Grievance",
       body: [
-        "Any individual or organisation that interacts with the Foundation — including beneficiaries of our programmes, donors, volunteers, staff, partner organisations and the general public — may raise a grievance regarding our services, conduct, or compliance with our policies and commitments.",
+        "Any individual or organisation that interacts with the Foundation   including beneficiaries of our programmes, donors, volunteers, staff, partner organisations and the general public   may raise a grievance regarding our services, conduct, or compliance with our policies and commitments.",
       ],
     },
     {
@@ -289,7 +289,7 @@ const GRIEVANCE_CONTENT = {
     {
       heading: "How to Raise a Grievance",
       body: [
-        "You may raise a grievance through any of the following channels. Please provide your name, contact details, a clear description of the issue, and any supporting information or documents.",
+        "You may raise a grievance through any of the following channels. Please provide your name, contact details, a clear description of the issue and any supporting information or documents.",
       ],
       list: [
         "By email to " + NGO.email + " with the subject line \"Grievance\".",
@@ -304,10 +304,10 @@ const GRIEVANCE_CONTENT = {
         "All grievances are handled through the following process:",
       ],
       list: [
-        "Acknowledgement — you will receive an acknowledgement of your grievance within 3 working days.",
-        "Review — the Grievance Redressal Officer will investigate the matter, gathering relevant facts and consulting concerned parties as needed.",
-        "Resolution — we aim to resolve grievances within 21 working days of acknowledgement. Where a grievance requires more time, you will be informed of the reason and the expected timeline.",
-        "Communication — the outcome of the review, along with any remedial action taken, will be communicated to you through the channel you used to raise the grievance.",
+        "Acknowledgement   you will receive an acknowledgement of your grievance within 3 working days.",
+        "Review   the Grievance Redressal Officer will investigate the matter, gathering relevant facts and consulting concerned parties as needed.",
+        "Resolution   we aim to resolve grievances within 21 working days of acknowledgement. Where a grievance requires more time, you will be informed of the reason and the expected timeline.",
+        "Communication   the outcome of the review, along with any remedial action taken, will be communicated to you through the channel you used to raise the grievance.",
       ],
     },
     {
@@ -319,7 +319,7 @@ const GRIEVANCE_CONTENT = {
     {
       heading: "Confidentiality and Non-Retaliation",
       body: [
-        "All grievances are treated with strict confidentiality. Information is shared only with those involved in the investigation on a need-to-know basis. The Foundation follows a strict non-retaliation policy — no person will be penalised or discriminated against for raising a grievance in good faith.",
+        "All grievances are treated with strict confidentiality. Information is shared only with those involved in the investigation on a need-to-know basis. The Foundation follows a strict non-retaliation policy   no person will be penalised or discriminated against for raising a grievance in good faith.",
       ],
     },
     {
@@ -411,8 +411,8 @@ export default function Legal() {
             className="text-zinc-600 max-w-3xl mx-auto text-lg md:text-xl font-light leading-relaxed"
             style={{ fontFamily: "'Lato', sans-serif" }}
           >
-            The policies that govern how {NGO.name} collects information, how you may use our website, and how we address
-            complaints — all built on transparency, trust and accountability.
+            The policies that govern how {NGO.name} collects information, how you may use our website and how we address
+            complaints   all built on transparency, trust and accountability.
           </motion.p>
         </div>
       </section>
@@ -427,9 +427,8 @@ export default function Legal() {
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`relative rounded-2xl px-5 py-4 md:py-5 text-left transition-all ${
-                    isActive ? "text-white" : "text-zinc-700 hover:bg-black/5"
-                  }`}
+                  className={`relative rounded-2xl px-5 py-4 md:py-5 text-left transition-all ${isActive ? "text-white" : "text-zinc-700 hover:bg-black/5"
+                    }`}
                 >
                   {isActive && (
                     <motion.div

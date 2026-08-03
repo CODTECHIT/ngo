@@ -163,7 +163,7 @@ export default function Apply() {
           created_at: new Date().toISOString()
         });
         localStorage.setItem(LOCAL_KEY, JSON.stringify(existing));
-      } catch (e) {}
+      } catch (e) { }
 
       // 3. Open WhatsApp with a prefilled message so the admin gets an instant notification
       const whatsappText = encodeURIComponent(
@@ -174,7 +174,7 @@ export default function Apply() {
         `📍 *City:* ${city || "N/A"}\n` +
         `📌 *Category:* ${categoryMeta.label}\n` +
         `🛠 *Service:* ${finalService}\n\n` +
-        `💬 *Message:*\n${message || "—"}`
+        `💬 *Message:*\n${message || " "}`
       );
       window.open(`https://wa.me/918977910974?text=${whatsappText}`, "_blank");
 
@@ -257,7 +257,7 @@ export default function Apply() {
                           className={`p-4 rounded-2xl border text-left transition-all ${active
                             ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
                             : "bg-black/5 border-black/10 hover:border-primary/40 hover:bg-black/[0.04]"
-                          }`}
+                            }`}
                         >
                           <Icon size={18} className={`mb-2 ${active ? "text-white" : "text-primary"}`} />
                           <div className={`font-bold text-sm ${active ? "text-white" : "text-zinc-900"}`}>{opt.label}</div>
@@ -306,7 +306,7 @@ export default function Apply() {
                       {services.map(s => (
                         <option key={s} value={s} className="bg-white text-zinc-900">{s}</option>
                       ))}
-                      <option value={MANUAL_SERVICE} className="bg-white text-zinc-900">Other — type it manually</option>
+                      <option value={MANUAL_SERVICE} className="bg-white text-zinc-900">Other   type it manually</option>
                     </select>
                     <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
                   </div>

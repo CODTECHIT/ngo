@@ -108,7 +108,7 @@ function Hero() {
         </h1>
 
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8 }} className="text-base sm:text-lg md:text-2xl text-white/90 font-light max-w-2xl mb-10 px-4 drop-shadow-md">
-          Join Srishreevision Foundation in creating lasting impact through healthcare, education, and women empowerment.
+          Join Srishreevision Foundation in creating lasting impact through healthcare, education and women empowerment.
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1 }} className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 w-full sm:w-auto px-4 md:px-6">
@@ -194,10 +194,10 @@ function AboutPreview() {
           <SectionLabel>Who We Are</SectionLabel>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6">Empowering People, Changing Lives</h2>
           <div className="text-zinc-600 text-lg leading-relaxed mb-6 whitespace-pre-wrap">
-            We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development. Born in Alwal, Hyderabad, we walk alongside the people we serve — one camp, one conversation, one life at a time.
+            We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development. Born in Alwal, Hyderabad, we walk alongside the people we serve   one camp, one conversation, one life at a time.
           </div>
           <div className="text-zinc-600 text-lg leading-relaxed mb-8 whitespace-pre-wrap">
-            Our mission is to empower individuals with better healthcare, foundational education, and essential skills — because we believe that when a person thrives, their whole community moves forward.
+            Our mission is to empower individuals with better healthcare, foundational education and essential skills   because we believe that when a person thrives, their whole community moves forward.
           </div>
           <ul className="space-y-3.5 mb-8">
             {highlights.map((h, i) => (
@@ -225,7 +225,7 @@ function AboutPreview() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-6 left-6 right-6">
             <p className="text-white text-lg md:text-xl font-medium italic">"Empowering people, changing lives."</p>
-            <p className="text-white/80 mt-2 text-sm uppercase tracking-widest font-bold">— Director</p>
+            <p className="text-white/80 mt-2 text-sm uppercase tracking-widest font-bold">  Director</p>
           </div>
         </motion.div>
       </div>
@@ -245,7 +245,7 @@ function BentoServices() {
   })) : [
     {
       title: "Health & Eye Care",
-      desc: "Free eye check-up camps, spectacle distribution, blood donation drives, and community health awareness programs.",
+      desc: "Free eye check-up camps, spectacle distribution, blood donation drives and community health awareness programs.",
       icon: Heart,
       img: "https://archive.cehjournal.org/wp-content/uploads/2013/04/5591589853_b254109a50_o.jpg"
     },
@@ -257,13 +257,13 @@ function BentoServices() {
     },
     {
       title: "Women Empowerment",
-      desc: "Programs focused on confidence, self-sufficiency, and community participation for women.",
+      desc: "Programs focused on confidence, self-sufficiency and community participation for women.",
       icon: Users,
       img: "https://images.deccanchronicle.com/dc-Cover-evutgf5c1ji9f3bioadrrd1q22-20170307231336.Medi.jpeg"
     },
     {
       title: "Community & Rural Development",
-      desc: "Drug-awareness programs, polio awareness drives, and rural outreach in partnership with local police and Lions Club.",
+      desc: "Drug-awareness programs, polio awareness drives and rural outreach in partnership with local police and Lions Club.",
       icon: Globe,
       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrcFs-CJGepmn6IPdXItKuRt3EYDhm26uOQSb4Dnxt8awYzyYB_zzxtQyB&s=10"
     }
@@ -461,10 +461,10 @@ function StrongerTogether() {
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <div className="flex justify-center"><SectionLabel className="justify-center">Partners</SectionLabel></div>
+          <div className="flex justify-center"><SectionLabel className="justify-center">Partners With</SectionLabel></div>
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">Stronger Together</h2>
           <p className="text-zinc-600 text-lg font-light leading-relaxed">
-            Our programs are powered by trusted partners who share their expertise, reach, and resources.
+            Our programs are powered by trusted partners who share their expertise, reach and resources.
           </p>
         </div>
         <PartnersMarquee />

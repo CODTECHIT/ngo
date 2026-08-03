@@ -244,6 +244,29 @@
     animation-play-state: paused;
   }
 
+  @keyframes marqueeUp {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+
+  @keyframes marqueeDown {
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(0); }
+  }
+
+  .animate-marquee-up {
+    animation: marqueeUp 26s linear infinite;
+  }
+
+  .animate-marquee-down {
+    animation: marqueeDown 26s linear infinite;
+  }
+
+  .animate-marquee-up:hover,
+  .animate-marquee-down:hover {
+    animation-play-state: paused;
+  }
+
   label {
     font-size: var(--text-base);
     font-weight: 500;

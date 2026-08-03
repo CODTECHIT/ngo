@@ -4,8 +4,8 @@ import { X, Mail, FileText, Trash2, Printer, CheckCircle, ExternalLink, ShieldCh
 import { getSentEmails, markEmailAsRead, EmailNotification } from '../../lib/emailService';
 import { usePublicAuth } from '../contexts/PublicAuthContext';
 
-export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: { 
-  isOpen: boolean; 
+export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
+  isOpen: boolean;
   onClose: () => void;
   initialEmailId?: string | null;
   criteria?: any;
@@ -17,17 +17,17 @@ export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
 
   const loadEmails = () => {
     const allList = getSentEmails();
-    
+
     // Filter out internal admin system reports from regular users' view
-    let list = allList.filter(e => 
-      !e.subject.includes('Daily NGO Analytics') && 
+    let list = allList.filter(e =>
+      !e.subject.includes('Daily NGO Analytics') &&
       !e.subject.includes('Gmail Engine Health Report') &&
       !e.subject.includes('Executive Analytics')
     );
 
     // If user is logged in, ONLY show emails addressed to this user or matching their action
     if (user?.email) {
-      const userList = list.filter(e => 
+      const userList = list.filter(e =>
         e.to.toLowerCase() === user.email?.toLowerCase() ||
         (criteria?.email && e.to.toLowerCase() === criteria.email.toLowerCase()) ||
         (criteria?.transactionId && (e.metadata?.transactionId === criteria.transactionId || e.htmlContent.includes(criteria.transactionId))) ||
@@ -139,10 +139,10 @@ export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
               </div>
               <div>
                 <h3 className="font-bold text-lg leading-none">Your Email Confirmations & 80G Receipts</h3>
-                <p className="text-xs text-zinc-300 mt-1">Official Tax Invoices, Event Tickets, and Certificates delivered to your registered email</p>
+                <p className="text-xs text-zinc-300 mt-1">Official Tax Invoices, Event Tickets and Certificates delivered to your registered email</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <span className="hidden sm:inline-flex items-center gap-1.5 text-xs bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full font-semibold border border-emerald-500/30">
                 <ShieldCheck size={14} /> Official Verified Receipts
@@ -166,9 +166,8 @@ export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
                   <button
                     key={t}
                     onClick={() => setFilter(t)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all whitespace-nowrap ${
-                      filter === t ? 'bg-[#0F6E6E] text-white shadow-sm' : 'text-zinc-600 hover:bg-zinc-100'
-                    }`}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all whitespace-nowrap ${filter === t ? 'bg-[#0F6E6E] text-white shadow-sm' : 'text-zinc-600 hover:bg-zinc-100'
+                      }`}
                   >
                     {t === 'all' ? 'All Mails' : `${t}s`}
                   </button>
@@ -193,9 +192,8 @@ export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
                           setSelectedEmail(email);
                           markEmailAsRead(email.id);
                         }}
-                        className={`p-4 cursor-pointer transition-colors relative ${
-                          isSelected ? 'bg-emerald-50/70 border-l-4 border-[#0F6E6E]' : 'hover:bg-zinc-100/80 bg-white'
-                        }`}
+                        className={`p-4 cursor-pointer transition-colors relative ${isSelected ? 'bg-emerald-50/70 border-l-4 border-[#0F6E6E]' : 'hover:bg-zinc-100/80 bg-white'
+                          }`}
                       >
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <span className="text-xs font-bold text-zinc-900 truncate flex items-center gap-1.5">
@@ -276,7 +274,7 @@ export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
                   <Mail size={56} className="mb-4 opacity-20" />
                   <p className="text-base font-medium text-zinc-600">Select an email to view details</p>
                   <p className="text-xs text-zinc-400 max-w-sm mt-1">
-                    Your sent donation receipts, event tickets, and completion certificates will appear here.
+                    Your sent donation receipts, event tickets and completion certificates will appear here.
                   </p>
                 </div>
               )}

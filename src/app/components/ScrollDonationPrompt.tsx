@@ -67,7 +67,7 @@ export function ScrollDonationPrompt() {
                   <TrendingUp size={12} /> Liking what you see?
                 </p>
                 <p className="text-sm text-zinc-700 font-light leading-snug">
-                  Your donation today creates real change — sight, health, education & hope.
+                  Your donation today creates real change   sight, health, education & hope.
                 </p>
               </div>
 

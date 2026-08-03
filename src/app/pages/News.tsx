@@ -1,9 +1,8 @@
 import { useState, useRef } from "react";
-import { ArrowRight, Search, X, Calendar, Tag, Loader2 } from "lucide-react";
+import { ArrowRight, Search, Loader2, Newspaper } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { SectionLabel } from "../components/Layout";
+import { useNavigate } from "react-router";
 import { useNews, type NewsItem } from "../hooks/useNews";
-import { Link } from "react-router";
 
 const TAGS = ["All", "Campaign", "Recognition", "Partnership", "Impact", "Community", "Environment", "Announcement"];
 
@@ -47,7 +46,10 @@ function SpotlightCard({ children, className = "", onClick }: { children: React.
   return (
     <div
       ref={divRef}
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && onClick) { e.preventDefault(); onClick(); } }}
       onMouseMove={handleMouseMove}
       onFocus={handleFocus}
       onBlur={handleBlur}
@@ -68,10 +70,10 @@ function SpotlightCard({ children, className = "", onClick }: { children: React.
 }
 
 export default function News() {
+  const navigate = useNavigate();
   const { news, loading } = useNews();
   const [activeTag, setActiveTag] = useState("All");
   const [query, setQuery] = useState("");
-  const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
 
   const filtered = news.filter(n => {
     const tagMatch = activeTag === "All" || n.tag === activeTag;
@@ -80,44 +82,109 @@ export default function News() {
   });
 
   const [featured, ...rest] = filtered;
+  const latest = news[0];
+
+  const openArticle = (n: NewsItem) => navigate(`/news/${encodeURIComponent(String(n.id))}`);
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Hero Section */}
-      <section className="pt-24 pb-10 md:pt-28 md:pb-14 relative overflow-hidden flex items-center justify-center md:min-h-[45vh]">
-        {/* Animated Mesh Background */}
-        <div className="absolute inset-0 z-0 opacity-40 mix-blend-multiply pointer-events-none">
-          <div className="absolute -top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
-          <div className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-primary/20 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate]" />
-        </div>
-        
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-multiply z-0 pointer-events-none" />
+      {/* ── Distinctive Newsroom Header ──────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-[#F6F3EC] border-b-2 border-zinc-900">
+        {/* Top accent rule */}
+        <div className="h-1.5 bg-gradient-to-r from-primary via-accent-2 to-primary" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex justify-center">
-            <SectionLabel>Media</SectionLabel>
-          </motion.div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight">
-            News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">Updates</span>
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-zinc-600 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
-            Stories from the field, campaign highlights, partnerships, and organizational milestones.
-          </motion.p>
+        {/* Faint print texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{ backgroundImage: `repeating-linear-gradient(0deg, #18181b 0, #18181b 1px, transparent 1px, transparent 6px)` }} />
+
+        <div className="max-w-7xl mx-auto px-6 pt-10 pb-12 md:pt-14 md:pb-16 relative z-10">
+          {/* Masthead bar */}
+          <div className="flex items-center justify-between gap-4 text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase text-zinc-600 border-y-2 border-zinc-900 py-2.5 mb-8">
+            <span className="whitespace-nowrap">{today}</span>
+            <span className="hidden md:block flex-1 text-center text-zinc-500">Srishreevision Foundation — Official Newsroom</span>
+            <span className="whitespace-nowrap">India Edition</span>
+          </div>
+
+          {/* Headline block */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+            <div className="max-w-3xl">
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex items-center gap-3 mb-4"
+              >
+                <span className="inline-flex items-center gap-1.5 bg-red-600 text-white text-[10px] font-black px-3 py-1 rounded-sm uppercase tracking-[0.2em] shadow-md">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
+                  </span>
+                  Live
+                </span>
+                <span className="text-xs font-bold tracking-[0.2em] uppercase text-primary">Breaking Stories</span>
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.05 }}
+                className="font-['Playfair_Display'] text-5xl sm:text-6xl md:text-7xl font-black text-zinc-900 leading-[1.02] tracking-tight"
+              >
+                News &amp; Updates
+              </motion.h1>
+
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="h-1.5 w-28 bg-gradient-to-r from-accent-2 to-accent mt-5 origin-left"
+              />
+
+              <motion.p
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-zinc-600 text-base md:text-lg font-light leading-relaxed mt-5 max-w-xl"
+              >
+                Stories from the field, campaign highlights, partnerships and organizational milestones — straight from the foundation.
+              </motion.p>
+            </div>
+
+            {/* Edition side card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="hidden lg:flex flex-col gap-3 border-2 border-zinc-900 bg-white px-6 py-5 shadow-[6px_6px_0_0_rgba(24,24,27,0.9)]"
+            >
+              <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-[0.2em]">
+                <Newspaper size={16} /> Newsroom
+              </div>
+              <p className="text-3xl font-black text-zinc-900 font-['Playfair_Display'] leading-none">{news.length}</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Stories Published</p>
+              <div className="h-px bg-zinc-300" />
+              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Updated {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}</p>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Breaking strip */}
+        <div className="border-t-2 border-zinc-900 bg-zinc-950 text-white">
+          <div className="max-w-7xl mx-auto px-6 py-3 flex items-center gap-4">
+            <span className="bg-red-600 text-white text-[10px] font-black px-2.5 py-1 uppercase tracking-[0.2em] shrink-0">Breaking</span>
+            <p className="truncate font-medium text-sm text-zinc-100">
+              {latest?.title || "Stories from the field, campaign highlights and organizational milestones."}
+            </p>
+            <ArrowRight size={16} className="text-accent shrink-0" />
+          </div>
         </div>
       </section>
 
-      <section className="py-8 md:py-12 relative z-10">
+      {/* ── Search + Filters ─────────────────────────────────────────────────── */}
+      <section className="py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-6">
-          {/* Search + Filter */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col md:flex-row gap-4 mb-16">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col md:flex-row gap-4 mb-10">
             <div className="relative flex-1 max-w-sm">
               <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
               <input
@@ -155,7 +222,7 @@ export default function News() {
                 {/* Featured */}
                 {featured && (
                   <motion.div variants={fadeIn} className="mb-12">
-                    <SpotlightCard onClick={() => setSelectedArticle(featured)} className="group cursor-pointer">
+                    <SpotlightCard onClick={() => openArticle(featured)} className="group cursor-pointer">
                       <div className="grid grid-cols-1 lg:grid-cols-2">
                         <div className="h-64 lg:h-auto overflow-hidden bg-black/5 shrink-0 relative">
                           <img src={featured.img} alt={featured.title}
@@ -187,7 +254,7 @@ export default function News() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {rest.map(n => (
                     <motion.div variants={fadeIn} key={n.id} className="h-full">
-                      <SpotlightCard onClick={() => setSelectedArticle(n)} className="group cursor-pointer h-full flex flex-col">
+                      <SpotlightCard onClick={() => openArticle(n)} className="group cursor-pointer h-full flex flex-col">
                         <div className="h-48 overflow-hidden bg-black/5 shrink-0 relative">
                           <img src={n.img} alt={n.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
@@ -220,62 +287,6 @@ export default function News() {
           )}
         </div>
       </section>
-
-      {/* ARTICLE READER MODAL */}
-      {selectedArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col relative animate-in fade-in zoom-in-95 duration-200">
-            <div className="sticky top-0 bg-white/90 backdrop-blur-md px-8 py-4 border-b border-black/5 flex items-center justify-between z-20">
-              <span className="text-xs font-bold uppercase tracking-widest text-primary px-3 py-1 bg-primary/10 rounded-md">
-                {selectedArticle.tag}
-              </span>
-              <button
-                onClick={() => setSelectedArticle(null)}
-                className="p-2 hover:bg-black/5 rounded-full text-zinc-500 transition-colors"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            <div className="p-6 md:p-10 space-y-6">
-              {selectedArticle.img && (
-                <div className="w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-black/5 shadow-md">
-                  <img src={selectedArticle.img} alt={selectedArticle.title} className="w-full h-full object-cover" />
-                </div>
-              )}
-
-              <div className="flex items-center gap-4 text-xs text-zinc-500 font-medium">
-                <span className="flex items-center gap-1.5"><Calendar size={14} /> {selectedArticle.date}</span>
-                <span className="flex items-center gap-1.5"><Tag size={14} /> {selectedArticle.tag}</span>
-              </div>
-
-              <h1 className="text-2xl md:text-4xl font-bold text-zinc-900 font-['Playfair_Display'] leading-tight">
-                {selectedArticle.title}
-              </h1>
-
-              <div className="text-zinc-700 leading-relaxed text-base md:text-lg space-y-4 font-light whitespace-pre-line border-t border-black/5 pt-6">
-                {selectedArticle.content || selectedArticle.excerpt}
-              </div>
-
-              {selectedArticle.event_id && (
-                <div className="mt-8 p-6 rounded-2xl bg-primary/5 border border-primary/20 flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div>
-                    <h4 className="font-bold text-zinc-900">Interested in attending?</h4>
-                    <p className="text-xs text-zinc-600">This news update is linked to an active organizational event.</p>
-                  </div>
-                  <Link
-                    to="/events"
-                    onClick={() => setSelectedArticle(null)}
-                    className="px-6 py-2.5 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition-colors shrink-0"
-                  >
-                    View Events
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

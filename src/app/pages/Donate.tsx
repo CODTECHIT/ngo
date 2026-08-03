@@ -17,7 +17,7 @@ const CAUSES = [
     name: 'Vision Care',
     icon: Eye,
     tagline: 'Give Vision, Restore Hope',
-    description: 'Sponsor free cataract screenings, diagnostic eye drops, and high-quality prescription spectacles for elderly villagers and children.',
+    description: 'Sponsor free cataract screenings, diagnostic eye drops and high-quality prescription spectacles for elderly villagers and children.',
     color: 'from-emerald-500 to-teal-700',
     bgLight: 'bg-emerald-50/80',
     borderLight: 'border-emerald-200',
@@ -35,7 +35,7 @@ const CAUSES = [
     name: 'Rural Healthcare',
     icon: Stethoscope,
     tagline: 'Healthcare to the Doorstep',
-    description: 'Fund diagnostic camps, blood sugar/BP testing units, and basic medicine distribution in remote tribal hamlets.',
+    description: 'Fund diagnostic camps, blood sugar/BP testing units and basic medicine distribution in remote tribal hamlets.',
     color: 'from-blue-500 to-indigo-700',
     bgLight: 'bg-blue-50/80',
     borderLight: 'border-blue-200',
@@ -53,7 +53,7 @@ const CAUSES = [
     name: 'Women Empowerment',
     icon: Users,
     tagline: 'Empower a Woman, Uplift a Family',
-    description: 'Provide vocational tailoring equipment, financial literacy training, and self-reliance seed kits to rural women.',
+    description: 'Provide vocational tailoring equipment, financial literacy training and self-reliance seed kits to rural women.',
     color: 'from-purple-500 to-pink-700',
     bgLight: 'bg-purple-50/80',
     borderLight: 'border-purple-200',
@@ -71,7 +71,7 @@ const CAUSES = [
     name: 'Child Education & Nutrition',
     icon: BookOpen,
     tagline: 'Nurture Young Minds',
-    description: 'Sponsor study materials, school kits, and daily nutritious meals for children in rural government schools.',
+    description: 'Sponsor study materials, school kits and daily nutritious meals for children in rural government schools.',
     color: 'from-amber-500 to-orange-700',
     bgLight: 'bg-amber-50/80',
     borderLight: 'border-amber-200',
@@ -88,7 +88,7 @@ const CAUSES = [
     name: 'Green Earth & Plantation',
     icon: TreePine,
     tagline: 'Plant Today, Breathe Tomorrow',
-    description: 'Support native sapling plantation, tree maintenance, and community environmental conservation drives.',
+    description: 'Support native sapling plantation, tree maintenance and community environmental conservation drives.',
     color: 'from-teal-500 to-emerald-800',
     bgLight: 'bg-teal-50/80',
     borderLight: 'border-teal-200',
@@ -101,7 +101,7 @@ const CAUSES = [
       { amount: 2500, label: '30 Saplings', impact: 'Funds a community water-harvesting trench and 30 tree saplings.' },
       { amount: 5000, label: 'Green Grove', impact: 'Sponsors an entire green grove of 75+ trees with 1-year volunteer maintenance.' }
     ],
-    defaultImpact: 'Protecting our environment ensures clean air, water, and sustainable livelihoods for future generations.'
+    defaultImpact: 'Protecting our environment ensures clean air, water and sustainable livelihoods for future generations.'
   }
 ];
 
@@ -160,7 +160,7 @@ export default function Donate() {
       return;
     }
     if (!formData.name || !formData.email || !formData.mobile) {
-      alert("Please fill in your Name, Email, and Mobile number for the official tax receipt.");
+      alert("Please fill in your Name, Email and Mobile number for the official tax receipt.");
       return;
     }
 
@@ -267,7 +267,7 @@ export default function Donate() {
           </h1>
 
           <p className="text-zinc-600 max-w-2xl mx-auto text-base sm:text-lg md:text-xl font-light leading-relaxed">
-            Instead of a generic donation, choose a specific cause that touches your heart. Witness exactly how your contribution restores sight, health, and dignity.
+            Instead of a generic donation, choose a specific cause that touches your heart. Witness exactly how your contribution restores sight, health and dignity.
           </p>
         </div>
       </section>

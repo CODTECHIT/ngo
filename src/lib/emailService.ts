@@ -30,10 +30,10 @@ export const saveEmailToHistory = (email: EmailNotification) => {
     const emails = getSentEmails();
     const updated = [email, ...emails];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    
+
     // Dispatch real-time event
     window.dispatchEvent(new CustomEvent('ngo-new-email', { detail: email }));
-    
+
     // Dispatch real email to actual user email address
     sendRealEmail(email);
 
@@ -186,7 +186,7 @@ export const sendDonationInvoiceEmail = (details: {
       <div style="padding: 32px 24px;">
         <h2 style="font-size: 20px; font-weight: 700; color: #0F6E6E; margin-top: 0;">Thank You for Your Generosity, ${details.name}! 🙏</h2>
         <p style="font-size: 15px; line-height: 1.6; color: #475569;">
-          We have gratefully received your donation. Your support directly funds our ground-level initiatives and brings vision, health, and empowerment to those who need it most.
+          We have gratefully received your donation. Your support directly funds our ground-level initiatives and brings vision, health and empowerment to those who need it most.
         </p>
 
         <!-- Invoice Box -->

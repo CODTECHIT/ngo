@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, Outlet } from "react-router";
-import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, ArrowRight, Phone } from "lucide-react";
+import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, ArrowRight, Phone, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { EVENTS } from "../data";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
@@ -38,30 +38,83 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
-const NAV_LINKS = [
+interface NavItem {
+  label: string;
+  to: string;
+  children?: { label: string; to: string; desc?: string }[];
+}
+
+const NAV_LINKS: NavItem[] = [
   { label: "Home", to: "/" },
-  { label: "About", to: "/about" },
-  { label: "Services", to: "/services" },
-  { label: "Events", to: "/events" },
-  { label: "Gallery", to: "/gallery" },
-  { label: "Contact", to: "/contact" },
+  {
+    label: "About",
+    to: "/about",
+    children: [
+      { label: "Overview & Mission", to: "/about", desc: "Our story, vision & impact" },
+      { label: "Leadership & Directors", to: "/about#leadership", desc: "Meet our governing board" },
+      { label: "Legal & Certifications", to: "/legal", desc: "12A, 80G & FCRA details" }
+    ]
+  },
+  {
+    label: "Services",
+    to: "/services",
+    children: [
+      { label: "All Community Services", to: "/services", desc: "Healthcare, education & welfare" },
+      { label: "Nasha Mukt Abhiyaan", to: "/nasha-mukt-pledge", desc: "Drug-free youth drive" },
+      { label: "Netra Suraksha Abhiyaan", to: "/netra-suraksha-pledge", desc: "Eye care & donation initiative" }
+    ]
+  },
+  {
+    label: "Events",
+    to: "/events",
+    children: [
+      { label: "Upcoming Events", to: "/events", desc: "Medical camps & youth drives" },
+      { label: "Volunteer Drive", to: "/apply", desc: "Join as a community volunteer" }
+    ]
+  },
+  {
+    label: "News",
+    to: "/news",
+    children: [
+      { label: "Press Releases & Articles", to: "/news", desc: "Media coverage & updates" },
+      { label: "Verify Certificate", to: "/verify-certificate", desc: "Authenticate pledge certificates" }
+    ]
+  },
+  {
+    label: "Gallery",
+    to: "/gallery",
+    children: [
+      { label: "Photo Gallery", to: "/gallery", desc: "Field action & event photos" }
+    ]
+  },
+  {
+    label: "Contact",
+    to: "/contact",
+    children: [
+      { label: "Get In Touch", to: "/contact", desc: "Contact details & map" },
+      { label: "Apply as Volunteer", to: "/apply", desc: "Join our volunteer network" },
+      { label: "Support & Donate", to: "/donate", desc: "Make a direct contribution" }
+    ]
+  }
 ];
 
 function FloatingIslandNav() {
   const [open, setOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const location = useLocation();
   const { user } = usePublicAuth();
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-black/5 shadow-sm">
+    <div className="relative z-40 w-full bg-white backdrop-blur-md border-b border-black/5 shadow-sm">
+
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="w-full max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+        className="w-full max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
 
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
-          <div className="w-16 h-16 shrink-0 flex items-center justify-center transition-transform group-hover:scale-105">
+          <div className="w-28 h-28 md:w-36 md:h-36 shrink-0 flex items-center justify-center transition-transform group-hover:scale-105">
             <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-lg md:text-xl tracking-tight text-zinc-900 hidden sm:block uppercase">
@@ -69,24 +122,75 @@ function FloatingIslandNav() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-2">
+
+        <nav className="hidden md:flex items-center gap-1">
           {NAV_LINKS.map(l => {
             const active = l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to);
+            const hasChildren = l.children && l.children.length > 0;
+
             return (
-              <Link key={l.to} to={l.to}
-                className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors ${active ? "text-primary" : "text-zinc-700 hover:text-zinc-900"}`}>
-                {active && (
-                  <motion.div
-                    layoutId="nav-indicator"
-                    className="absolute inset-0 bg-primary/10 rounded-full border border-primary/20"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
+              <div
+                key={l.label}
+                className="relative"
+                onMouseEnter={() => hasChildren && setActiveDropdown(l.label)}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <Link
+                  to={l.to}
+                  className={`relative px-3.5 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-1 ${active ? "text-primary font-bold" : "text-zinc-700 hover:text-zinc-900"}`}
+                >
+                  {active && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="absolute inset-0 bg-primary/10 rounded-full border border-primary/20"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">{l.label}</span>
+                  {hasChildren && (
+                    <ChevronDown className={`w-3.5 h-3.5 relative z-10 transition-transform ${activeDropdown === l.label ? 'rotate-180 text-primary' : 'text-zinc-400'}`} />
+                  )}
+                </Link>
+
+                {/* Dropdown Menu */}
+                {hasChildren && (
+                  <AnimatePresence>
+                    {activeDropdown === l.label && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-0 mt-1 w-64 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2 z-50 overflow-hidden"
+                      >
+                        <div className="space-y-0.5">
+                          {l.children!.map((child) => (
+                            <Link
+                              key={child.to}
+                              to={child.to}
+                              onClick={() => setActiveDropdown(null)}
+                              className="block p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition group"
+                            >
+                              <div className="text-xs font-bold text-slate-800 dark:text-white group-hover:text-primary transition-colors">
+                                {child.label}
+                              </div>
+                              {child.desc && (
+                                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                  {child.desc}
+                                </div>
+                              )}
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 )}
-                <span className="relative z-10">{l.label}</span>
-              </Link>
+              </div>
             );
           })}
         </nav>
+
 
         <div className="hidden md:flex items-center gap-3">
           {user ? (
@@ -98,8 +202,8 @@ function FloatingIslandNav() {
               Login
             </Link>
           )}
-          <Link 
-            to="/donate" 
+          <Link
+            to="/donate"
             className="donate-dance donate-shine text-sm font-bold px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary/90 hover:shadow-lg transition-all active:scale-95 block text-center"
           >
             Donate
@@ -111,6 +215,35 @@ function FloatingIslandNav() {
         </button>
       </motion.header>
 
+      {/* Sub-Header Campaign Pledge Bar with Distinct Colored Buttons */}
+      <div className="bg-slate-900 text-white py-2.5 px-4 border-t border-slate-800 shadow-inner">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            Free Campaign Pledges & Certification
+          </div>
+
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
+            {/* Orange Button: Nasha Mukt Pledge */}
+            <Link
+              to="/nasha-mukt-pledge"
+              className="flex-1 sm:flex-initial px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold shadow-md hover:shadow-orange-500/20 transition-all flex items-center justify-center gap-1.5 text-xs border border-orange-400/30"
+            >
+              <span>🚫</span> Nasha Mukt Pledge & Certificate
+            </Link>
+
+            {/* Cyan/Teal Button: Netra Suraksha Pledge */}
+            <Link
+              to="/netra-suraksha-pledge"
+              className="flex-1 sm:flex-initial px-4 py-1.5 rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold shadow-md hover:shadow-teal-500/20 transition-all flex items-center justify-center gap-1.5 text-xs border border-teal-400/30"
+            >
+              <span>👁️</span> Netra Suraksha Pledge & Certificate
+            </Link>
+          </div>
+        </div>
+      </div>
+
+
       <AnimatePresence>
         {open && (
           <motion.div
@@ -120,12 +253,46 @@ function FloatingIslandNav() {
             className="absolute top-[100%] left-0 right-0 bg-white border-b border-black/10 shadow-xl p-4 md:hidden">
             <div className="flex flex-col gap-1">
               {NAV_LINKS.map(l => (
-                <Link key={l.to} to={l.to} onClick={() => setOpen(false)}
-                  className="text-sm font-medium text-zinc-600 py-3 px-4 rounded-xl hover:bg-black/5 hover:text-zinc-900 transition-colors">
-                  {l.label}
-                </Link>
+                <div key={l.label} className="space-y-1">
+                  <Link to={l.to} onClick={() => setOpen(false)}
+                    className="text-sm font-bold text-zinc-900 py-2 px-3 rounded-xl hover:bg-black/5 flex items-center justify-between transition-colors">
+                    <span>{l.label}</span>
+                  </Link>
+                  {l.children && (
+                    <div className="pl-3 space-y-0.5 border-l-2 border-slate-200 my-0.5">
+                      {l.children.map(child => (
+                        <Link
+                          key={child.to}
+                          to={child.to}
+                          onClick={() => setOpen(false)}
+                          className="block text-xs font-medium text-slate-600 hover:text-primary py-1.5 px-2 rounded-lg hover:bg-slate-50 transition"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
+
               <div className="h-px bg-black/10 my-2" />
+              <div className="flex flex-col gap-2 my-1">
+                <Link
+                  to="/nasha-mukt-pledge"
+                  onClick={() => setOpen(false)}
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <span>🚫</span> Nasha Mukt Pledge & Certificate
+                </Link>
+                <Link
+                  to="/netra-suraksha-pledge"
+                  onClick={() => setOpen(false)}
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <span>👁️</span> Netra Suraksha Pledge & Certificate
+                </Link>
+              </div>
+              <div className="h-px bg-black/10 my-1" />
               {user ? (
                 <Link to="/account" onClick={() => setOpen(false)} className="text-sm font-medium text-zinc-600 py-3 px-4 rounded-xl hover:bg-black/5 hover:text-zinc-900 transition-colors">
                   Account
@@ -135,7 +302,7 @@ function FloatingIslandNav() {
                   Login
                 </Link>
               )}
-              <Link 
+              <Link
                 to="/donate"
                 onClick={() => setOpen(false)}
                 className="donate-dance donate-shine text-sm font-bold py-3 mt-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white shadow-lg w-full block text-center"
@@ -143,6 +310,7 @@ function FloatingIslandNav() {
                 Donate Now
               </Link>
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
@@ -167,7 +335,7 @@ function Footer() {
             </div>
             <p className="text-zinc-600 text-sm leading-relaxed max-w-sm mb-8 font-light">
               <strong className="block text-zinc-900 mb-2 font-bold">Local Vision, Global Impact</strong>
-              A registered non-profit foundation working in healthcare, education, women empowerment, and community development across Telangana.
+              A registered non-profit foundation working in healthcare, education, women empowerment and community development across Telangana.
             </p>
             <div className="text-zinc-600 text-sm font-light space-y-2">
               <p><strong className="text-zinc-900 font-medium">Phone:</strong>8977910974/ 9701100974 </p>
@@ -175,32 +343,39 @@ function Footer() {
               <p><strong className="text-zinc-900 font-medium">Address:</strong> 1-11-22,Golnaka Alwal, Alwal, Tirumalagiri, Hyderabad, T.G - 500010</p>
             </div>
           </div>
-          {[
-            { title: "Quick Links", links: [{ label: "About Us", to: "/about" }, { label: "Our Services", to: "/services" }, { label: "Events", to: "/events" }, { label: "Gallery", to: "/gallery" }, { label: "Contact", to: "/contact" }] },
-            { title: "Get Involved", links: [{ label: "Volunteer", to: "/apply?category=volunteer" }, { label: "Corporate CSR", to: "/apply?category=csr" }, { label: "Intern with Us", to: "/apply?category=intern" }, { label: "Fundraise", to: "/apply?category=fundraise" }, { label: "Partner NGOs", to: "/apply?category=partner" }, { label: "Donate", to: "/donate" }] },
-          ].map(col => (
-            <div key={col.title}>
-              <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-zinc-400 mb-6">
-                {col.title}
-              </h4>
-              <ul className="space-y-3">
-                {col.links.map(l => (
-                  <li key={l.label}>
-                    <Link to={l.to} className="text-zinc-600 hover:text-zinc-900 text-sm transition-colors flex items-center gap-2 group">
-                      <ArrowRight size={12} className="opacity-0 -translate-x-2 text-primary group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                      <span className="group-hover:translate-x-1 transition-transform">{l.label}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="md:col-span-2 grid grid-cols-2 gap-6">
+            {[
+              { title: "Quick Links", links: [{ label: "About Us", to: "/about" }, { label: "Our Services", to: "/services" }, { label: "Events", to: "/events" }, { label: "News", to: "/news" }, { label: "Gallery", to: "/gallery" }, { label: "Contact", to: "/contact" }] },
+              { title: "Get Involved", links: [{ label: "Volunteer", to: "/apply?category=volunteer" }, { label: "Corporate CSR", to: "/apply?category=csr" }, { label: "Intern with Us", to: "/apply?category=intern" }, { label: "Fundraise", to: "/apply?category=fundraise" }, { label: "Partner NGOs", to: "/apply?category=partner" }, { label: "Donate", to: "/donate" }] },
+            ].map(col => (
+              <div key={col.title}>
+                <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-zinc-400 mb-6">
+                  {col.title}
+                </h4>
+                <ul className="space-y-3">
+                  {col.links.map(l => (
+                    <li key={l.label}>
+                      <Link to={l.to} className="text-zinc-600 hover:text-zinc-900 text-sm transition-colors flex items-center gap-2 group">
+                        <ArrowRight size={12} className="opacity-0 -translate-x-2 text-primary group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                        <span className="group-hover:translate-x-1 transition-transform">{l.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-zinc-500 text-xs font-light">
-            © 2026 Srishreevision Foundation. All rights reserved.
-          </p>
-          <div className="flex gap-6">
+        <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          <div className="space-y-1">
+            <p className="text-zinc-500 text-xs font-light">
+              © 2026 Srishreevision Foundation. All rights reserved.
+            </p>
+            <p className="text-zinc-500 text-xs font-light">
+              Developed by <a href="https://codtechitsolutions.com/" target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:underline">CODTECH IT SOLUTIONS</a>
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
             {[
               { label: "Privacy Policy", hash: "privacy" },
               { label: "Terms of Use", hash: "terms" },
@@ -216,6 +391,7 @@ function Footer() {
     </footer>
   );
 }
+
 
 export function Layout() {
   const location = useLocation();

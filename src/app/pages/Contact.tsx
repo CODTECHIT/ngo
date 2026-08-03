@@ -210,19 +210,74 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Map */}
+      {/* Map Locations */}
       <section className="py-12 md:py-20 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="w-full h-96 bg-black/5 border border-black/10 rounded-3xl overflow-hidden relative flex items-center justify-center">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&h=800&fit=crop&auto=format')] opacity-20 object-cover mix-blend-luminosity grayscale" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-            <div className="relative z-10 text-center">
-              <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(15,110,110,0.3)] animate-bounce">
-                <MapPin size={24} />
-              </div>
-              <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">Visit Our HQ</h3>
-              <p className="text-zinc-600 font-light mt-2 line-clamp-1">{"Hyderabad, Telangana"}</p>
+          <div className="text-center mb-8">
+            <div className="w-14 h-14 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_0_30px_rgba(15,110,110,0.3)] animate-bounce">
+              <MapPin size={22} />
             </div>
+            <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">Visit Our Locations</h3>
+            <p className="text-zinc-600 font-light mt-2 text-sm">Find us at any of our branches across Hyderabad</p>
+          </div>
+
+          <div className="space-y-6">
+            {[
+              {
+                title: "ICARE & WEAR Optical Eyec Clinic, Alwal",
+                address: "Alwal, Hyderabad, Telangana",
+                src: "https://www.google.com/maps?q=17.5029057,78.5119689&hl=en&z=16&output=embed",
+                link: "https://www.google.com/maps/place/ICARE%26WEAR+OPTICAL+EYECLINIC+,ALWAL/@17.5029057,78.5119689,942m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3bcb9adcf9b29615:0x840bc91729fcb7a5!8m2!3d17.5029057!4d78.5119689!16s%2Fg%2F11bt_h1c78?entry=ttu"
+              },
+              {
+                title: "i GEAR Optical",
+                address: "Alwal, Hyderabad, Telangana",
+                src: "https://www.google.com/maps?q=17.5052784,78.5069741&hl=en&z=16&output=embed",
+                link: "https://www.google.com/maps/place/i+GEAR+OPTICALS/@17.5052784,78.5069741,942m/data/!3m6!1m3!4b1!4m6!3m5!1s0x3bcb9bc8078ef09b:0x156473b3803705af!8m2!3d17.5052784!4d78.5069741!16s%2Fg%2F11vq8_g750?entry=ttu"
+              },
+              {
+                title: "Suchitra X Road",
+                address: "Plot No 47, Suchitra X Rd, opposite Meeseva Center, Suchitra, Green Park, Jeedimetla, Hyderabad, Telangana 500067",
+                src: "https://www.google.com/maps?q=Plot%20No%2047%2C%20Suchitra%20X%20Rd%2C%20opposite%20Meeseva%20Center%2C%20Suchitra%2C%20Green%20Park%2C%20Jeedimetla%2C%20Hyderabad%2C%20Telangana%20500067&hl=en&z=16&output=embed",
+                link: "https://www.google.com/maps/search/?api=1&query=Plot%20No%2047%2C%20Suchitra%20X%20Rd%2C%20Suchitra%2C%20Green%20Park%2C%20Jeedimetla%2C%20Hyderabad%2C%20Telangana%20500067"
+              }
+            ].map((loc, i) => (
+              <motion.div
+                key={loc.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="bg-white border border-black/10 rounded-3xl p-4 md:p-5 shadow-xl overflow-hidden"
+              >
+                <div className="flex items-center justify-between mb-3 gap-4 flex-wrap">
+                  <div>
+                    <h4 className="text-lg font-bold text-zinc-900 tracking-tight">{loc.title}</h4>
+                    <p className="text-xs text-zinc-600 font-light mt-0.5 ml-1">{loc.address}</p>
+                  </div>
+                  <a
+                    href={loc.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold text-xs hover:opacity-90 transition-opacity shadow-[0_4px_14px_rgba(15,110,110,0.25)]"
+                  >
+                    <MapPin size={14} /> Open in Maps
+                  </a>
+                </div>
+                <div className="w-full h-44 md:h-52 rounded-2xl overflow-hidden border border-black/10">
+                  <iframe
+                    title={loc.title}
+                    src={loc.src}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

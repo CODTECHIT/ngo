@@ -23,17 +23,17 @@ export function useEvents(forceRefresh = false) {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('events')
         .select('*')
         .order('event_date', { ascending: false });
-      
+
       const fallbackEvents: Event[] = [
         {
           id: "e1",
           title: "Mega Health Camp 2026",
-          description: "A free mega health camp providing general health checkups, eye testing, and free medicines to the underprivileged.",
+          description: "A free mega health camp providing general health checkups, eye testing and free medicines to the underprivileged.",
           image_url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
           event_date: "2026-08-15",
           location: "Community Hall, Alwal",
@@ -46,7 +46,7 @@ export function useEvents(forceRefresh = false) {
         {
           id: "e2",
           title: "Women Empowerment Workshop",
-          description: "Skill development workshop focusing on tailoring, basic computer skills, and financial literacy for rural women.",
+          description: "Skill development workshop focusing on tailoring, basic computer skills and financial literacy for rural women.",
           image_url: "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80",
           event_date: "2026-09-10",
           location: "ZPHS School, Tirumalagiri",
@@ -67,7 +67,7 @@ export function useEvents(forceRefresh = false) {
       if (data && data.length > 0) {
         processedData = data;
       }
-      
+
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Normalize to start of day
 

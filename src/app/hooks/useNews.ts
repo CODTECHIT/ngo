@@ -15,6 +15,22 @@ export type NewsItem = {
 };
 
 const LOCAL_STORAGE_KEY = 'ngo_custom_news';
+const DELETED_KEY = 'ngo_deleted_news';
+
+function readDeleted(): Array<{ id?: string | null }> {
+  try {
+    return JSON.parse(localStorage.getItem(DELETED_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+// Only matches by exact ID so a newly created article can never be hidden by a
+// previously deleted article that happens to share its title.
+function isDeleted(item: NewsItem, deleted: Array<{ id?: string | null }>): boolean {
+  if (!item.id) return false;
+  return deleted.some(d => d && d.id != null && String(d.id) === String(item.id));
+}
 
 export function useNews(forceRefresh = false) {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -94,7 +110,7 @@ export function useNews(forceRefresh = false) {
         }
       });
 
-      const result = Array.from(combinedMap.values());
+      const result = Array.from(combinedMap.values()).filter(item => !isDeleted(item, readDeleted()));
       setNews(result);
     } catch (err) {
       console.error("Error fetching news:", err);

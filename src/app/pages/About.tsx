@@ -48,25 +48,25 @@ const staggerContainer = {
 
 // ── Content ────────────────────────────────────────────────────────────────────
 const VALUES = [
-  { icon: Shield, title: "Integrity & Transparency", text: "We operate with complete openness — every rupee, every camp, and every partnership is accountable to the communities we serve." },
+  { icon: Shield, title: "Integrity & Transparency", text: "We operate with complete openness   every rupee, every camp and every partnership is accountable to the communities we serve." },
   { icon: Heart, title: "Compassion & Dignity", text: "We meet every person with respect. Our work is rooted in empathy, ensuring help reaches those who need it most." },
-  { icon: HeartHandshake, title: "Collaboration & Partnership", text: "Real change happens together. We work hand-in-hand with police, hospitals, civic bodies, and community volunteers." },
-  { icon: Sprout, title: "Sustainable Impact", text: "We build programs that outlast a single camp — planting seeds of education, health, and self-reliance for generations." },
+  { icon: HeartHandshake, title: "Collaboration & Partnership", text: "Real change happens together. We work hand-in-hand with police, hospitals, civic bodies and community volunteers." },
+  { icon: Sprout, title: "Sustainable Impact", text: "We build programs that outlast a single camp   planting seeds of education, health and self-reliance for generations." },
 ];
 
 const FOCUS_AREAS = [
-  { icon: Heart, title: "Health & Eye Care", desc: "Free eye check-up camps, spectacle distribution, blood donation drives, and general health screening for under-served communities.", tag: "Health" },
+  { icon: Heart, title: "Health & Eye Care", desc: "Free eye check-up camps, spectacle distribution, blood donation drives and general health screening for under-served communities.", tag: "Health" },
   { icon: BookOpen, title: "Education & Skill Development", desc: "Awareness and skill-building programs for youth, plus safe agricultural practice education for farming communities.", tag: "Education" },
-  { icon: Users, title: "Women Empowerment", desc: "Initiatives supporting women's confidence, participation, and self-sustainability within local communities.", tag: "Women" },
-  { icon: Globe, title: "Community & Rural Development", desc: "Drug awareness drives, polio vaccination awareness, and rural health outreach across Telangana.", tag: "Community" },
+  { icon: Users, title: "Women Empowerment", desc: "Initiatives supporting women's confidence, participation and self-sustainability within local communities.", tag: "Women" },
+  { icon: Globe, title: "Community & Rural Development", desc: "Drug awareness drives, polio vaccination awareness and rural health outreach across Telangana.", tag: "Community" },
 ];
 
 const MILESTONES = [
-  { year: "Dec 2025", title: "First Health Camp", text: "Our free eye check-up camp in Dahegam screened 150+ people and identified 45 individuals for free spectacles — the spark of our journey." },
+  { year: "Dec 2025", title: "First Health Camp", text: "Our free eye check-up camp in Dahegam screened 150+ people and identified 45 individuals for free spectacles   the spark of our journey." },
   { year: "Jan 2026", title: "Formal Registration", text: "Srishreevision Foundation was registered (No. 20967/6) as a non-profit to scale up our community health and welfare work." },
-  { year: "Jun 2026", title: "Blood Donation & Health Check Camp", text: "Partnering with Hindu Jagarana Mancha and iCare Vision Center, we hosted free sugar, BP, and hemoglobin testing alongside a blood donation drive." },
-  { year: "Jun 2026", title: "Drug Awareness Program", text: "A youth awareness drive in Khagaznagar, run in partnership with Telangana Police, TGNAB, and Lions Club of International." },
-  { year: "Aug 2026", title: "Annual Green Earth Drive", text: "Our largest planned community event — 500+ volunteers joining a massive tree plantation drive at Central Park, Khagaznagar." },
+  { year: "Jun 2026", title: "Blood Donation & Health Check Camp", text: "Partnering with Hindu Jagarana Mancha and iCare Vision Center, we hosted free sugar, BP and hemoglobin testing alongside a blood donation drive." },
+  { year: "Jun 2026", title: "Drug Awareness Program", text: "A youth awareness drive in Khagaznagar, run in partnership with Telangana Police, TGNAB and Lions Club of International." },
+  { year: "Aug 2026", title: "Annual Green Earth Drive", text: "Our largest planned community event   500+ volunteers joining a massive tree plantation drive at Central Park, Khagaznagar." },
 ];
 
 export default function About() {
@@ -117,7 +117,7 @@ export default function About() {
                 <h3 className="text-xl font-bold text-zinc-900">Why We Exist</h3>
               </div>
               <p className="text-zinc-600 font-light leading-relaxed">
-                Every community has unseen needs — eyes that cannot afford a check-up, families that miss out on essential health screenings, and youth who lack awareness and opportunity. We saw these needs in our own neighbourhoods and chose to act, one camp, one conversation, one life at a time.
+                Every community has unseen needs   eyes that cannot afford a check-up, families that miss out on essential health screenings and youth who lack awareness and opportunity. We saw these needs in our own neighbourhoods and chose to act, one camp, one conversation, one life at a time.
               </p>
             </motion.div>
             <motion.div variants={fadeIn} className="bg-white border border-black/10 rounded-3xl p-8 md:p-10 hover:border-primary/30 transition-all">
@@ -126,7 +126,7 @@ export default function About() {
                 <h3 className="text-xl font-bold text-zinc-900">How We Work</h3>
               </div>
               <p className="text-zinc-600 font-light leading-relaxed">
-                We partner where expertise lives. Hospitals and vision centers deliver the care, police and civic bodies bring the reach, and our volunteers bring the heart. By pooling these strengths, even a small foundation can create outsized, lasting impact.
+                We partner where expertise lives. Hospitals and vision centers deliver the care, police and civic bodies bring the reach and our volunteers bring the heart. By pooling these strengths, even a small foundation can create outsized, lasting impact.
               </p>
             </motion.div>
           </motion.div>
@@ -162,7 +162,7 @@ export default function About() {
             <div className="flex justify-center"><SectionLabel className="justify-center">Core Values</SectionLabel></div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">The Principles That Guide Every Camp</h2>
             <p className="text-zinc-600 text-lg font-light leading-relaxed">
-              Our values are not posters on a wall — they are the standards we hold ourselves to in every program we run.
+              Our values are not posters on a wall   they are the standards we hold ourselves to in every program we run.
             </p>
           </div>
 
@@ -217,10 +217,10 @@ export default function About() {
             </motion.h2>
             <motion.div variants={fadeIn} className="space-y-6 text-zinc-600 font-light text-lg leading-relaxed">
               <p>
-                At Srishreevision Foundation, our work is driven by a profound commitment to human dignity. We believe that empowering individuals with better healthcare, foundational education, and essential skills creates a ripple effect that transforms entire communities.
+                At Srishreevision Foundation, our work is driven by a profound commitment to human dignity. We believe that empowering individuals with better healthcare, foundational education and essential skills creates a ripple effect that transforms entire communities.
               </p>
               <p>
-                By bringing together passionate volunteers, dedicated partners, and grassroots initiatives, we are steadily working towards a society where every person has the opportunity to thrive and succeed, no matter their background.
+                By bringing together passionate volunteers, dedicated partners and grassroots initiatives, we are steadily working towards a society where every person has the opportunity to thrive and succeed, no matter their background.
               </p>
             </motion.div>
           </motion.div>
@@ -232,7 +232,7 @@ export default function About() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
           {[
-            { icon: Target, title: "Our Mission", text: "To empower individuals with better healthcare, foundational education, and essential skills." },
+            { icon: Target, title: "Our Mission", text: "To empower individuals with better healthcare, foundational education and essential skills." },
             { icon: Eye, title: "Our Vision", text: "A society where every person has the opportunity to thrive and succeed, no matter their background." },
           ].map((item, i) => (
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.2 }} key={item.title} className="bg-white border border-black/10 rounded-3xl p-10 hover:border-black/20 transition-all hover:shadow-[0_0_30px_rgba(0,0,0,0.05)]">
@@ -287,7 +287,7 @@ export default function About() {
             <div className="flex justify-center"><SectionLabel className="justify-center">Our Journey</SectionLabel></div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">From One Camp to a Movement</h2>
             <p className="text-zinc-600 text-lg font-light leading-relaxed">
-              Every milestone below was made possible by the people who showed up — our volunteers, partners, and the communities who trusted us.
+              Every milestone below was made possible by the people who showed up   our volunteers, partners and the communities who trusted us.
             </p>
           </div>
 
@@ -345,15 +345,80 @@ export default function About() {
         </div>
       </section>
 
+      {/* Leadership & Directors Section */}
+      <section id="leadership" className="py-12 md:py-24 px-4 md:px-6 bg-slate-50 dark:bg-slate-900/50 border-y border-black/5 relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <div className="flex justify-center"><SectionLabel className="justify-center">Board of Directors</SectionLabel></div>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6">Our Leadership & Directors</h2>
+            <p className="text-zinc-600 dark:text-slate-300 text-lg font-light leading-relaxed">
+              Guided by dedicated community leaders and active members of Lions Clubs International.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Director 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-white dark:bg-slate-800 border border-black/10 dark:border-slate-700 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all text-center space-y-4"
+            >
+              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-600 p-1 shadow-lg">
+                <div className="w-full h-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center font-bold text-2xl text-amber-600">
+                  RS
+                </div>
+              </div>
+              <div>
+                <span className="inline-block px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 text-xs font-bold rounded-full uppercase tracking-wider mb-2">
+                  Lions Clubs International Member
+                </span>
+                <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Lion Dr. R. Srinivas</h3>
+                <p className="text-primary font-semibold text-sm mt-1">Director & Founding Trustee</p>
+                <p className="text-zinc-500 dark:text-slate-400 text-xs mt-3 leading-relaxed">
+                  Sri Shree Vision Foundation Director with extensive experience driving health screening, eye care outreach, and youth drug awareness campaigns nationwide.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Director 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="bg-white dark:bg-slate-800 border border-black/10 dark:border-slate-700 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all text-center space-y-4"
+            >
+              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-teal-500 via-emerald-500 to-cyan-600 p-1 shadow-lg">
+                <div className="w-full h-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center font-bold text-2xl text-teal-600">
+                  JI
+                </div>
+              </div>
+              <div>
+                <span className="inline-block px-3 py-1 bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 text-xs font-bold rounded-full uppercase tracking-wider mb-2">
+                  Lions Clubs International Member
+                </span>
+                <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white">MSc. Lion J. Indhyarani</h3>
+                <p className="text-primary font-semibold text-sm mt-1">Director & Trustee</p>
+                <p className="text-zinc-500 dark:text-slate-400 text-xs mt-3 leading-relaxed">
+                  Sri Shree Vision Foundation Director leading community empowerment, rural health programs, and social welfare drives.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Partners */}
       <section className="py-12 md:py-24 px-4 md:px-6 bg-background border-y border-black/5 relative overflow-hidden">
+
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <div className="flex justify-center"><SectionLabel className="justify-center">Partners</SectionLabel></div>
+            <div className="flex justify-center"><SectionLabel className="justify-center">Partners With</SectionLabel></div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">Stronger Together</h2>
             <p className="text-zinc-600 text-lg font-light leading-relaxed">
-              Our programs are powered by trusted partners who share their expertise, reach, and resources.
+              Our programs are powered by trusted partners who share their expertise, reach and resources.
             </p>
           </div>
 
@@ -400,7 +465,7 @@ export default function About() {
           <div className="relative z-10">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">Be Part of the Change</h2>
             <p className="text-white/85 text-lg font-light mb-10 max-w-2xl mx-auto leading-relaxed">
-              Whether you volunteer your time, partner your expertise, or support with a donation — every contribution takes us one step closer to a thriving, self-reliant community.
+              Whether you volunteer your time, partner your expertise, or support with a donation   every contribution takes us one step closer to a thriving, self-reliant community.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link to="/apply?category=volunteer" className="px-8 py-4 bg-white text-primary font-bold rounded-full hover:scale-105 transition-all shadow-lg block text-center">

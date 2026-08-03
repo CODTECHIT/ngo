@@ -194,8 +194,8 @@ export default function AdminTeamRoles() {
               </div>
               <ul className="text-xs text-zinc-600 space-y-2 list-disc list-inside">
                 <li>Full access to all administrative modules & settings</li>
-                <li>Can view financial totals, donation logs, and revenue charts</li>
-                <li>Can create, edit, and remove team member roles</li>
+                <li>Can view financial totals, donation logs and revenue charts</li>
+                <li>Can create, edit and remove team member roles</li>
               </ul>
             </div>
 
@@ -259,8 +259,8 @@ export default function AdminTeamRoles() {
                     <td className="p-4 text-sm font-mono text-zinc-800">{m.email}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${m.role === 'super_admin' || m.role === 'admin'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-primary/10 text-primary'
+                        ? 'bg-amber-100 text-amber-800'
+                        : 'bg-primary/10 text-primary'
                         }`}>
                         {m.role === 'super_admin' || m.role === 'admin' ? <Shield size={12} /> : <Users size={12} />}
                         {m.role === 'super_admin' || m.role === 'admin' ? 'Super Admin' : 'Event Manager'}

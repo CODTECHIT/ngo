@@ -60,11 +60,11 @@ export default function Contact() {
           created_at: new Date().toISOString()
         });
         localStorage.setItem(LOCAL_KEY, JSON.stringify(existing));
-      } catch (e) {}
+      } catch (e) { }
 
       // 3. Open WhatsApp with prefilled message text for instant WhatsApp notification to Admin
       const whatsappText = encodeURIComponent(
-        `*New Contact Message - Srishreevision Foundation*\n\n` +
+        `*New Contact Message - SRISHREE VISION FOUNDATION*\n\n` +
         `👤 *Name:* ${fname} ${lname}\n` +
         `✉️ *Email:* ${email}\n` +
         `📞 *Phone:* ${phone || 'N/A'}\n` +

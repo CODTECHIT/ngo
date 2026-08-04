@@ -40,7 +40,7 @@ export default function AdminNewsTicker() {
       try {
         const local = localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY);
         if (local) setAnnouncements(JSON.parse(local));
-      } catch (_) {}
+      } catch (_) { }
     }
   }, []);
 
@@ -131,12 +131,12 @@ export default function AdminNewsTicker() {
         setAnnouncements(prev => prev.map(a => (a.id === tempId ? { id: data.id, message: data.message, created_at: data.created_at } : a)));
       }
     } catch (err) {
-      // DB failed — keep it in localStorage list
+      // DB failed   keep it in localStorage list
       try {
         const local = JSON.parse(localStorage.getItem(LOCAL_ANNOUNCEMENTS_KEY) || '[]');
         local.unshift({ id: tempId, message: text, created_at: new Date().toISOString() });
         localStorage.setItem(LOCAL_ANNOUNCEMENTS_KEY, JSON.stringify(local));
-      } catch (_) {}
+      } catch (_) { }
     }
 
     notifyTicker();

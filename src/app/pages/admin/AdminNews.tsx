@@ -131,7 +131,7 @@ export default function AdminNews() {
     } else {
       setPublishStatus({
         type: 'error',
-        text: `Database save failed (${dbErrorMessage || 'unknown error'}). The article was saved in this browser only — check your Supabase connection and retry.`
+        text: `Database save failed (${dbErrorMessage || 'unknown error'}). The article was saved in this browser only   check your Supabase connection and retry.`
       });
     }
     closeModal();
@@ -309,7 +309,7 @@ export default function AdminNews() {
               {mode === 'preview' ? (
                 <div className="border border-zinc-200 rounded-2xl overflow-hidden">
                   <div className="bg-zinc-900 text-white px-5 py-3 flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-widest text-accent">Live Preview — how readers will see it</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-accent">Live Preview   how readers will see it</span>
                     <span className="text-[10px] text-zinc-400">{date || 'Date TBD'}</span>
                   </div>
                   <div className="p-6 md:p-10 bg-[#F6F3EC]">
@@ -375,7 +375,7 @@ export default function AdminNews() {
                     <div>
                       <label className="block text-sm font-bold text-zinc-700 mb-2">
                         Full Article Body
-                        <span className="font-normal text-zinc-400 ml-1">(paste from Word / Docs — formatting is preserved)</span>
+                        <span className="font-normal text-zinc-400 ml-1">(paste from Word / Docs   formatting is preserved)</span>
                       </label>
                       <RichTextEditor value={content} onChange={handleContentChange} minHeight={220} />
                     </div>

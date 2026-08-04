@@ -67,14 +67,14 @@ export const NEWS = [
     tag: "Partnership",
     title: "MoU Signed with State Education Department for Digital Literacy",
     excerpt: "A landmark agreement to deploy our Digital Skills Bootcamp across 120 government schools in three districts over the next 18 months.",
-    content: `<p>A landmark agreement was signed today between Srishreevision Foundation and the State Education Department to deploy our flagship Digital Skills Bootcamp across 120 government schools in three districts over the next 18 months.</p><p>Under this Memorandum of Understanding (MoU), the foundation will equip computer labs with modern learning software, train government school teachers in digital pedagogy, and provide interactive coding and computer literacy modules to over 15,000 students in grades 6 through 10.</p><p>This partnership marks a significant milestone in bridging the digital divide for underprivileged youth in rural and semi-urban communities.</p>`,
+    content: `<p>A landmark agreement was signed today between SRISHREE VISION FOUNDATION and the State Education Department to deploy our flagship Digital Skills Bootcamp across 120 government schools in three districts over the next 18 months.</p><p>Under this Memorandum of Understanding (MoU), the foundation will equip computer labs with modern learning software, train government school teachers in digital pedagogy, and provide interactive coding and computer literacy modules to over 15,000 students in grades 6 through 10.</p><p>This partnership marks a significant milestone in bridging the digital divide for underprivileged youth in rural and semi-urban communities.</p>`,
     img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=380&fit=crop&auto=format"
   },
   {
     id: 4,
     date: "May 28, 2025",
     tag: "Impact",
-    title: "12,400 Lives Impacted in FY 2024-25 — Annual Report Released",
+    title: "12,400 Lives Impacted in FY 2024-25   Annual Report Released",
     excerpt: "Our annual impact report documents 12,400 direct beneficiaries, ₹4.8 Cr in program expenditure and a 94% program completion rate for the financial year.",
     content: `<p>Our annual impact report for Fiscal Year 2024-25 documents 12,400 direct beneficiaries, ₹4.8 Cr in program expenditure, and an outstanding 94% program completion rate across all active healthcare and education drives.</p><p>Key highlights from the report include 5,200 patients screened at free eye and medical check-up camps, 3,800 youth enrolled in skill development bootcamps, and 3,400 women supported through micro-entrepreneurship training programs.</p><p>The complete report with detailed financial audits and beneficiary testimonials is now available for download on our website.</p>`,
     img: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&h=380&fit=crop&auto=format"
@@ -116,10 +116,22 @@ export const TESTIMONIALS = [
 ];
 
 export const STATS = [
-  { value: "150+", label: "People Screened in a Single Eye Camp" },
-  { value: "5+", label: "Community Health & Awareness Camps" },
-  { value: "4", label: "Core Focus Areas (Health, Education, Women Empowerment, Community Development)" },
-  { value: "3+", label: "Partner Organizations (Lions Club, Telangana Police, iCare Vision Center)" },
+  {
+    value: "11,000+",
+    label: "Through our free vision camps & health initiatives",
+  },
+  {
+    value: "2,500+",
+    label: "Restoring vision through Recycle for Sight & community support",
+  },
+  {
+    value: "310+",
+    label: "Free eye screenings, awareness programs, and diagnostic drives",
+  },
+  {
+    value: "1000+",
+    label: "Healthcare, Education, Women & Community"
+  },
 ];
 
 export const ADMIN_EVENTS = [

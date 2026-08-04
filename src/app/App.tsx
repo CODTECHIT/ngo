@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 function SplashScreen() {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -19,17 +19,17 @@ function SplashScreen() {
         transition={{ duration: 1, ease: "easeOut" }}
         className="w-40 h-40 md:w-56 md:h-56 mb-8 flex items-center justify-center"
       >
-        <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain" />
+        <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
       </motion.div>
       <div className="w-48 h-1 bg-black/5 rounded-full overflow-hidden mb-4">
-        <motion.div 
+        <motion.div
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 2, ease: "easeInOut" }}
           className="h-full bg-primary"
         />
       </div>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 1 }}

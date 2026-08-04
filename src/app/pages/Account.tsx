@@ -40,14 +40,14 @@ export default function Account() {
 
     const fetchData = async () => {
       setLoadingData(true);
-      
+
       // Fetch profile
       const { data: profileData, error: profileError } = await supabase
         .from('users_profile')
         .select('full_name, phone')
         .eq('id', user.id)
         .single();
-        
+
       if (profileData) {
         setProfile({
           full_name: profileData.full_name || '',
@@ -99,11 +99,11 @@ export default function Account() {
       let userLocalRegs: any[] = [];
       try {
         const rawLocalRegs = JSON.parse(localStorage.getItem('ngo_saved_registrations') || '[]');
-        userLocalRegs = rawLocalRegs.filter((item: any) => 
-          (item.user_id && item.user_id === user.id) || 
+        userLocalRegs = rawLocalRegs.filter((item: any) =>
+          (item.user_id && item.user_id === user.id) ||
           (item.email && user.email && item.email.toLowerCase() === user.email.toLowerCase())
         );
-      } catch {}
+      } catch { }
 
       const combinedRegs = [...dbProcessed, ...userLocalRegs];
       // Map deduplication by unique event identifier (title or event_id)
@@ -119,15 +119,15 @@ export default function Account() {
       // Fetch donations
       try {
         const { data: dbDonations } = await supabase.from('donations').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
-        
+
         let userLocalDonations: any[] = [];
         try {
           const rawLocalDons = JSON.parse(localStorage.getItem('ngo_saved_donations') || '[]');
-          userLocalDonations = rawLocalDons.filter((item: any) => 
-            (item.user_id && item.user_id === user.id) || 
+          userLocalDonations = rawLocalDons.filter((item: any) =>
+            (item.user_id && item.user_id === user.id) ||
             (item.email && user.email && item.email.toLowerCase() === user.email.toLowerCase())
           );
-        } catch {}
+        } catch { }
 
         const combinedDonations = [...(dbDonations || []), ...userLocalDonations];
         const uniqueDonsMap = new Map();
@@ -140,8 +140,8 @@ export default function Account() {
         setDonations(Array.from(uniqueDonsMap.values()));
       } catch {
         const rawLocalDons = JSON.parse(localStorage.getItem('ngo_saved_donations') || '[]');
-        const userLocalDonations = rawLocalDons.filter((item: any) => 
-          (item.user_id && item.user_id === user.id) || 
+        const userLocalDonations = rawLocalDons.filter((item: any) =>
+          (item.user_id && item.user_id === user.id) ||
           (item.email && user.email && item.email.toLowerCase() === user.email.toLowerCase())
         );
         setDonations(userLocalDonations);
@@ -172,14 +172,14 @@ export default function Account() {
     } else {
       setProfileMessage({ type: 'success', text: 'Profile updated successfully!' });
     }
-    
+
     setSavingProfile(false);
   };
 
   const handleDownloadCertificate = async (reg: EventRegistration) => {
     try {
       setDownloadingCert(reg.id);
-      
+
       const { PDFDocument, StandardFonts, rgb } = await import('pdf-lib');
       let pdfDoc: any = null;
       let firstPage: any = null;
@@ -349,7 +349,7 @@ export default function Account() {
         });
 
         // 4. Official Wording Line 2
-        const wording2 = "organized by Srishreevision Foundation, in recognition of their sincere effort towards community welfare.";
+        const wording2 = "organized by SRISHREE VISION FOUNDATION, in recognition of their sincere effort towards community welfare.";
         const w2Size = Math.round(10.5 * scale);
         const w2Width = timesItalic.widthOfTextAtSize(wording2, w2Size);
         firstPage.drawText(wording2, {
@@ -408,7 +408,7 @@ export default function Account() {
             return r;
           });
           localStorage.setItem('ngo_saved_registrations', JSON.stringify(updatedPast));
-        } catch {}
+        } catch { }
 
         setRegistrations(prev => prev.map(r => r.id === reg.id ? { ...r, status: 'participated', certificate_issued: true, participated_at: participatedAt } : r));
         window.dispatchEvent(new Event('ngo_registration_updated'));
@@ -428,7 +428,7 @@ export default function Account() {
     if (!printWin) return;
     const dateStr = don.created_at ? new Date(don.created_at).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : new Date().toLocaleDateString('en-IN', { dateStyle: 'medium' });
     const donorName = profile.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Valued Donor';
-    
+
     printWin.document.write(`
       <html>
         <head>
@@ -497,7 +497,7 @@ export default function Account() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
+
           {/* Profile Card */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="md:col-span-1 space-y-6">
             <div className="bg-white border border-black/5 rounded-3xl p-8 shadow-xl text-center">
@@ -522,7 +522,7 @@ export default function Account() {
                 Sign Out
               </button>
             </div>
-            
+
             {/* Profile Edit Form */}
             <div className="bg-black/5 border border-black/5 rounded-3xl p-6">
               <h3 className="text-lg font-bold text-zinc-900 mb-4">Edit Details</h3>
@@ -533,12 +533,12 @@ export default function Account() {
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
                       <UserIcon size={16} />
                     </div>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={profile.full_name}
                       onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
                       className="w-full pl-9 pr-3 py-2 rounded-xl bg-white border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary transition-colors"
-                      placeholder="Your name" 
+                      placeholder="Your name"
                     />
                   </div>
                 </div>
@@ -548,23 +548,23 @@ export default function Account() {
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
                       <Phone size={16} />
                     </div>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={profile.phone}
                       onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                       className="w-full pl-9 pr-3 py-2 rounded-xl bg-white border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary transition-colors"
-                      placeholder="+1 (555) 000-0000" 
+                      placeholder="+1 (555) 000-0000"
                     />
                   </div>
                 </div>
-                
+
                 {profileMessage.text && (
                   <div className={`text-xs p-2 rounded-lg ${profileMessage.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'} flex items-center gap-2`}>
                     {profileMessage.type === 'success' && <CheckCircle2 size={14} />}
                     {profileMessage.text}
                   </div>
                 )}
-                
+
                 <button
                   type="submit"
                   disabled={savingProfile}
@@ -578,13 +578,13 @@ export default function Account() {
 
           {/* Main Content Area */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="md:col-span-2 space-y-6">
-            
+
             <div className="bg-white border border-black/5 rounded-3xl p-8 shadow-xl">
               <h3 className="text-2xl font-bold text-zinc-900 mb-6 flex items-center gap-2">
-                <Calendar className="text-primary" /> 
+                <Calendar className="text-primary" />
                 My Event Registrations
               </h3>
-              
+
               {registrations.length === 0 ? (
                 <div className="text-center py-12 bg-black/5 rounded-2xl border border-dashed border-black/10">
                   <p className="text-zinc-500 font-medium mb-4">You haven't registered for any upcoming events.</p>
@@ -611,13 +611,13 @@ export default function Account() {
                       </div>
                       <div className="shrink-0 flex flex-col items-end gap-1.5">
                         <StatusBadge status={reg.events.status as any} />
-                        
+
                         {(reg.status === 'participated' || reg.certificate_issued) && (
                           <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-full inline-flex items-center gap-1 shadow-sm">
                             🎓 Certificate Awarded & Participated
                           </span>
                         )}
-                        
+
                         {(reg.events.status === 'completed' || reg.status === 'participated' || reg.certificate_issued) && (
                           <div className="mt-2 w-full">
                             <button

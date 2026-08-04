@@ -115,10 +115,10 @@ function FloatingIslandNav() {
 
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
           <div className="w-28 h-28 md:w-36 md:h-36 shrink-0 flex items-center justify-center transition-transform group-hover:scale-105">
-            <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain" />
+            <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-lg md:text-xl tracking-tight text-zinc-900 hidden sm:block uppercase">
-            SRISHREEVISION FOUNDATION
+            SRISHREE VISION FOUNDATION
           </span>
         </Link>
 
@@ -329,9 +329,9 @@ function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-16 h-16 shrink-0 flex items-center justify-center">
-                <img src="/logo.jpeg" alt="Srishreevision Foundation Logo" className="w-full h-full object-contain" />
+                <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight">SRISHREEVISION FOUNDATION</span>
+              <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight">SRISHREE VISION FOUNDATION</span>
             </div>
             <p className="text-zinc-600 text-sm leading-relaxed max-w-sm mb-8 font-light">
               <strong className="block text-zinc-900 mb-2 font-bold">Local Vision, Global Impact</strong>
@@ -369,7 +369,7 @@ function Footer() {
         <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <div className="space-y-1">
             <p className="text-zinc-500 text-xs font-light">
-              © 2026 Srishreevision Foundation. All rights reserved.
+              © 2026 SRISHREE VISION FOUNDATION. All rights reserved.
             </p>
             <p className="text-zinc-500 text-xs font-light">
               Developed by <a href="https://codtechitsolutions.com/" target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:underline">CODTECH IT SOLUTIONS</a>
@@ -427,7 +427,7 @@ export function Layout() {
           <Phone size={26} />
         </a>
         <a
-          href="https://wa.me/918977910974?text=Hi! I would like to know more about Srishreevision Foundation."
+          href="https://wa.me/918977910974?text=Hi! I would like to know more about SRISHREE VISION FOUNDATION."
           target="_blank"
           rel="noreferrer"
           className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all cursor-pointer"

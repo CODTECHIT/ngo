@@ -167,7 +167,7 @@ export default function Apply() {
 
       // 3. Open WhatsApp with a prefilled message so the admin gets an instant notification
       const whatsappText = encodeURIComponent(
-        `*New ${categoryMeta.label} Application - Srishreevision Foundation*\n\n` +
+        `*New ${categoryMeta.label} Application - SRISHREE VISION FOUNDATION*\n\n` +
         `👤 *Name:* ${fullName}\n` +
         `✉️ *Email:* ${email}\n` +
         `📞 *Phone:* ${phone || "N/A"}\n` +

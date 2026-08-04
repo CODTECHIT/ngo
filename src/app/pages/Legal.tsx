@@ -6,7 +6,7 @@ import { SectionLabel } from "../components/Layout";
 import Aurora from "../components/reactbits/Aurora";
 
 const NGO = {
-  name: "SRISHREEVISION FOUNDATION",
+  name: "SRISHREE VISION FOUNDATION",
   tagline: "Local Vision, Global Impact",
   regNo: "20967/6, Dated 14/01/2026",
   cin: "U85500TS2026NPL209676",
@@ -29,13 +29,13 @@ const TABS: { id: TabId; label: string; icon: React.ElementType; intro: string }
     id: "privacy",
     label: "Privacy Policy",
     icon: ShieldCheck,
-    intro: "How SRISHREEVISION FOUNDATION collects, uses, protects and manages the personal information of visitors, donors, volunteers and beneficiaries.",
+    intro: "How SRISHREE VISION FOUNDATION collects, uses, protects and manages the personal information of visitors, donors, volunteers and beneficiaries.",
   },
   {
     id: "terms",
     label: "Terms of Use",
     icon: ScrollText,
-    intro: "The terms and conditions that govern your use of the Srishreevision Foundation website and the services we offer.",
+    intro: "The terms and conditions that govern your use of the SRISHREE VISION FOUNDATION website and the services we offer.",
   },
   {
     id: "grievance",
@@ -78,7 +78,7 @@ function Block({ heading, body, list }: { heading: string; body?: string[]; list
 
 const PRIVACY_CONTENT = {
   intro:
-    "At SRISHREEVISION FOUNDATION, we are committed to protecting the privacy and dignity of the people we serve and those who support us. This Privacy Policy explains what personal information we collect, why we collect it and how we handle it, in accordance with the Information Technology Act, 2000 and applicable data protection laws in India.",
+    "At SRISHREE VISION FOUNDATION, we are committed to protecting the privacy and dignity of the people we serve and those who support us. This Privacy Policy explains what personal information we collect, why we collect it and how we handle it, in accordance with the Information Technology Act, 2000 and applicable data protection laws in India.",
   blocks: [
     {
       heading: "Information We Collect",
@@ -168,12 +168,12 @@ const PRIVACY_CONTENT = {
 
 const TERMS_CONTENT = {
   intro:
-    "These Terms of Use govern your access to and use of the website of SRISHREEVISION FOUNDATION. By accessing or using this website, you agree to be bound by these terms. If you do not agree with any part of these terms, please do not use the website.",
+    "These Terms of Use govern your access to and use of the website of SRISHREE VISION FOUNDATION. By accessing or using this website, you agree to be bound by these terms. If you do not agree with any part of these terms, please do not use the website.",
   blocks: [
     {
-      heading: "About SRISHREEVISION FOUNDATION",
+      heading: "About SRISHREE VISION FOUNDATION",
       body: [
-        "SRISHREEVISION FOUNDATION is a registered non-profit organisation working in healthcare, eye care, education, skill development, women empowerment and community development across Telangana. Our registration details are as follows:",
+        "SRISHREE VISION FOUNDATION is a registered non-profit organisation working in healthcare, eye care, education, skill development, women empowerment and community development across Telangana. Our registration details are as follows:",
       ],
       list: [
         "Registration No: " + NGO.regNo,
@@ -192,7 +192,7 @@ const TERMS_CONTENT = {
     {
       heading: "Donations and Payments",
       body: [
-        "Donations made through this website are voluntary contributions to SRISHREEVISION FOUNDATION. All payment transactions are processed through secure third-party payment gateways. Please retain the transaction reference for your records, as donation receipts (including 80G certificates where applicable) are issued based on verifiable payment details. Donations, once made, are not refundable except in cases of erroneous or duplicate transactions, which will be reviewed by our team.",
+        "Donations made through this website are voluntary contributions to SRISHREE VISION FOUNDATION. All payment transactions are processed through secure third-party payment gateways. Please retain the transaction reference for your records, as donation receipts (including 80G certificates where applicable) are issued based on verifiable payment details. Donations, once made, are not refundable except in cases of erroneous or duplicate transactions, which will be reviewed by our team.",
       ],
     },
     {
@@ -204,7 +204,7 @@ const TERMS_CONTENT = {
     {
       heading: "Intellectual Property",
       body: [
-        "All content on this website, including text, graphics, logos, images and software, is the property of SRISHREEVISION FOUNDATION or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute or create derivative works from any content on this website without prior written permission from the Foundation.",
+        "All content on this website, including text, graphics, logos, images and software, is the property of SRISHREE VISION FOUNDATION or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute or create derivative works from any content on this website without prior written permission from the Foundation.",
       ],
     },
     {
@@ -222,13 +222,13 @@ const TERMS_CONTENT = {
     {
       heading: "Limitation of Liability",
       body: [
-        "To the maximum extent permitted by law, SRISHREEVISION FOUNDATION, its trustees, officers, employees and volunteers shall not be liable for any direct, indirect, incidental or consequential damages arising out of your use of, or inability to use, this website or the information contained in it.",
+        "To the maximum extent permitted by law, SRISHREE VISION FOUNDATION, its trustees, officers, employees and volunteers shall not be liable for any direct, indirect, incidental or consequential damages arising out of your use of, or inability to use, this website or the information contained in it.",
       ],
     },
     {
       heading: "Indemnification",
       body: [
-        "You agree to indemnify and hold harmless SRISHREEVISION FOUNDATION and its trustees, officers, employees and volunteers from any claims, losses, liabilities or expenses arising out of your use of this website or your violation of these Terms of Use.",
+        "You agree to indemnify and hold harmless SRISHREE VISION FOUNDATION and its trustees, officers, employees and volunteers from any claims, losses, liabilities or expenses arising out of your use of this website or your violation of these Terms of Use.",
       ],
     },
     {
@@ -254,7 +254,7 @@ const TERMS_CONTENT = {
 
 const GRIEVANCE_CONTENT = {
   intro:
-    "SRISHREEVISION FOUNDATION is committed to maintaining the highest standards of transparency, accountability and ethical conduct. This Grievance Redressal Policy provides a clear and accessible mechanism for any person   beneficiary, donor, volunteer, partner or member of the public   to raise a concern or complaint and have it addressed fairly and promptly.",
+    "SRISHREE VISION FOUNDATION is committed to maintaining the highest standards of transparency, accountability and ethical conduct. This Grievance Redressal Policy provides a clear and accessible mechanism for any person   beneficiary, donor, volunteer, partner or member of the public   to raise a concern or complaint and have it addressed fairly and promptly.",
   blocks: [
     {
       heading: "Who Can Raise a Grievance",
@@ -277,8 +277,8 @@ const GRIEVANCE_CONTENT = {
     {
       heading: "Grievance Redressal Officer",
       body: [
-        "The Board of SRISHREEVISION FOUNDATION has designated a Grievance Redressal Officer who is responsible for receiving, investigating and resolving all grievances in a fair, confidential and timely manner.",
-        "Grievance Redressal Officer: Director, Srishreevision Foundation",
+        "The Board of SRISHREE VISION FOUNDATION has designated a Grievance Redressal Officer who is responsible for receiving, investigating and resolving all grievances in a fair, confidential and timely manner.",
+        "Grievance Redressal Officer: Director, SRISHREE VISION FOUNDATION",
       ],
       list: [
         "Email: " + NGO.email + " / " + NGO.email2,
@@ -313,7 +313,7 @@ const GRIEVANCE_CONTENT = {
     {
       heading: "Escalation",
       body: [
-        "If you are not satisfied with the resolution provided, you may escalate your grievance in writing to the Board of Trustees of SRISHREEVISION FOUNDATION at the registered address or by email to " + NGO.email + ", within 15 days of receiving the resolution. The Board will review the matter and provide a final response within 30 days.",
+        "If you are not satisfied with the resolution provided, you may escalate your grievance in writing to the Board of Trustees of SRISHREE VISION FOUNDATION at the registered address or by email to " + NGO.email + ", within 15 days of receiving the resolution. The Board will review the matter and provide a final response within 30 days.",
       ],
     },
     {

@@ -108,7 +108,7 @@ function Hero() {
         </h1>
 
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8 }} className="text-base sm:text-lg md:text-2xl text-white/90 font-light max-w-2xl mb-10 px-4 drop-shadow-md">
-          Join Srishreevision Foundation in creating lasting impact through healthcare, education and women empowerment.
+          Join SRISHREE VISION FOUNDATION in creating lasting impact through healthcare, education and women empowerment.
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1 }} className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 w-full sm:w-auto px-4 md:px-6">

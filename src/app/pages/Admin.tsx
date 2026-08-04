@@ -219,10 +219,10 @@ function AdminEventsTab() {
               return (
                 <div key={f}>
                   <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">{f.replace('_', ' ')}</label>
-                  <input 
+                  <input
                     type={f.includes('date') || f === 'registration_deadline' ? 'date' : f === 'seats' ? 'number' : 'text'}
-                    value={(formData as any)[f]} 
-                    onChange={e => setFormData({...formData, [f]: e.target.value})}
+                    value={(formData as any)[f]}
+                    onChange={e => setFormData({ ...formData, [f]: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/10 transition-colors placeholder:text-zinc-500"
                     placeholder={f} />
                 </div>
@@ -230,11 +230,11 @@ function AdminEventsTab() {
             })}
             <div className="md:col-span-2">
               <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Description</label>
-              <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/10 transition-colors resize-none placeholder:text-zinc-500" placeholder="Event details..." />
+              <textarea rows={3} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-black/5 border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/10 transition-colors resize-none placeholder:text-zinc-500" placeholder="Event details..." />
             </div>
             <div className="md:col-span-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div 
+                <div
                   onClick={() => openCloudinaryWidget((info) => {
                     setBannerUrl(info.secure_url);
                     setBannerPublicId(info.public_id);
@@ -250,8 +250,8 @@ function AdminEventsTab() {
                     </>
                   )}
                 </div>
-                
-                <div 
+
+                <div
                   onClick={() => openCloudinaryWidget((info) => {
                     setCertificateTemplateUrl(info.secure_url);
                   })}
@@ -294,25 +294,25 @@ function AdminEventsTab() {
             </tr>
           </thead>
           <tbody>
-            {loading ? <tr><td colSpan={5} className="p-8 text-center">Loading events...</td></tr> : 
-             events.length === 0 ? <tr><td colSpan={5} className="p-8 text-center">No events found.</td></tr> :
-             events.map(ev => (
-              <tr key={ev.id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
-                <td className="px-6 py-4 font-bold text-zinc-900">{ev.title}</td>
-                <td className="px-6 py-4 text-xs font-medium text-zinc-600">{new Date(ev.event_date).toLocaleDateString()}</td>
-                <td className="px-6 py-4 text-xs font-medium text-zinc-600">{ev.seats}</td>
-                <td className="px-6 py-4"><StatusBadge status={ev.status} /></td>
-                <td className="px-6 py-4">
-                  <div className="flex gap-2">
-                    <button className="p-2 rounded-lg bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-900"><Edit2 size={14} /></button>
-                    <button className="p-2 rounded-lg bg-black/5 hover:bg-red-500/20 transition-colors text-zinc-500 hover:text-red-600" onClick={async () => {
-                      await api.deleteEvent(ev.id);
-                      setEvents(events.filter(e => e.id !== ev.id));
-                    }}><Trash2 size={14} /></button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {loading ? <tr><td colSpan={5} className="p-8 text-center">Loading events...</td></tr> :
+              events.length === 0 ? <tr><td colSpan={5} className="p-8 text-center">No events found.</td></tr> :
+                events.map(ev => (
+                  <tr key={ev.id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
+                    <td className="px-6 py-4 font-bold text-zinc-900">{ev.title}</td>
+                    <td className="px-6 py-4 text-xs font-medium text-zinc-600">{new Date(ev.event_date).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 text-xs font-medium text-zinc-600">{ev.seats}</td>
+                    <td className="px-6 py-4"><StatusBadge status={ev.status} /></td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button className="p-2 rounded-lg bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-900"><Edit2 size={14} /></button>
+                        <button className="p-2 rounded-lg bg-black/5 hover:bg-red-500/20 transition-colors text-zinc-500 hover:text-red-600" onClick={async () => {
+                          await api.deleteEvent(ev.id);
+                          setEvents(events.filter(e => e.id !== ev.id));
+                        }}><Trash2 size={14} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
@@ -356,23 +356,23 @@ function AdminRegistrationsTab() {
             </tr>
           </thead>
           <tbody>
-            {loading ? <tr><td colSpan={6} className="p-8 text-center">Loading registrations...</td></tr> : 
-             registrations.length === 0 ? <tr><td colSpan={6} className="p-8 text-center">No registrations found.</td></tr> :
-             registrations.map(r => (
-              <tr key={r.id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
-                <td className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{r.id.substring(0, 8)}</td>
-                <td className="px-6 py-4 font-bold text-zinc-900">{r.profiles?.full_name}</td>
-                <td className="px-6 py-4 text-xs font-medium text-zinc-600 max-w-[160px] truncate">{r.events?.title}</td>
-                <td className="px-6 py-4 text-xs font-medium text-zinc-600">{new Date(r.registered_at).toLocaleDateString()}</td>
-                <td className="px-6 py-4"><StatusBadge status={r.status} /></td>
-                <td className="px-6 py-4">
-                  <div className="flex gap-2">
-                    <button className="p-2 rounded-lg bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-900"><Eye size={14} /></button>
-                    <button className="p-2 rounded-lg bg-black/5 hover:bg-red-500/20 transition-colors text-zinc-500 hover:text-red-600"><Trash2 size={14} /></button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {loading ? <tr><td colSpan={6} className="p-8 text-center">Loading registrations...</td></tr> :
+              registrations.length === 0 ? <tr><td colSpan={6} className="p-8 text-center">No registrations found.</td></tr> :
+                registrations.map(r => (
+                  <tr key={r.id} className="border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
+                    <td className="px-6 py-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{r.id.substring(0, 8)}</td>
+                    <td className="px-6 py-4 font-bold text-zinc-900">{r.profiles?.full_name}</td>
+                    <td className="px-6 py-4 text-xs font-medium text-zinc-600 max-w-[160px] truncate">{r.events?.title}</td>
+                    <td className="px-6 py-4 text-xs font-medium text-zinc-600">{new Date(r.registered_at).toLocaleDateString()}</td>
+                    <td className="px-6 py-4"><StatusBadge status={r.status} /></td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button className="p-2 rounded-lg bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-900"><Eye size={14} /></button>
+                        <button className="p-2 rounded-lg bg-black/5 hover:bg-red-500/20 transition-colors text-zinc-500 hover:text-red-600"><Trash2 size={14} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
@@ -491,20 +491,20 @@ function AdminGalleryTab() {
         <p className="font-bold text-zinc-900 mb-2">Click to upload photos or videos</p>
         <p className="text-xs font-medium text-zinc-600">JPG, PNG, MP4 · Max 50MB each</p>
       </div>
-      {loading ? <p className="text-zinc-500">Loading gallery...</p> : 
-       images.length === 0 ? <p className="text-zinc-500">No images in gallery.</p> : (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {images.map((img) => (
-          <div key={img.id} className="relative group rounded-2xl overflow-hidden bg-black/5 aspect-square border border-black/5 hover:border-black/20 transition-all">
-            <img src={img.image_url} alt="Gallery" className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-60 transition-all duration-500" />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={() => handleDelete(img.id)} className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-red-500/80 hover:border-red-500 hover:scale-110 transition-all"><Trash2 size={16} /></button>
-            </div>
-            <span className="absolute bottom-3 left-3 bg-black/80 border border-white/10 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest rounded-md">{img.tag}</span>
+      {loading ? <p className="text-zinc-500">Loading gallery...</p> :
+        images.length === 0 ? <p className="text-zinc-500">No images in gallery.</p> : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {images.map((img) => (
+              <div key={img.id} className="relative group rounded-2xl overflow-hidden bg-black/5 aspect-square border border-black/5 hover:border-black/20 transition-all">
+                <img src={img.image_url} alt="Gallery" className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-60 transition-all duration-500" />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleDelete(img.id)} className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-red-500/80 hover:border-red-500 hover:scale-110 transition-all"><Trash2 size={16} /></button>
+                </div>
+                <span className="absolute bottom-3 left-3 bg-black/80 border border-white/10 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest rounded-md">{img.tag}</span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      )}
+        )}
     </div>
   );
 }
@@ -531,7 +531,7 @@ export default function Admin() {
             <Heart size={14} className="text-primary-foreground" fill="currentColor" />
           </div>
           <div>
-            <p className="text-sm font-bold text-zinc-900 leading-none tracking-tight">SRISHREEVISION FOUNDATION</p>
+            <p className="text-sm font-bold text-zinc-900 leading-none tracking-tight">SRISHREE VISION FOUNDATION</p>
             <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-1">Admin Panel</p>
           </div>
         </div>
@@ -554,12 +554,12 @@ export default function Admin() {
           </button>
         </div>
       </aside>
-      
+
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 bg-background relative overflow-hidden">
         {/* Subtle background glow for main area */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
-        
+
         <header className="h-20 bg-white/80 backdrop-blur-md border-b border-black/10 flex items-center justify-between px-8 relative z-10">
           <div>
             <h1 className="text-lg font-bold text-zinc-900 tracking-tight capitalize">{activeTab}</h1>
@@ -580,7 +580,7 @@ export default function Admin() {
             </div>
           </div>
         </header>
-        
+
         <main className="flex-1 overflow-y-auto p-8 relative z-10">
           {activeTab === "dashboard" && <AdminDashboard />}
           {activeTab === "events" && <AdminEventsTab />}
@@ -620,7 +620,7 @@ export default function Admin() {
                       <div key={f}>
                         <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">{f}</label>
                         <input className="w-full px-4 py-3 rounded-xl bg-white border border-black/10 text-zinc-900 text-sm outline-none focus:border-primary/50 focus:bg-black/5 transition-colors placeholder:text-zinc-500"
-                          defaultValue={f === "Organization Name" ? "SRISHREEVISION FOUNDATION" : ""} placeholder={`Enter ${f.toLowerCase()}`} />
+                          defaultValue={f === "Organization Name" ? "SRISHREE VISION FOUNDATION" : ""} placeholder={`Enter ${f.toLowerCase()}`} />
                       </div>
                     ))}
                   </div>

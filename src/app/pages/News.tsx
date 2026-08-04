@@ -102,7 +102,7 @@ export default function News() {
           {/* Masthead bar */}
           <div className="flex items-center justify-between gap-4 text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase text-zinc-600 border-y-2 border-zinc-900 py-2.5 mb-8">
             <span className="whitespace-nowrap">{today}</span>
-            <span className="hidden md:block flex-1 text-center text-zinc-500">Srishreevision Foundation — Official Newsroom</span>
+            <span className="hidden md:block flex-1 text-center text-zinc-500">SRISHREE VISION FOUNDATION   Official Newsroom</span>
             <span className="whitespace-nowrap">India Edition</span>
           </div>
 
@@ -147,7 +147,7 @@ export default function News() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-zinc-600 text-base md:text-lg font-light leading-relaxed mt-5 max-w-xl"
               >
-                Stories from the field, campaign highlights, partnerships and organizational milestones — straight from the foundation.
+                Stories from the field, campaign highlights, partnerships and organizational milestones   straight from the foundation.
               </motion.p>
             </div>
 

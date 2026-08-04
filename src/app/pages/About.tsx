@@ -48,22 +48,22 @@ const staggerContainer = {
 
 // ── Content ────────────────────────────────────────────────────────────────────
 const VALUES = [
-  { icon: Shield, title: "Integrity & Transparency", text: "We operate with complete openness   every rupee, every camp and every partnership is accountable to the communities we serve." },
-  { icon: Heart, title: "Compassion & Dignity", text: "We meet every person with respect. Our work is rooted in empathy, ensuring help reaches those who need it most." },
-  { icon: HeartHandshake, title: "Collaboration & Partnership", text: "Real change happens together. We work hand-in-hand with police, hospitals, civic bodies and community volunteers." },
-  { icon: Sprout, title: "Sustainable Impact", text: "We build programs that outlast a single camp   planting seeds of education, health and self-reliance for generations." },
+  { icon: Shield, title: "Integrity & Transparency", text: "We operate with complete openness—every rupee, every camp, and every partnership is accountable to the communities we serve." },
+  { icon: Heart, title: "Compassion & Dignity", text: "We meet every person with respect. Our work is rooted in empathy, ensuring help reaches those who need it most" },
+  { icon: HeartHandshake, title: "Collaboration & Partnership", text: "Real change happens together. We work hand-in-hand with healthcare partners, civic bodies, local authorities, and community volunteers." },
+  { icon: Sprout, title: "Sustainable Impact", text: "We build programs that outlast a single camp, planting seeds of education, health, and self-reliance for generations." },
 ];
 
 const FOCUS_AREAS = [
-  { icon: Heart, title: "Health & Eye Care", desc: "Free eye check-up camps, spectacle distribution, blood donation drives and general health screening for under-served communities.", tag: "Health" },
-  { icon: BookOpen, title: "Education & Skill Development", desc: "Awareness and skill-building programs for youth, plus safe agricultural practice education for farming communities.", tag: "Education" },
-  { icon: Users, title: "Women Empowerment", desc: "Initiatives supporting women's confidence, participation and self-sustainability within local communities.", tag: "Women" },
-  { icon: Globe, title: "Community & Rural Development", desc: "Drug awareness drives, polio vaccination awareness and rural health outreach across Telangana.", tag: "Community" },
+  { icon: Heart, title: "Health & Eye Care", desc: "We make quality, free eye care services and primary healthcare accessible to everyone in society. We actively work to prevent avoidable blindness through regular eye camps, cataract screenings, and the distribution of free eyeglasses.Our ambition is to preserve vision and gift a healthier, brighter future to all.ved communities.", tag: "Health" },
+  { icon: BookOpen, title: "Education & Skill Development", desc: "We improve employment opportunities for rural youth through quality education and modern skill training. Our goal is to prepare the next generation for future challenges by fostering personal development and technical knowledge.", tag: "Education" },
+  { icon: Users, title: "Women Empowerment", desc: "We lead women toward self-reliance by providing skill development training and employment opportunities. We empower every woman to live with dignity through financial independence, education, and social awareness.", tag: "Women" },
+  { icon: Globe, title: "Community & Rural Development", desc: "Believing that national progress is possible through the overall development of rural areas, we strive to build essential infrastructure. We enhance the living standards of rural people by creating employment opportunities, conducting awareness programs, and providing skill development training. Our main objective is to empower every individual in society with self-reliance, a better future, and dignity.", tag: "Community" },
 ];
 
 const MILESTONES = [
   { year: "Dec 2025", title: "First Health Camp", text: "Our free eye check-up camp in Dahegam screened 150+ people and identified 45 individuals for free spectacles   the spark of our journey." },
-  { year: "Jan 2026", title: "Formal Registration", text: "Srishreevision Foundation was registered (No. 20967/6) as a non-profit to scale up our community health and welfare work." },
+  { year: "Jan 2026", title: "Formal Registration", text: "SRISHREE VISION FOUNDATION was registered (No. 20967/6) as a non-profit to scale up our community health and welfare work." },
   { year: "Jun 2026", title: "Blood Donation & Health Check Camp", text: "Partnering with Hindu Jagarana Mancha and iCare Vision Center, we hosted free sugar, BP and hemoglobin testing alongside a blood donation drive." },
   { year: "Jun 2026", title: "Drug Awareness Program", text: "A youth awareness drive in Khagaznagar, run in partnership with Telangana Police, TGNAB and Lions Club of International." },
   { year: "Aug 2026", title: "Annual Green Earth Drive", text: "Our largest planned community event   500+ volunteers joining a massive tree plantation drive at Central Park, Khagaznagar." },
@@ -87,7 +87,7 @@ export default function About() {
           </motion.div>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-zinc-900 mb-6 tracking-tight leading-tight flex items-center justify-center gap-4 flex-wrap">
             <BlurText text="About" delay={150} animateBy="words" direction="top" />
-            <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>SRISHREEVISION FOUNDATION</GradientText>
+            <GradientText colors={["#0F6E6E", "#4CAF50", "#0F6E6E"]} animationSpeed={5} showBorder={false}>SRISHREE VISION FOUNDATION</GradientText>
           </h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -104,9 +104,10 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <div className="flex justify-center"><SectionLabel className="justify-center">Who We Are</SectionLabel></div>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">A Local Vision with a Mission to Serve</h2>
-            <p className="text-zinc-600 text-lg font-light leading-relaxed">
-              Born in the heart of Hyderabad, Telangana, Srishreevision Foundation exists to close the gap between communities in need and the services that can transform their lives.
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6 whitespace-nowrap">
+              A Local Vision with Global Impact
+            </h2>            <p className="text-zinc-600 text-lg font-light leading-relaxed">
+              Born in the heart of Telangana, India, SRISHREE VISION FOUNDATION exists to close the gap between communities in need and the services that can transform their lives.
             </p>
           </div>
 
@@ -117,8 +118,7 @@ export default function About() {
                 <h3 className="text-xl font-bold text-zinc-900">Why We Exist</h3>
               </div>
               <p className="text-zinc-600 font-light leading-relaxed">
-                Every community has unseen needs   eyes that cannot afford a check-up, families that miss out on essential health screenings and youth who lack awareness and opportunity. We saw these needs in our own neighbourhoods and chose to act, one camp, one conversation, one life at a time.
-              </p>
+                Good vision and basic healthcare shouldn't be a privilege. Across our communities, families miss out on essential screenings and youth lack direction simply due to a lack of access. We chose to step in and bridge this gap one eye camp, one conversation, and one life at a time.              </p>
             </motion.div>
             <motion.div variants={fadeIn} className="bg-white border border-black/10 rounded-3xl p-8 md:p-10 hover:border-primary/30 transition-all">
               <div className="flex items-center gap-3 mb-5">
@@ -126,8 +126,7 @@ export default function About() {
                 <h3 className="text-xl font-bold text-zinc-900">How We Work</h3>
               </div>
               <p className="text-zinc-600 font-light leading-relaxed">
-                We partner where expertise lives. Hospitals and vision centers deliver the care, police and civic bodies bring the reach and our volunteers bring the heart. By pooling these strengths, even a small foundation can create outsized, lasting impact.
-              </p>
+                We collaborate with key partners to maximize our impact. Hospitals and vision centers provide quality care, local civic bodies broaden our reach, and dedicated volunteers drive the mission forward. Together, we create meaningful and lasting change.              </p>
             </motion.div>
           </motion.div>
 
@@ -135,7 +134,7 @@ export default function About() {
             {[
               { label: "Based In", value: "Hyderabad, Telangana" },
               { label: "Registered", value: "No. 20967/6, Jan 2026" },
-              { label: "Focus", value: "Health, Education, Women, Community" },
+              { label: "Focus", value: "Health, Education, Women, Community, Environment" },
               { label: "Approach", value: "Camps, Awareness, Outreach" },
             ].map((f, i) => (
               <motion.div
@@ -162,7 +161,7 @@ export default function About() {
             <div className="flex justify-center"><SectionLabel className="justify-center">Core Values</SectionLabel></div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">The Principles That Guide Every Camp</h2>
             <p className="text-zinc-600 text-lg font-light leading-relaxed">
-              Our values are not posters on a wall   they are the standards we hold ourselves to in every program we run.
+              "Our values are not posters on a wall—they are the standards we hold ourselves to in every program we run."
             </p>
           </div>
 
@@ -201,7 +200,7 @@ export default function About() {
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
                 <div>
                   <h3 className="text-2xl font-bold text-white mb-1">{"Director"}</h3>
-                  <p className="text-white/80 text-xs font-bold uppercase tracking-widest">Director, Srishreevision Foundation</p>
+                  <p className="text-white/80 text-xs font-bold uppercase tracking-widest">Director, SRISHREE VISION FOUNDATION</p>
                 </div>
                 <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
                   <Award size={24} className="text-white" />
@@ -213,15 +212,28 @@ export default function About() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}>
             <motion.div variants={fadeIn}><SectionLabel>Message from the Director</SectionLabel></motion.div>
             <motion.h2 variants={fadeIn} className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-zinc-900 tracking-tight">
-              "Empowering people, changing lives."
+              "Restoring Vision, Empowering Futures."
             </motion.h2>
             <motion.div variants={fadeIn} className="space-y-6 text-zinc-600 font-light text-lg leading-relaxed">
               <p>
-                At Srishreevision Foundation, our work is driven by a profound commitment to human dignity. We believe that empowering individuals with better healthcare, foundational education and essential skills creates a ripple effect that transforms entire communities.
+                At <b>SRISHREE VISION FOUNDATION</b>, we believe that good health and opportunity are fundamental rights, not privileges. Our mission is to restore dignity and transform lives by providing accessible healthcare, quality education, and sustainable skill-building programs.
               </p>
               <p>
-                By bringing together passionate volunteers, dedicated partners and grassroots initiatives, we are steadily working towards a society where every person has the opportunity to thrive and succeed, no matter their background.
+                Together with our dedicated volunteers, partners, and community leaders, we are constantly working to create a world where no one is left behind due to preventable challenges.
               </p>
+            </motion.div>
+            <motion.div
+              variants={fadeIn}
+              className="mt-10 flex justify-end"
+            >
+              <div className="text-right border-t border-zinc-300 pt-3 w-fit">
+                <p className="font-bold text-zinc-900 text-xl">
+                  Lion Dr. R. Srinivas
+                </p>
+                <p className="text-primary font-semibold text-sm uppercase tracking-wider mt-1">
+                  Founder & Director
+                </p>
+              </div>
             </motion.div>
           </motion.div>
         </div>
@@ -229,18 +241,59 @@ export default function About() {
 
       {/* Mission & Vision */}
       <section className="py-12 md:py-24 px-4 md:px-6 bg-background border-y border-black/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 mix-blend-multiply pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+        {/* Background Texture */}
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
           {[
-            { icon: Target, title: "Our Mission", text: "To empower individuals with better healthcare, foundational education and essential skills." },
-            { icon: Eye, title: "Our Vision", text: "A society where every person has the opportunity to thrive and succeed, no matter their background." },
+            {
+              icon: Target,
+              title: "Our Mission",
+              text: "To transform underserved communities by providing accessible eye care & healthcare, foundational education, and sustainable skill development.",
+            },
+            {
+              icon: Eye,
+              title: "Our Vision",
+              text: "An inclusive society where clear vision, health, and opportunity empower every individual to thrive, dignified and self-reliant.",
+            },
           ].map((item, i) => (
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.2 }} key={item.title} className="bg-white border border-black/10 rounded-3xl p-10 hover:border-black/20 transition-all hover:shadow-[0_0_30px_rgba(0,0,0,0.05)]">
-              <div className="w-16 h-16 rounded-2xl bg-black/5 flex items-center justify-center mb-8 border border-black/10">
-                <item.icon size={32} className="text-primary" />
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.2 }}
+              className="bg-white rounded-3xl border border-zinc-200 p-10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+            >
+              {/* Header */}
+              <div className="flex items-center gap-5 mb-8">
+                <div className="w-16 h-16 rounded-2xl bg-cyan-100 border border-cyan-200 flex items-center justify-center flex-shrink-0">
+                  <item.icon size={30} className="text-primary" />
+                </div>
+
+                <h3 className="text-3xl font-bold text-zinc-900 tracking-tight">
+                  {item.title}
+                </h3>
               </div>
-              <h3 className="text-3xl font-bold text-zinc-900 mb-4 tracking-tight">{item.title}</h3>
-              <p className="text-zinc-600 text-lg leading-relaxed font-light">{item.text}</p>
+
+              {/* Quote Box */}
+              <div className="relative">
+                {/* Opening Quote */}
+                <span className="absolute -top-7 left-4 text-7xl font-serif text-cyan-300 leading-none select-none">
+                  “
+                </span>
+
+                <div className="rounded-2xl border border-cyan-200 bg-gradient-to-br from-cyan-50 via-white to-teal-50 p-8 shadow-inner">
+                  <p className="text-lg leading-9 text-zinc-700">
+                    {item.text}
+                  </p>
+                </div>
+
+                {/* Closing Quote */}
+                <span className="absolute -bottom-10 right-5 text-7xl font-serif text-cyan-300 leading-none select-none">
+                  ”
+                </span>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -259,20 +312,22 @@ export default function About() {
             </Link>
           </div>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {FOCUS_AREAS.map((f, i) => (
               <motion.div
                 key={f.title}
                 variants={fadeIn}
                 transition={{ delay: i * 0.05 }}
-                className="group bg-white border border-black/10 rounded-3xl p-8 hover:border-primary/30 hover:shadow-[0_0_30px_rgba(15,110,110,0.08)] transition-all flex flex-col"
+                className="group bg-white border border-black/10 rounded-3xl p-8 hover:border-primary/30 hover:shadow-[0_0_30px_rgba(15,110,110,0.08)] transition-all flex flex-col h-full"
               >
-                <div className="w-14 h-14 rounded-2xl bg-black/5 flex items-center justify-center mb-6 border border-black/10 group-hover:bg-primary group-hover:border-primary transition-colors">
-                  <f.icon size={26} className="text-primary group-hover:text-white transition-colors" />
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 shrink-0 rounded-2xl bg-black/5 flex items-center justify-center border border-black/10 group-hover:bg-primary group-hover:border-primary transition-colors">
+                    <f.icon size={26} className="text-primary group-hover:text-white transition-colors" />
+                  </div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-primary">{f.tag}</span>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">{f.tag}</span>
-                <h3 className="text-lg font-bold text-zinc-900 mb-3">{f.title}</h3>
-                <p className="text-zinc-600 text-sm leading-relaxed font-light flex-1">{f.desc}</p>
+                <h3 className="text-xl font-bold text-zinc-900 mb-3 min-h-[3.5rem]">{f.title}</h3>
+                <p className="text-zinc-700 text-base leading-relaxed flex-1 text-left md:text-justify">{f.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -319,11 +374,22 @@ export default function About() {
       {/* Impact at a Glance */}
       <section className="py-12 md:py-24 px-4 md:px-6 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <div className="flex justify-center"><SectionLabel className="justify-center">Impact at a Glance</SectionLabel></div>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">Small Team, Real Results</h2>
-            <p className="text-zinc-600 text-lg font-light leading-relaxed">
-              A snapshot of what our grassroots programs have delivered so far.
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <div className="flex justify-center mb-5">
+              <SectionLabel className="justify-center text-2xl md:text-3xl">
+                Impact at a Glance
+              </SectionLabel>
+            </div>
+
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6 leading-tight">
+              Driven by Purpose,
+              <br />
+              Measured by Impact
+            </h2>
+
+            <p className="text-zinc-800 text-xl font-normal leading-relaxed max-w-3xl mx-auto">
+              A snapshot of how our grassroots programs are transforming lives and
+              empowering communities.
             </p>
           </div>
 
@@ -337,8 +403,13 @@ export default function About() {
                 transition={{ delay: i * 0.1 }}
                 className="bg-white border border-black/10 rounded-3xl p-8 text-center hover:border-primary/30 hover:shadow-[0_0_30px_rgba(15,110,110,0.08)] transition-all"
               >
-                <p className="text-4xl md:text-5xl font-bold text-primary mb-3 tracking-tight"><AnimatedCounter value={s.value} /></p>
-                <p className="text-zinc-600 text-sm font-light leading-relaxed">{s.label}</p>
+                <p className="text-4xl md:text-5xl font-bold text-primary mb-3 tracking-tight">
+                  <AnimatedCounter value={s.value} />
+                </p>
+
+                <p className="text-zinc-700 text-sm font-medium leading-relaxed">
+                  {s.label}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -432,7 +503,7 @@ export default function About() {
           <SectionLabel className="justify-center">Compliance</SectionLabel>
           <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-8 tracking-tight">Registration & Compliance</h2>
           <p className="text-zinc-600 text-lg leading-relaxed font-light mb-12">
-            SRISHREEVISION FOUNDATION is formally registered and compliant with all statutory regulations to ensure complete transparency in our operations.
+            SRISHREE VISION FOUNDATION is formally registered and compliant with all statutory regulations to ensure complete transparency in our operations.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">

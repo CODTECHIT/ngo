@@ -5,10 +5,10 @@ import { Eye, Award, Download, Share2, CheckCircle2, ShieldCheck, Sparkles, Hear
 import { Link } from 'react-router';
 
 const INDIAN_STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
-  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
   "Uttarakhand", "West Bengal", "Delhi NCR", "Jammu and Kashmir", "Ladakh", "Puducherry", "Other"
 ];
 
@@ -32,7 +32,7 @@ export const NetraSurakshaPledge: React.FC = () => {
 
   useEffect(() => {
     // Fetch live Netra Suraksha pledge count
-    api.getNetraPledgeCount().then(count => setPledgeCount(count)).catch(() => {});
+    api.getNetraPledgeCount().then(count => setPledgeCount(count)).catch(() => { });
   }, []);
 
 
@@ -89,7 +89,7 @@ export const NetraSurakshaPledge: React.FC = () => {
           spread: 80,
           origin: { y: 0.6 }
         });
-      } catch (cErr) {}
+      } catch (cErr) { }
     }
   };
 
@@ -366,7 +366,7 @@ export const NetraSurakshaPledge: React.FC = () => {
                 <Eye className="w-4 h-4 text-cyan-300" /> Sri Shree Vision Foundation Drive
               </div>
               <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-                Netra Suraksha Abhiyaan — Eye Care & Donation Pledge
+                Netra Suraksha Abhiyaan   Eye Care & Donation Pledge
               </h1>
               <p className="text-cyan-100 text-sm sm:text-base leading-relaxed">
                 Protect your vision, prevent avoidable blindness, and support eye donation awareness across India. Take the online pledge and instantly download your official <strong>Certificate of Commitment</strong>.
@@ -389,7 +389,7 @@ export const NetraSurakshaPledge: React.FC = () => {
 
         {!submittedCert ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
+
             {/* Guidelines */}
             <div className="lg:col-span-5 space-y-6">
               <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-700">

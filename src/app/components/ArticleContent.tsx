@@ -11,7 +11,7 @@ export function normalizeArticleHtml(html: unknown): string {
   const clean = String(sanitizeHtml(html) ?? '').trim();
   if (!clean) return '';
 
-  // Already structured rich text — render as-is (converting the flat <div>
+  // Already structured rich text   render as-is (converting the flat <div>
   // blocks some browsers produce in a contentEditable into proper <p>
   // paragraphs so spacing and alignment render perfectly).
   if (BLOCK_TAG.test(clean)) {

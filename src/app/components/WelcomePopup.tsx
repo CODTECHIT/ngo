@@ -64,7 +64,7 @@ export function WelcomePopup() {
               </span>
 
               <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-3 tracking-tight">
-                Welcome to Srishreevision Foundation
+                Welcome to SRISHREE VISION FOUNDATION
               </h2>
 
               <p className="text-sm md:text-base text-zinc-600 font-light leading-relaxed mb-2">

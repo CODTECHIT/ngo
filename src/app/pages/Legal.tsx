@@ -15,8 +15,7 @@ const NGO = {
   address: "1-11-22, Golnaka Alwal, Tirumalagiri, Hyderabad, Telangana - 500010",
   phone: "+91 89779 10974",
   phone2: "+91 97011 00974",
-  email: "srishreefoundation@gmail.com",
-  email2: "srishreevisionfoundation1@gmail.com",
+  email: "srishreevisionfoundation1@gmail.com",
   hours: "Monday - Saturday: 9:00 AM - 6:00 PM",
   updated: "August 2, 2026",
 };
@@ -281,7 +280,7 @@ const GRIEVANCE_CONTENT = {
         "Grievance Redressal Officer: Director, SRISHREE VISION FOUNDATION",
       ],
       list: [
-        "Email: " + NGO.email + " / " + NGO.email2,
+        "Email: " + NGO.email,
         "Phone: " + NGO.phone + " / " + NGO.phone2,
         "Address: " + NGO.address,
       ],
@@ -343,7 +342,7 @@ function ContactCard() {
       <h3 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-8 tracking-tight relative z-10">Reach Our Office</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 relative z-10">
         {[
-          { icon: Mail, title: "Email", lines: [NGO.email, NGO.email2] },
+          { icon: Mail, title: "Email", lines: [NGO.email] },
           { icon: Phone, title: "Phone", lines: [NGO.phone, NGO.phone2] },
           { icon: MapPin, title: "Registered Address", lines: [NGO.address] },
           { icon: Clock, title: "Working Hours", lines: [NGO.hours, "Sunday: Closed"] },

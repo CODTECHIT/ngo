@@ -327,11 +327,11 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-16 h-16 shrink-0 flex items-center justify-center">
+            <div className="flex flex-col items-center md:items-start mb-6">
+              <div className="w-32 h-32 shrink-0 flex items-center justify-center mb-5">
                 <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight">SRISHREE VISION FOUNDATION</span>
+              <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight text-center md:text-left">SRISHREE VISION FOUNDATION</span>
             </div>
             <p className="text-zinc-600 text-sm leading-relaxed max-w-sm mb-8 font-light">
               <strong className="block text-zinc-900 mb-2 font-bold">Local Vision, Global Impact</strong>
@@ -339,7 +339,7 @@ function Footer() {
             </p>
             <div className="text-zinc-600 text-sm font-light space-y-2">
               <p><strong className="text-zinc-900 font-medium">Phone:</strong>8977910974/ 9701100974 </p>
-              <p><strong className="text-zinc-900 font-medium">Email:</strong> srishreefoundation@gmail.com</p>
+              <p><strong className="text-zinc-900 font-medium">Email:</strong> srishreevisionfoundation1@gmail.com</p>
               <p><strong className="text-zinc-900 font-medium">Address:</strong> 1-11-22,Golnaka Alwal, Alwal, Tirumalagiri, Hyderabad, T.G - 500010</p>
             </div>
           </div>
@@ -349,7 +349,7 @@ function Footer() {
               { title: "Get Involved", links: [{ label: "Volunteer", to: "/apply?category=volunteer" }, { label: "Corporate CSR", to: "/apply?category=csr" }, { label: "Intern with Us", to: "/apply?category=intern" }, { label: "Fundraise", to: "/apply?category=fundraise" }, { label: "Partner NGOs", to: "/apply?category=partner" }, { label: "Donate", to: "/donate" }] },
             ].map(col => (
               <div key={col.title}>
-                <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-zinc-400 mb-6">
+                <h4 className="font-bold text-sm uppercase tracking-[0.2em] text-primary mb-6">
                   {col.title}
                 </h4>
                 <ul className="space-y-3">

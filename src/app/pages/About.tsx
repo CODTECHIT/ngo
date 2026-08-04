@@ -342,7 +342,7 @@ export default function About() {
             <div className="flex justify-center"><SectionLabel className="justify-center">Our Journey</SectionLabel></div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">From One Camp to a Movement</h2>
             <p className="text-zinc-600 text-lg font-light leading-relaxed">
-              Every milestone below was made possible by the people who showed up   our volunteers, partners and the communities who trusted us.
+              Every milestone reflects the dedication of our volunteers, the strength of our partners, and the trust of the communities we serve.
             </p>
           </div>
 
@@ -423,7 +423,7 @@ export default function About() {
             <div className="flex justify-center"><SectionLabel className="justify-center">Board of Directors</SectionLabel></div>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6">Our Leadership & Directors</h2>
             <p className="text-zinc-600 dark:text-slate-300 text-lg font-light leading-relaxed">
-              Guided by dedicated community leaders and active members of Lions Clubs International.
+              Guided by dedicated clinical advisors and community leaders committed to ending preventable blindness.
             </p>
           </div>
 
@@ -433,21 +433,23 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white dark:bg-slate-800 border border-black/10 dark:border-slate-700 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all text-center space-y-4"
+              className="bg-white dark:bg-slate-800 border border-black/10 dark:border-slate-700 rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col"
             >
-              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-600 p-1 shadow-lg">
-                <div className="w-full h-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center font-bold text-2xl text-amber-600">
-                  RS
-                </div>
+              <div className="w-full bg-zinc-50 dark:bg-slate-900 border-b border-black/5 dark:border-white/5 h-[320px] relative overflow-hidden">
+                <img
+                  src="/director.jpeg"
+                  alt="Lion Dr. R. Srinivas"
+                  className="w-full h-full object-cover object-top"
+                />
               </div>
-              <div>
-                <span className="inline-block px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 text-xs font-bold rounded-full uppercase tracking-wider mb-2">
+              <div className="p-8 text-center flex flex-col items-center flex-1">
+                <span className="inline-block px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 text-[10px] font-bold rounded-full uppercase tracking-wider mb-4">
                   Lions Clubs International Member
                 </span>
-                <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Lion Dr. R. Srinivas</h3>
-                <p className="text-primary font-semibold text-sm mt-1">Director & Founding Trustee</p>
-                <p className="text-zinc-500 dark:text-slate-400 text-xs mt-3 leading-relaxed">
-                  Sri Shree Vision Foundation Director with extensive experience driving health screening, eye care outreach, and youth drug awareness campaigns nationwide.
+                <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white mb-2">Lion Dr. R. Srinivas</h3>
+                <p className="text-primary font-bold text-sm mb-4">Director & Founder</p>
+                <p className="text-zinc-600 dark:text-slate-400 text-sm leading-relaxed">
+                  An experienced leader driving health screening, eye care outreach, and youth drug awareness campaigns nationwide.
                 </p>
               </div>
             </motion.div>
@@ -458,22 +460,21 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.15 }}
-              className="bg-white dark:bg-slate-800 border border-black/10 dark:border-slate-700 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all text-center space-y-4"
+              className="bg-white dark:bg-slate-800 border border-black/10 dark:border-slate-700 rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col"
             >
-              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-teal-500 via-emerald-500 to-cyan-600 p-1 shadow-lg">
-                <div className="w-full h-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center font-bold text-2xl text-teal-600">
-                  JI
-                </div>
+              <div className="w-full bg-zinc-50 dark:bg-slate-900 border-b border-black/5 dark:border-white/5 h-[320px] relative overflow-hidden">
+                <img
+                  src="/director 2.jpeg"
+                  alt="Lion J. Indhyarani"
+                  className="w-full h-full object-cover object-top"
+                />
               </div>
-              <div>
-                <span className="inline-block px-3 py-1 bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 text-xs font-bold rounded-full uppercase tracking-wider mb-2">
+              <div className="p-8 text-center flex flex-col items-center flex-1">
+                <span className="inline-block px-3 py-1 bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 text-[10px] font-bold rounded-full uppercase tracking-wider mb-4">
                   Lions Clubs International Member
                 </span>
-                <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white">MSc. Lion J. Indhyarani</h3>
-                <p className="text-primary font-semibold text-sm mt-1">Director & Trustee</p>
-                <p className="text-zinc-500 dark:text-slate-400 text-xs mt-3 leading-relaxed">
-                  Sri Shree Vision Foundation Director leading community empowerment, rural health programs, and social welfare drives.
-                </p>
+                <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white mb-2">Lion J. Indhyarani</h3>
+                <p>Director leading community empowerment, rural health programs, and social welfare drives.</p>
               </div>
             </motion.div>
           </div>
@@ -536,7 +537,7 @@ export default function About() {
           <div className="relative z-10">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">Be Part of the Change</h2>
             <p className="text-white/85 text-lg font-light mb-10 max-w-2xl mx-auto leading-relaxed">
-              Whether you volunteer your time, partner your expertise, or support with a donation   every contribution takes us one step closer to a thriving, self-reliant community.
+              Whether you volunteer your time, share your expertise, or make a donation, every contribution takes us one step closer to a thriving, self-reliant community
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link to="/apply?category=volunteer" className="px-8 py-4 bg-white text-primary font-bold rounded-full hover:scale-105 transition-all shadow-lg block text-center">

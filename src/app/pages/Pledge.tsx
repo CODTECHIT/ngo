@@ -5,10 +5,10 @@ import { Award, Download, Share2, CheckCircle2, ShieldCheck, Sparkles, HeartHand
 import { Link } from 'react-router';
 
 const INDIAN_STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
-  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
   "Uttarakhand", "West Bengal", "Delhi NCR", "Jammu and Kashmir", "Ladakh", "Puducherry", "Other"
 ];
 
@@ -32,7 +32,7 @@ export const Pledge: React.FC = () => {
 
   useEffect(() => {
     // Fetch live Nasha Mukt pledge count
-    api.getNashaPledgeCount().then(count => setPledgeCount(count)).catch(() => {});
+    api.getNashaPledgeCount().then(count => setPledgeCount(count)).catch(() => { });
   }, []);
 
 
@@ -88,7 +88,7 @@ export const Pledge: React.FC = () => {
           spread: 80,
           origin: { y: 0.6 }
         });
-      } catch (cErr) {}
+      } catch (cErr) { }
     }
   };
 
@@ -274,10 +274,10 @@ export const Pledge: React.FC = () => {
     ctx.fillStyle = '#64748b';
     ctx.fillText('Sri Shree Vision Foundation', 340, 975);
 
-    // Right Signature - MSc. Lion J. Indhyarani
+    // Right Signature - Lion J. Indhyarani
     ctx.fillStyle = '#0f172a';
     ctx.font = 'bold italic 24px "Times New Roman", Georgia, serif';
-    ctx.fillText('MSc. Lion J. Indhyarani', 1260, 915);
+    ctx.fillText('Lion J. Indhyarani', 1260, 915);
     ctx.strokeStyle = '#64748b';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -398,7 +398,7 @@ export const Pledge: React.FC = () => {
         {!submittedCert ? (
           /* Registration Form & Guidelines Grid */
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
+
             {/* Left Guidelines & Info */}
             <div className="lg:col-span-5 space-y-6">
               <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-700">

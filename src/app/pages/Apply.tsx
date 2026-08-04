@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { CheckCircle2, Send, Users, Building2, GraduationCap, HandCoins, Handshake, ChevronDown } from "lucide-react";
 import { motion } from "motion/react";
@@ -73,6 +73,19 @@ export default function Apply() {
   );
   const [service, setService] = useState("");
   const [manualService, setManualService] = useState("");
+
+  useEffect(() => {
+    const param = searchParams.get("category");
+    if (param && CATEGORY_OPTIONS.some(c => c.value === param)) {
+      setCategory(param);
+      setService("");
+      setManualService("");
+    }
+    setTimeout(() => {
+      const el = document.getElementById("apply-form");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  }, [searchParams]);
 
   const categoryMeta = useMemo(
     () => CATEGORY_OPTIONS.find(c => c.value === category) || CATEGORY_OPTIONS[0],
@@ -224,7 +237,7 @@ export default function Apply() {
       </section>
 
       {/* Application Form */}
-      <section className="py-8 md:py-14 px-4 md:px-6 relative z-10">
+      <section id="apply-form" className="py-8 md:py-14 px-4 md:px-6 relative z-10">
         <div className="max-w-3xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn}
             className="bg-white border border-black/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">

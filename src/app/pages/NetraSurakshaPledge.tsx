@@ -272,10 +272,10 @@ export const NetraSurakshaPledge: React.FC = () => {
     ctx.fillStyle = '#64748b';
     ctx.fillText('Sri Shree Vision Foundation', 340, 975);
 
-    // Right Signature - MSc. Lion J. Indhyarani
+    // Right Signature - Lion J. Indhyarani
     ctx.fillStyle = '#0f172a';
     ctx.font = 'bold italic 24px "Times New Roman", Georgia, serif';
-    ctx.fillText('MSc. Lion J. Indhyarani', 1260, 915);
+    ctx.fillText('Lion J. Indhyarani', 1260, 915);
     ctx.strokeStyle = '#64748b';
     ctx.lineWidth = 1;
     ctx.beginPath();

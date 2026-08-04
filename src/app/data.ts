@@ -118,7 +118,7 @@ export const TESTIMONIALS = [
 export const STATS = [
   {
     value: "11,000+",
-    label: "Through our free vision camps & health initiatives",
+    label: "People Reached Through Free Vision screening & Health Initiatives",
   },
   {
     value: "2,500+",
@@ -130,7 +130,7 @@ export const STATS = [
   },
   {
     value: "1000+",
-    label: "Healthcare, Education, Women & Community"
+    label: "Healthcare, Education, Women, Community & Environment"
   },
 ];
 

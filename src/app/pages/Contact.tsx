@@ -217,7 +217,7 @@ export default function Contact() {
             <div className="w-14 h-14 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-3 shadow-[0_0_30px_rgba(15,110,110,0.3)] animate-bounce">
               <MapPin size={22} />
             </div>
-            <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">Visit Our Locations</h3>
+            <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">Our Partner Service Centers</h3>
             <p className="text-zinc-600 font-light mt-2 text-sm">Find us at any of our branches across Hyderabad</p>
           </div>
 

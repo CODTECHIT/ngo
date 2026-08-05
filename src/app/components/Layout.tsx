@@ -338,7 +338,7 @@ function Footer() {
               A registered non-profit foundation working in healthcare, education, women empowerment and community development across Telangana.
             </p>
             <div className="text-zinc-600 text-sm font-light space-y-2">
-              <p><strong className="text-zinc-900 font-medium">Phone:</strong>8977910974/ 9701100974 </p>
+              <p><strong className="text-zinc-900 font-medium">Phone:</strong>+91 89779 10974 / +91 97011 00974  </p>
               <p><strong className="text-zinc-900 font-medium">Email:</strong> srishreevisionfoundation1@gmail.com</p>
               <p><strong className="text-zinc-900 font-medium">Address:</strong> 1-11-22,Golnaka Alwal, Alwal, Tirumalagiri, Hyderabad, T.G - 500010</p>
             </div>

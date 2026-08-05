@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Heart, ShieldCheck, CheckCircle2, ArrowRight, Sparkles, Gift, Eye, Stethoscope, Users, BookOpen, TreePine, Loader2, HelpCircle } from 'lucide-react';
+import { Heart, ShieldCheck, CheckCircle2, ArrowRight, Sparkles, Gift, Eye, Stethoscope, Users, BookOpen, TreePine, GraduationCap, Loader2, HelpCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import Aurora from '../components/reactbits/Aurora';
 import BlurText from '../components/reactbits/BlurText';
@@ -62,7 +62,7 @@ const CAUSES = [
       { amount: 1000, label: 'Stitch Training', impact: 'Sponsor vocational stitching training for 1 woman.' },
       { amount: 2500, label: '5 Women', impact: 'Sponsor stitching training for 5 women in a village.' },
       { amount: 5000, label: 'Sewing Machine', impact: "Donate 1 sewing machine to support women's livelihoods." },
-      { amount: 20000, label: '6-Month Program', impact: "Sponsor a 6-month vocational training program. The completion certificate will carry the sponsor's name." }
+      { amount: 20000, label: '2-month program', impact: "Sponsor a 2-month vocational training program. The completion certificate will carry the sponsor's name." }
     ],
     defaultImpact: 'Empowering women with vocational skills creates sustainable income and strengthens entire communities.'
   },
@@ -77,7 +77,7 @@ const CAUSES = [
     borderLight: 'border-amber-200',
     textLight: 'text-amber-800',
     presets: [
-      { amount: 500, label: 'School Kit', impact: 'Donate a school bag and gift for 1 student.' },
+      { amount: 500, label: 'School Kit', impact: 'Donate a school bag School bag + study materials 1 student.' },
       { amount: 1000, label: 'Nutrition Day', impact: 'Sponsor a one-day nutrition program for school children.' },
       { amount: 10000, label: 'Classroom', impact: 'Sponsor a classroom with school bags and textbooks for students.' }
     ],
@@ -89,6 +89,7 @@ const CAUSES = [
     icon: TreePine,
     tagline: 'Plant Today, Breathe Tomorrow',
     description: 'Support native sapling plantation, tree maintenance and community environmental conservation drives.',
+    highlight: '🌱 We plant the trees in the name of the donor — a dedicated name plate with the sponsor\'s name is placed on every tree you fund.',
     color: 'from-teal-500 to-emerald-800',
     bgLight: 'bg-teal-50/80',
     borderLight: 'border-teal-200',
@@ -102,6 +103,24 @@ const CAUSES = [
       { amount: 5000, label: 'Green Grove', impact: 'Sponsors an entire green grove of 75+ trees with 1-year volunteer maintenance.' }
     ],
     defaultImpact: 'Protecting our environment ensures clean air, water and sustainable livelihoods for future generations.'
+  },
+  {
+    id: 'skill',
+    name: 'Skill Development',
+    icon: GraduationCap,
+    tagline: 'Learn, Earn & Empower',
+    description: 'Support vocational training, computer/digital literacy and employment readiness programs for rural youth and women.',
+    color: 'from-orange-500 to-red-700',
+    bgLight: 'bg-orange-50/80',
+    borderLight: 'border-orange-200',
+    textLight: 'text-orange-800',
+    presets: [
+      { amount: 1000, label: '1 Month Training', impact: 'Sponsor skill development training for 1 youth or woman for one month.' },
+      { amount: 2500, label: '5 Trainees', impact: 'Sponsor skill training for 5 people in a vocational batch.' },
+      { amount: 5000, label: 'Digital Literacy', impact: 'Fund computer and digital literacy training for a rural group.' },
+      { amount: 20000, label: 'Full Batch', impact: 'Sponsor a complete skill development batch with certification and placement support.' }
+    ],
+    defaultImpact: 'Skill development creates employability and sustainable livelihoods, breaking the cycle of poverty for good.'
   }
 ];
 
@@ -316,6 +335,11 @@ export default function Donate() {
                         <div className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-0.5">{cause.tagline}</div>
                         <h3 className="font-bold text-lg text-zinc-900 mb-1">{cause.name}</h3>
                         <p className="text-xs sm:text-sm text-zinc-600 font-light leading-relaxed">{cause.description}</p>
+                        {cause.highlight && (
+                          <div className={`mt-2.5 text-[11px] sm:text-xs font-semibold leading-snug rounded-xl px-3 py-2 ${isSelected ? 'bg-teal-50 text-teal-800 border border-teal-200' : 'bg-black/5 text-zinc-700 border border-black/5'}`}>
+                            {cause.highlight}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </motion.div>

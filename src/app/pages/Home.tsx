@@ -82,7 +82,7 @@ function Hero() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="relative min-h-[75vh] md:min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-zinc-950 pt-20 md:pt-24 pb-10 md:pb-12">
+    <section className="relative min-h-[75vh] md:min-h-[90vh] flex flex-col items-center justify-start overflow-hidden bg-zinc-950 pt-28 md:pt-32 pb-10 md:pb-12">
       {/* Background Image with Ken Burns & Overlay */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div

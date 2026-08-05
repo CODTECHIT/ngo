@@ -13,7 +13,7 @@
   --secondary: #E5E7EB;
   --secondary-foreground: #1A1A1A;
   --muted: #F3F4F6;
-  --muted-foreground: #4B5563;
+  --muted-foreground: #374151;
   --accent: #4CAF50;
   --accent-foreground: #FFFFFF;
   --accent-2: #F57C00;
@@ -57,7 +57,7 @@
   --secondary: #E5E7EB;
   --secondary-foreground: #1A1A1A;
   --muted: #F3F4F6;
-  --muted-foreground: #4B5563;
+  --muted-foreground: #374151;
   --accent: #4CAF50;
   --accent-foreground: #FFFFFF;
   --accent-2: #F57C00;
@@ -284,4 +284,34 @@
     font-weight: 400;
     line-height: 1.5;
   }
+}
+
+/* Darken light text shades site-wide for better legibility */
+@layer utilities {
+  .font-light { font-weight: 400; }
+  .text-zinc-200 { color: #3f3f46; }
+  .text-zinc-300 { color: #52525b; }
+  .text-zinc-400 { color: #3f3f46; }
+  .text-zinc-500 { color: #27272a; }
+  .text-zinc-600 { color: #27272a; }
+  .text-gray-200 { color: #374151; }
+  .text-gray-300 { color: #4b5563; }
+  .text-gray-400 { color: #374151; }
+  .text-gray-500 { color: #1f2937; }
+  .text-gray-600 { color: #1f2937; }
+  .text-slate-200 { color: #334155; }
+  .text-slate-300 { color: #475569; }
+  .text-slate-400 { color: #334155; }
+  .text-slate-500 { color: #1e293b; }
+  .text-slate-600 { color: #1e293b; }
+  .text-neutral-200 { color: #404040; }
+  .text-neutral-300 { color: #525252; }
+  .text-neutral-400 { color: #404040; }
+  .text-neutral-500 { color: #262626; }
+  .text-neutral-600 { color: #262626; }
+  .text-stone-200 { color: #44403c; }
+  .text-stone-300 { color: #57534e; }
+  .text-stone-400 { color: #44403c; }
+  .text-stone-500 { color: #292524; }
+  .text-stone-600 { color: #292524; }
 }

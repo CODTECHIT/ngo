@@ -94,7 +94,7 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-600 max-w-3xl mx-auto text-lg md:text-xl font-light leading-relaxed">
-            We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development.
+            We are a dedicated non-profit organization transforming communities through accessible eye care, sustainable development, and rural empowerment
           </motion.p>
         </div>
       </section>

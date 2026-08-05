@@ -100,206 +100,52 @@ export const Pledge: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set resolution (1600 x 1131 landscape)
-    canvas.width = 1600;
-    canvas.height = 1131;
+    const bgImg = new Image();
+    bgImg.src = '/nashamukth certificuite.png';
+    bgImg.onload = () => {
+      // Set canvas resolution to match the image exactly
+      canvas.width = bgImg.width;
+      canvas.height = bgImg.height;
 
-    // Background Parchment
-    const bgGrad = ctx.createLinearGradient(0, 0, 1600, 1131);
-    bgGrad.addColorStop(0, '#ffffff');
-    bgGrad.addColorStop(0.5, '#fffdf9');
-    bgGrad.addColorStop(1, '#fffaf0');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, 1600, 1131);
+      // Draw background
+      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
-    // Official Double Gold Frame
-    // Outer Border
-    ctx.lineWidth = 14;
-    ctx.strokeStyle = '#92400e'; // Deep Amber
-    ctx.strokeRect(36, 36, 1528, 1059);
+      // Body Text Above Name
+      ctx.fillStyle = '#000000';
+      ctx.font = '500 24px Georgia, "Times New Roman", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('This is to proudly certify that', canvas.width / 2, canvas.height * 0.49);
 
-    // Middle Gold Accent Line
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#d97706';
-    ctx.strokeRect(54, 54, 1492, 1023);
+      // Recipient Name (Center)
+      ctx.fillStyle = '#000000'; // Make name dark
+      ctx.font = 'bold italic 55px "Times New Roman", Georgia, serif';
+      ctx.fillText(submittedCert.full_name, canvas.width / 2, canvas.height * 0.56);
 
-    // Inner Fine Line
-    ctx.lineWidth = 1.5;
-    ctx.strokeStyle = '#f59e0b';
-    ctx.strokeRect(62, 62, 1476, 1007);
+      // Body Text Below Name (Pledge Text)
+      ctx.fillStyle = '#000000';
+      ctx.font = 'italic 24px "Times New Roman", Georgia, serif';
+      ctx.fillText('has solemnly taken the Nasha Mukt YUVA Pledge, committing to remain drug-free,', canvas.width / 2, canvas.height * 0.63);
+      ctx.fillText('spread anti-substance abuse awareness, and contribute towards a healthy, drug-free & Viksit Bharat.', canvas.width / 2, canvas.height * 0.67);
 
-    // Corner Ornaments
-    const drawCorner = (x: number, y: number, angle: number) => {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate((angle * Math.PI) / 180);
-      ctx.fillStyle = '#b45309';
-      ctx.fillRect(0, 0, 45, 5);
-      ctx.fillRect(0, 0, 5, 45);
-      ctx.restore();
+      // Certificate ID (Placed above the bottom badge)
+      ctx.fillStyle = '#334155';
+      ctx.font = 'bold 16px "Inter", monospace';
+      ctx.fillText(`CERTIFICATE ID: ${submittedCert.certificate_id}`, canvas.width / 2, canvas.height * 0.72);
+
+      // Date (Left Side, above the DATE line)
+      ctx.fillStyle = '#000000';
+      ctx.font = 'bold 24px "Times New Roman", Georgia, serif';
+      const dateStr = new Date(submittedCert.created_at || Date.now()).toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric'
+      });
+      ctx.fillText(dateStr, canvas.width * 0.28, canvas.height * 0.82);
+
+      // Authorized Sign (Right Side, above the AUTHORIZED SIGNATURE line)
+      ctx.font = 'bold italic 30px "Times New Roman", Georgia, serif';
+      ctx.fillText('Lion Dr. R. Srinivas', canvas.width * 0.73, canvas.height * 0.81);
+      ctx.font = 'bold 18px "Inter", sans-serif';
+      ctx.fillText('Director', canvas.width * 0.73, canvas.height * 0.835);
     };
-    drawCorner(74, 74, 0);
-    drawCorner(1526, 74, 90);
-    drawCorner(1526, 1057, 180);
-    drawCorner(74, 1057, 270);
-
-    // Top Tricolor Accent Line
-    const triGrad = ctx.createLinearGradient(350, 0, 1250, 0);
-    triGrad.addColorStop(0, '#f97316');
-    triGrad.addColorStop(0.5, '#ffffff');
-    triGrad.addColorStop(1, '#16a34a');
-    ctx.fillStyle = triGrad;
-    ctx.fillRect(450, 62, 700, 6);
-
-    // Top Center Official Logo Emblem
-    const logoImg = new Image();
-    logoImg.src = '/logo.jpeg';
-    logoImg.onload = () => {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(800, 150, 55, 0, 2 * Math.PI);
-      ctx.clip();
-      ctx.drawImage(logoImg, 800 - 55, 150 - 55, 110, 110);
-      ctx.restore();
-
-      ctx.beginPath();
-      ctx.arc(800, 150, 55, 0, 2 * Math.PI);
-      ctx.lineWidth = 3.5;
-      ctx.strokeStyle = '#b45309';
-      ctx.stroke();
-    };
-
-    // Fallback logo frame
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(800, 150, 55, 0, 2 * Math.PI);
-    ctx.fillStyle = '#fef3c7';
-    ctx.fill();
-    ctx.lineWidth = 3.5;
-    ctx.strokeStyle = '#b45309';
-    ctx.stroke();
-    ctx.restore();
-
-    // Organization & Header Title
-    ctx.fillStyle = '#78350f';
-    ctx.font = 'bold 30px "Times New Roman", Georgia, serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('SRI SHREE VISION FOUNDATION', 800, 242);
-
-    ctx.fillStyle = '#475569';
-    ctx.font = '500 16px "Inter", sans-serif';
-    ctx.fillText('In Association with MY Bharat Initiative  |  Viksit & Nasha Mukt Yuva Initiative', 800, 272);
-
-    // Formal Divider Line with Center Ornament
-    ctx.strokeStyle = '#d97706';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(350, 300);
-    ctx.lineTo(680, 300);
-    ctx.moveTo(920, 300);
-    ctx.lineTo(1250, 300);
-    ctx.stroke();
-
-    ctx.fillStyle = '#b45309';
-    ctx.font = 'bold 18px Georgia, serif';
-    ctx.fillText('❖  OFFICIAL PLEDGE  ❖', 800, 305);
-
-    // Main Certificate Title
-    ctx.fillStyle = '#9a3412';
-    ctx.font = 'bold 46px "Times New Roman", Georgia, serif';
-    ctx.fillText('CERTIFICATE OF COMMITMENT', 800, 375);
-
-    // Body Certification Text
-    ctx.fillStyle = '#334155';
-    ctx.font = '500 22px Georgia, "Times New Roman", serif';
-    ctx.fillText('This is to proudly certify that', 800, 440);
-
-    // Recipient Name
-    ctx.fillStyle = '#9a3412';
-    ctx.font = 'bold italic 50px "Times New Roman", Georgia, serif';
-    ctx.fillText(submittedCert.full_name, 800, 515);
-
-    // Gold Accent Underline
-    const nameWidth = ctx.measureText(submittedCert.full_name).width;
-    ctx.strokeStyle = '#d97706';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(800 - nameWidth / 2 - 25, 535);
-    ctx.lineTo(800 + nameWidth / 2 + 25, 535);
-    ctx.stroke();
-
-    // Location Detail
-    ctx.fillStyle = '#475569';
-    ctx.font = '500 20px Georgia, serif';
-    const locText = `from ${submittedCert.district ? submittedCert.district + ', ' : ''}${submittedCert.state}`;
-    ctx.fillText(locText, 800, 580);
-
-    // Formal Affirmation Statement
-    ctx.fillStyle = '#1e293b';
-    ctx.font = 'italic 20px "Times New Roman", Georgia, serif';
-    ctx.fillText('has solemnly taken the Nasha Mukt YUVA Pledge, committing to remain drug-free,', 800, 638);
-    ctx.fillText('spread anti-substance abuse awareness, and contribute towards a healthy, drug-free & Viksit Bharat.', 800, 670);
-
-    // Certificate ID & Date Pill Box
-    ctx.fillStyle = '#fffbe8';
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.roundRect(460, 720, 680, 48, 24);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = '#78350f';
-    ctx.font = 'bold 17px "Inter", monospace';
-    const dateStr = new Date(submittedCert.created_at || Date.now()).toLocaleDateString('en-IN', {
-      day: 'numeric', month: 'short', year: 'numeric'
-    });
-    ctx.fillText(`CERTIFICATE ID: ${submittedCert.certificate_id}   |   ISSUED: ${dateStr}`, 800, 751);
-
-    // Footer Signatures - Directors
-    // Left Signature - Lion Dr. R. Srinivas
-    ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold italic 24px "Times New Roman", Georgia, serif';
-    ctx.fillText('Lion Dr. R. Srinivas', 340, 915);
-    ctx.strokeStyle = '#64748b';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(220, 930);
-    ctx.lineTo(460, 930);
-    ctx.stroke();
-    ctx.fillStyle = '#334155';
-    ctx.font = 'bold 16px "Inter", sans-serif';
-    ctx.fillText('Director', 340, 955);
-    ctx.font = '14px "Inter", sans-serif';
-    ctx.fillStyle = '#64748b';
-    ctx.fillText('Sri Shree Vision Foundation', 340, 975);
-
-    // Right Signature - Lion J. Indhyarani
-    ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold italic 24px "Times New Roman", Georgia, serif';
-    ctx.fillText('Lion J. Indhyarani', 1260, 915);
-    ctx.strokeStyle = '#64748b';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(1140, 930);
-    ctx.lineTo(1380, 930);
-    ctx.stroke();
-    ctx.fillStyle = '#334155';
-    ctx.font = 'bold 16px "Inter", sans-serif';
-    ctx.fillText('Director', 1260, 955);
-    ctx.font = '14px "Inter", sans-serif';
-    ctx.fillStyle = '#64748b';
-    ctx.fillText('Sri Shree Vision Foundation', 1260, 975);
-
-
-    // Online Verification Footer Note
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '13px "Inter", sans-serif';
-    ctx.fillText(`Verify authenticity online at: ngo-azure-zeta.vercel.app/verify-certificate?id=${submittedCert.certificate_id}`, 800, 1035);
-
-
-
-
   }, [submittedCert]);
 
   // Actions

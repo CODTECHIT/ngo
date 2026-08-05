@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, Outlet } from "react-router";
-import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, ArrowRight, Phone, ChevronDown } from "lucide-react";
+import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, ArrowRight, Phone, ChevronDown, Award, CigaretteOff, Eye, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { EVENTS } from "../data";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
@@ -227,17 +227,28 @@ function FloatingIslandNav() {
             {/* Orange Button: Nasha Mukt Pledge */}
             <Link
               to="/nasha-mukt-pledge"
-              className="flex-1 sm:flex-initial px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold shadow-md hover:shadow-orange-500/20 transition-all flex items-center justify-center gap-1.5 text-xs border border-orange-400/30"
+              className="group flex-1 sm:flex-initial px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-xs border border-orange-400/40 active:scale-95"
             >
-              <span>🚫</span> Nasha Mukt Pledge & Certificate
+              <CigaretteOff className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+              <span>Nasha Mukt Pledge & Certificate</span>
             </Link>
 
             {/* Cyan/Teal Button: Netra Suraksha Pledge */}
             <Link
               to="/netra-suraksha-pledge"
-              className="flex-1 sm:flex-initial px-4 py-1.5 rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold shadow-md hover:shadow-teal-500/20 transition-all flex items-center justify-center gap-1.5 text-xs border border-teal-400/30"
+              className="group flex-1 sm:flex-initial px-4 py-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-teal-500/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-xs border border-teal-400/40 active:scale-95"
             >
-              <span>👁️</span> Netra Suraksha Pledge & Certificate
+              <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <span>Netra Suraksha Pledge & Certificate</span>
+            </Link>
+
+            {/* Indigo Button: Vision Warrior */}
+            <Link
+              to="/vision-warrior"
+              className="group flex-1 sm:flex-initial px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-xs border border-indigo-400/40 active:scale-95"
+            >
+              <Shield className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <span>Vision Warrior</span>
             </Link>
           </div>
         </div>
@@ -280,16 +291,23 @@ function FloatingIslandNav() {
                 <Link
                   to="/nasha-mukt-pledge"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+                  className="group px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm hover:shadow-lg hover:shadow-orange-500/30 transition-all active:scale-95"
                 >
-                  <span>🚫</span> Nasha Mukt Pledge & Certificate
+                  <CigaretteOff className="w-4 h-4" /> Nasha Mukt Pledge & Certificate
                 </Link>
                 <Link
                   to="/netra-suraksha-pledge"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+                  className="group px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm hover:shadow-lg hover:shadow-teal-500/30 transition-all active:scale-95"
                 >
-                  <span>👁️</span> Netra Suraksha Pledge & Certificate
+                  <Eye className="w-4 h-4" /> Netra Suraksha Pledge & Certificate
+                </Link>
+                <Link
+                  to="/vision-warrior"
+                  onClick={() => setOpen(false)}
+                  className="group px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm hover:shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-95"
+                >
+                  <Shield className="w-4 h-4" /> Vision Warrior
                 </Link>
               </div>
               <div className="h-px bg-black/10 my-1" />
@@ -346,7 +364,7 @@ function Footer() {
           <div className="md:col-span-2 grid grid-cols-2 gap-6">
             {[
               { title: "Quick Links", links: [{ label: "About Us", to: "/about" }, { label: "Our Services", to: "/services" }, { label: "Events", to: "/events" }, { label: "News", to: "/news" }, { label: "Gallery", to: "/gallery" }, { label: "Contact", to: "/contact" }] },
-              { title: "Get Involved", links: [{ label: "Volunteer", to: "/apply?category=volunteer" }, { label: "Corporate CSR", to: "/apply?category=csr" }, { label: "Intern with Us", to: "/apply?category=intern" }, { label: "Fundraise", to: "/apply?category=fundraise" }, { label: "Partner NGOs", to: "/apply?category=partner" }, { label: "Donate", to: "/donate" }] },
+              { title: "Get Involved", links: [{ label: "Volunteer", to: "/apply?category=volunteer" }, { label: "Corporate CSR", to: "/apply?category=csr" }, { label: "Intern with Us", to: "/apply?category=intern" }, { label: "Fundraise", to: "/apply?category=fundraise" }, { label: "Partner NGOs", to: "/apply?category=partner" }, { label: "Donate", to: "/donate" }, { label: "Volunteer Certificate", to: "/volunteer-certificate" }] },
             ].map(col => (
               <div key={col.title}>
                 <h4 className="font-bold text-sm uppercase tracking-[0.2em] text-primary mb-6">
@@ -366,6 +384,16 @@ function Footer() {
             ))}
           </div>
         </div>
+        
+        <div className="flex justify-center mb-12">
+          <Link
+            to="/volunteer-certificate"
+            className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-full shadow-lg transition-transform hover:scale-105 flex items-center gap-2"
+          >
+            <Award size={18} /> Get Your Volunteer Certificate
+          </Link>
+        </div>
+
         <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <div className="space-y-1">
             <p className="text-zinc-500 text-xs font-light">

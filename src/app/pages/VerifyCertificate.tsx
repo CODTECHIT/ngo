@@ -127,7 +127,15 @@ export const VerifyCertificate: React.FC = () => {
                       <Award className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase">Campaign Name</p>
-                        <p className="font-semibold text-slate-900 dark:text-white">Viksit & Nasha Mukt Yuva Initiative</p>
+                        <p className="font-semibold text-slate-900 dark:text-white">
+                          {certData.certificate_id?.includes('NETRA') 
+                            ? 'Netra Suraksha Abhiyaan'
+                            : certData.certificate_id?.includes('VOL')
+                              ? 'Volunteer Appreciation Program'
+                              : certData.certificate_id?.includes('VIS')
+                                ? 'Vision Warrior Program'
+                                : 'Viksit & Nasha Mukt Yuva Initiative'}
+                        </p>
 
                       </div>
                     </div>
@@ -166,7 +174,15 @@ export const VerifyCertificate: React.FC = () => {
                   </div>
 
                   <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
-                    <strong>Pledge Commitment:</strong> "I solemnly pledge that I will refrain from drug and substance abuse, actively promote a healthy, addiction-free lifestyle among youth, and contribute towards a Nasha Mukt (Drug-Free) India."
+                    <strong>Pledge / Commitment:</strong> {
+                      certData.certificate_id?.includes('NETRA')
+                        ? '"I solemnly pledge to practice regular eye care, prevent avoidable blindness, and spread eye donation awareness for a brighter India."'
+                        : certData.certificate_id?.includes('VOL')
+                          ? '"I promise to continue serving my community with dedication, compassion, and integrity, contributing to a better and brighter future."'
+                          : certData.certificate_id?.includes('VIS')
+                            ? '"I pledge to act as a Vision Warrior, turning personal gatherings into fundraisers and spreading awareness to support treatments and cures for blinding diseases like retinitis pigmentosa and macular degeneration."'
+                            : '"I solemnly pledge that I will refrain from drug and substance abuse, actively promote a healthy, addiction-free lifestyle among youth, and contribute towards a Nasha Mukt (Drug-Free) India."'
+                    }
                   </div>
                 </div>
               </div>

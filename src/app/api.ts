@@ -198,6 +198,47 @@ export const api = {
     return Math.max(dbCount, localCount);
   },
 
+  getVolunteerPledgeCount: async () => {
+    let dbCount = 0;
+    try {
+      const { count, error } = await supabase
+        .from('pledge_certificates')
+        .select('*', { count: 'exact', head: true })
+        .ilike('category', 'Volunteer%');
+      if (!error && count !== null) {
+        dbCount = count;
+      }
+    } catch (e) {}
+
+    let localCount = 0;
+    try {
+      const existing = JSON.parse(localStorage.getItem('ngo_pledge_certificates') || '[]');
+      localCount = existing.filter((c: any) => c.category?.toLowerCase().startsWith('volunteer')).length;
+    } catch (e) {}
+
+    return Math.max(dbCount, localCount);
+  },
+
+  getVisionWarriorPledgeCount: async () => {
+    let dbCount = 0;
+    try {
+      const { count, error } = await supabase
+        .from('pledge_certificates')
+        .select('*', { count: 'exact', head: true })
+        .ilike('category', 'Vision Warrior%');
+      if (!error && count !== null) {
+        dbCount = count;
+      }
+    } catch (e) {}
+
+    let localCount = 0;
+    try {
+      const existing = JSON.parse(localStorage.getItem('ngo_pledge_certificates') || '[]');
+      localCount = existing.filter((c: any) => c.category?.toLowerCase().startsWith('vision warrior')).length;
+    } catch (e) {}
+
+    return Math.max(dbCount, localCount);
+  },
 
   getCertificateById: async (certificate_id: string) => {
     const cleanId = (certificate_id || '').trim().toUpperCase();

@@ -194,7 +194,7 @@ function AboutPreview() {
           <SectionLabel>Who We Are</SectionLabel>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6">Empowering People, Changing Lives</h2>
           <div className="text-zinc-600 text-lg leading-relaxed mb-6 whitespace-pre-wrap">
-            We are a registered non-profit organization dedicated to empowering communities and fostering sustainable development. Born in Alwal, Hyderabad, we walk alongside the people we serve   one camp, one conversation, one life at a time.
+            We are a dedicated non-profit organization transforming communities through accessible eye care, sustainable development, and rural empowerment Born in Alwal, Hyderabad, we walk alongside the people we serve   one camp, one conversation, one life at a time.
           </div>
           <div className="text-zinc-600 text-lg leading-relaxed mb-8 whitespace-pre-wrap">
             Our mission is to empower individuals with better healthcare, foundational education and essential skills   because we believe that when a person thrives, their whole community moves forward.

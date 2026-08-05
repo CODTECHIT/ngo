@@ -18,6 +18,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { Pledge } from "./pages/Pledge";
 import { NetraSurakshaPledge } from "./pages/NetraSurakshaPledge";
+import { VolunteerPledge } from "./pages/VolunteerPledge";
+import { VisionWarriorPledge } from "./pages/VisionWarriorPledge";
 import { VerifyCertificate } from "./pages/VerifyCertificate";
 
 
@@ -133,6 +135,8 @@ export const router = createBrowserRouter([
       { path: "pledge", Component: Pledge },
       { path: "netra-suraksha-pledge", Component: NetraSurakshaPledge },
       { path: "netra-suraksha", Component: NetraSurakshaPledge },
+      { path: "volunteer-certificate", Component: VolunteerPledge },
+      { path: "vision-warrior", Component: VisionWarriorPledge },
       { path: "delegate-registration", Component: Pledge },
       { path: "verify-certificate", Component: VerifyCertificate },
       { path: "*", Component: NotFound },

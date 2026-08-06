@@ -56,6 +56,42 @@ export default function AdminDonations() {
     fetchDonations();
   }, []);
 
+  const handleExportCSV = () => {
+    const escape = (val: any) => {
+      const s = (val === null || val === undefined) ? '' : String(val);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+
+    const columns = [
+      'Donor Name', 'Email', 'Mobile', 'Amount (INR)', 'Cause / Campaign',
+      'PAN (80G)', 'Payment ID', 'Status', 'Anonymous', 'Donation Date'
+    ];
+
+    const rows = donations.map(d => [
+      escape(d.donor_real_name || (d.name && d.name !== 'Anonymous Donor' ? d.name : (d.email ? d.email.split('@')[0] : 'Valued Donor'))),
+      escape(d.email),
+      escape(d.mobile),
+      escape(d.amount),
+      escape(d.cause || 'General Vision Fund'),
+      escape(d.pan && d.pan !== 'N/A' ? d.pan : ''),
+      escape(d.payment_id),
+      escape(d.status || 'PAID'),
+      (d.is_anonymous || d.isAnonymous || d.name === 'Anonymous Donor') ? 'Yes' : 'No',
+      escape(d.created_at ? new Date(d.created_at).toLocaleString('en-IN') : '')
+    ]);
+
+    const csv = [columns.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `donors_donations_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleResendInvoice = (don: any) => {
     sendDonationInvoiceEmail({
       name: don.name || 'Valued Donor',
@@ -106,6 +142,13 @@ export default function AdminDonations() {
                 Complete overview of donor identities, contributed amounts, PAN audit numbers and 80G receipt delivery.
               </p>
             </div>
+            <button
+              onClick={handleExportCSV}
+              className="shrink-0 px-5 py-2.5 rounded-xl bg-[#0F6E6E] text-white font-bold text-sm shadow-md hover:bg-[#0c5959] transition-all flex items-center gap-2 active:scale-95"
+              title="Download all donor records as CSV"
+            >
+              <Download size={16} /> Export Donors CSV
+            </button>
           </header>
 
           {/* Stats Grid */}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router';
 import { useEvents } from '../hooks/useEvents';
 import { supabase } from '../../lib/supabase';
 import { Megaphone, Calendar, CheckCircle2, Sparkles, Radio } from 'lucide-react';
@@ -144,14 +145,19 @@ export function HeaderTicker() {
           >
             <div className="inline-flex items-center gap-8 py-0.5">
               {tickerItems.map((item, idx) => (
-                <div key={item.id + '_' + idx} className="inline-flex items-center gap-2.5">
+                <Link
+                  key={item.id + '_' + idx}
+                  to={item.id.startsWith('evt_') || item.id.startsWith('completed_') ? '/events' : '/news'}
+                  className="inline-flex items-center gap-2.5 hover:opacity-80 transition-opacity"
+                  title={item.id.startsWith('evt_') || item.id.startsWith('completed_') ? 'View this event on the Events page' : 'Read more on the News page'}
+                >
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border flex items-center gap-1.5 ${item.color}`}>
                     {item.icon}
                     <span>{item.badge}</span>
                   </span>
                   <span className="font-medium text-zinc-100 tracking-wide text-xs">{item.text}</span>
                   <span className="text-teal-500/60 font-bold ml-4">✦</span>
-                </div>
+                </Link>
               ))}
             </div>
           </marquee>

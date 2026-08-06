@@ -218,7 +218,7 @@ function FloatingIslandNav() {
       {/* Sub-Header Campaign Pledge Bar with Distinct Colored Buttons */}
       <div className="bg-slate-900 text-white py-2.5 px-4 border-t border-slate-800 shadow-inner">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-white font-bold uppercase tracking-wider">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             Free Campaign Pledges & Certification
           </div>

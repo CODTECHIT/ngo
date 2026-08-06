@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { 
-  Loader2, Mail, Phone, MapPin, Clock, ChevronDown, ChevronUp, 
+  Loader2, Mail, Phone, MapPin, Clock, ChevronDown, ChevronUp, Download,
   Users, Building2, GraduationCap, HandCoins, Handshake, ClipboardList, Tag
 } from 'lucide-react';
 import { useApplications } from '../../hooks/useApplications';
@@ -36,6 +36,42 @@ export default function AdminApplications() {
     }
   };
 
+  const handleExportCSV = () => {
+    const escape = (val: any) => {
+      const s = (val === null || val === undefined) ? '' : String(val);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+
+    const columns = [
+      'Full Name', 'Email', 'Phone', 'Category', 'Service', 'City',
+      'Message', 'Status', 'Read', 'Submitted On'
+    ];
+
+    const rows = applications.map(a => [
+      escape(a.full_name),
+      escape(a.email),
+      escape(a.phone),
+      escape((CATEGORY_META[a.category] || {}).label || a.category),
+      escape(a.service),
+      escape(a.city),
+      escape(a.message),
+      escape(a.status || 'pending'),
+      a.is_read ? 'Yes' : 'No',
+      escape(a.created_at ? new Date(a.created_at).toLocaleString('en-IN') : '')
+    ]);
+
+    const csv = [columns.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `applications_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const filtered = categoryFilter === 'all'
     ? applications
     : applications.filter(a => a.category === categoryFilter);
@@ -52,6 +88,13 @@ export default function AdminApplications() {
               <p className="text-zinc-500">Volunteer, CSR, Intern, Fundraise & NGO partnership applications.</p>
             </div>
             <div className="flex items-center gap-3">
+              <button
+                onClick={handleExportCSV}
+                className="shrink-0 px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-sm hover:opacity-90 transition-all flex items-center gap-2 active:scale-95"
+                title="Download all applications as CSV"
+              >
+                <Download size={16} /> Export CSV
+              </button>
               {unreadCount > 0 && (
                 <span className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-full inline-flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500 blink-dot" />

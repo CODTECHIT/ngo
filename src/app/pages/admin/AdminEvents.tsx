@@ -386,11 +386,10 @@ export default function AdminEvents() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-zinc-700 mb-2">Certificate (PDF)</label>
+                    <label className="block text-sm font-bold text-zinc-700 mb-2">Certificate Template (Image)</label>
                     <ImageUploader 
                       defaultImage={certificateTemplateUrl} 
                       onUploadComplete={(url) => setCertificateTemplateUrl(url)} 
-                      acceptPDF={true}
                     />
                   </div>
                 </div>

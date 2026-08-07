@@ -474,6 +474,7 @@ export default function About() {
                   Lions Clubs International Member
                 </span>
                 <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white mb-2">Lion J. Indhyarani</h3>
+                <p className="text-primary font-bold text-sm mb-4">Director</p>
                 <p>Director leading community empowerment, rural health programs, and social welfare drives.</p>
               </div>
             </motion.div>

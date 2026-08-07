@@ -160,7 +160,7 @@ function ImpactStats() {
     { label: "Lives Impacted", value: 10000, suffix: "+" },
     { label: "Camps", value: 500, suffix: "+" },
     { label: "Volunteers", value: 1200, suffix: "+" },
-    { label: "Years Active", value: 25, suffix: "+" }
+    { label: "Years Active", value: 5, suffix: "+" }
   ];
   return (
     <section className="relative z-20 mt-8 px-4 md:px-6 max-w-7xl mx-auto">

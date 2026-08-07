@@ -132,7 +132,7 @@ export function StickyNotes() {
           animate={{ opacity: 1, x: 0, y: 0 }}
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 220, damping: 20 }}
-          className={`fixed ${side.base} z-[55] w-60 sm:w-64 rounded-lg border ${active.note.border} ${active.note.color} ${active.note.rotate} p-4 transition-shadow`}
+          className={`fixed ${side.base} z-[55] w-60 sm:w-64 max-w-[calc(100vw-1.5rem)] rounded-lg border ${active.note.border} ${active.note.color} ${active.note.rotate} p-4 transition-shadow`}
           style={{ boxShadow: "3px 5px 0 rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.12)" }}
         >
           <button

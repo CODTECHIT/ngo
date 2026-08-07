@@ -197,7 +197,7 @@ function RegistrationModal({ event, onClose, onRegisterSuccess }: { event: Event
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="bg-white border border-black/10 rounded-3xl shadow-2xl w-full max-w-xl p-8 relative overflow-hidden"
+          className="bg-white border border-black/10 rounded-3xl shadow-2xl w-full max-w-xl p-5 sm:p-8 relative overflow-y-auto max-h-[90vh]"
         >
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 blur-[60px] rounded-full pointer-events-none" />
 

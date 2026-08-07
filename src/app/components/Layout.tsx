@@ -114,14 +114,18 @@ function FloatingIslandNav() {
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className="w-full max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
 
-        <Link to="/" className="flex items-center gap-3 md:gap-4 group">
-          <div className="w-28 h-28 md:w-36 md:h-36 shrink-0 flex items-center justify-center transition-transform group-hover:scale-105">
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 md:gap-4 group shrink-0">
+          <div className="w-16 h-16 sm:w-22 sm:h-22 md:w-28 md:h-28 shrink-0 flex items-center justify-center transition-transform group-hover:scale-105">
             <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="font-bold text-lg md:text-xl tracking-tight text-zinc-900 hidden sm:block uppercase">
-            <span className="whitespace-nowrap">SRISHREE VISION</span><br />
-            FOUNDATION
-          </span>
+          <div className="flex flex-col">
+            <span className="font-bold text-xs sm:text-base md:text-xl tracking-tight text-zinc-900 uppercase leading-tight">
+              SRISHREE VISION
+            </span>
+            <span className="font-bold text-[10px] sm:text-xs md:text-sm tracking-widest text-primary uppercase leading-tight">
+              FOUNDATION
+            </span>
+          </div>
         </Link>
 
 
@@ -218,39 +222,48 @@ function FloatingIslandNav() {
       </motion.header>
 
       {/* Sub-Header Campaign Pledge Bar with Distinct Colored Buttons */}
-      <div className="bg-slate-900 text-white py-2.5 px-4 border-t border-slate-800 shadow-inner">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2 text-white font-bold uppercase tracking-wider">
+      <div className="bg-slate-900 text-white py-2.5 px-3 sm:px-4 border-t border-slate-800 shadow-inner">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 text-xs">
+          <div className="flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[11px] sm:text-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             Free Campaign Pledges & Certification
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
+          <div className="grid grid-cols-1 sm:flex sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             {/* Orange Button: Nasha Mukt Pledge */}
             <Link
               to="/nasha-mukt-pledge"
-              className="group flex-1 sm:flex-initial px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-xs border border-orange-400/40 active:scale-95"
+              className="group w-full sm:w-auto px-3.5 py-2 rounded-xl sm:rounded-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-orange-500/30 transition-all flex items-center justify-between sm:justify-center gap-2 text-xs border border-orange-400/40 active:scale-95"
             >
-              <CigaretteOff className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-              <span>Nasha Mukt Pledge & Certificate</span>
+              <div className="flex items-center gap-2">
+                <CigaretteOff className="w-4 h-4 shrink-0 group-hover:rotate-12 transition-transform" />
+                <span>Nasha Mukt Pledge & Certificate</span>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 opacity-70 sm:hidden shrink-0" />
             </Link>
 
             {/* Cyan/Teal Button: Netra Suraksha Pledge */}
             <Link
               to="/netra-suraksha-pledge"
-              className="group flex-1 sm:flex-initial px-4 py-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-teal-500/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-xs border border-teal-400/40 active:scale-95"
+              className="group w-full sm:w-auto px-3.5 py-2 rounded-xl sm:rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-teal-500/30 transition-all flex items-center justify-between sm:justify-center gap-2 text-xs border border-teal-400/40 active:scale-95"
             >
-              <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              <span>Netra Suraksha Pledge & Certificate</span>
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+                <span>Netra Suraksha Pledge & Certificate</span>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 opacity-70 sm:hidden shrink-0" />
             </Link>
 
             {/* Indigo Button: Vision Warrior */}
             <Link
               to="/vision-warrior"
-              className="group flex-1 sm:flex-initial px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-xs border border-indigo-400/40 active:scale-95"
+              className="group w-full sm:w-auto px-3.5 py-2 rounded-xl sm:rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-indigo-500/30 transition-all flex items-center justify-between sm:justify-center gap-2 text-xs border border-indigo-400/40 active:scale-95"
             >
-              <Shield className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              <span>Vision Warrior</span>
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" />
+                <span>Vision Warrior</span>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 opacity-70 sm:hidden shrink-0" />
             </Link>
           </div>
         </div>
@@ -340,15 +353,15 @@ function FloatingIslandNav() {
 
 function Footer() {
   return (
-    <footer className="bg-background text-foreground py-12 md:py-24 px-4 md:px-6 border-t border-black/10 relative overflow-hidden">
+    <footer className="bg-background text-foreground py-8 md:py-16 px-4 md:px-6 border-t border-black/10 relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-30" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/10 blur-[150px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-8 md:mb-12">
           <div className="md:col-span-2">
             <div className="flex flex-col items-center md:items-start mb-6">
-              <div className="w-32 h-32 shrink-0 flex items-center justify-center mb-5">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 flex items-center justify-center mb-3">
                 <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
               </div>
               <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight text-center md:text-left"><span className="whitespace-nowrap">SRISHREE VISION</span><br />FOUNDATION</span>
@@ -452,22 +465,22 @@ export function Layout() {
         <Outlet />
       </main>
       <Footer />
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-center gap-2 sm:gap-3">
         <a
           href="tel:+918977910974"
-          className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(15,110,110,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(15,110,110,0.6)] transition-all cursor-pointer"
+          className="w-11 h-11 sm:w-14 sm:h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(15,110,110,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(15,110,110,0.6)] transition-all cursor-pointer"
           title="Call us now"
         >
-          <Phone size={26} />
+          <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
         </a>
         <a
           href="https://wa.me/918977910974?text=Hi! I would like to know more about SRISHREE VISION FOUNDATION."
           target="_blank"
           rel="noreferrer"
-          className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all cursor-pointer"
+          className="w-11 h-11 sm:w-14 sm:h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all cursor-pointer"
           title="Chat with us on WhatsApp"
         >
-          <MessageCircle size={28} fill="currentColor" />
+          <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" />
         </a>
       </div>
     </div>

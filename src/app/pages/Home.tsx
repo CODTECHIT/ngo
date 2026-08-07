@@ -270,9 +270,9 @@ function BentoServices() {
   ];
 
   return (
-    <section className="py-12 md:py-24 px-4 md:px-6 max-w-7xl mx-auto relative">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-16">
+    <section className="py-8 md:py-16 px-4 md:px-6 max-w-7xl mx-auto relative">
+      <div>
+        <div className="mb-10 md:mb-16">
           <SectionLabel>Initiatives</SectionLabel>
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-6 text-zinc-900 max-w-2xl">Core Programs</h2>
         </div>

@@ -483,7 +483,7 @@ export const VolunteerPledge: React.FC = () => {
               <canvas
                 ref={canvasRef}
                 className="rounded-xl shadow-2xl mx-auto border border-slate-700 max-w-full h-auto"
-                style={{ width: '900px' }}
+                style={{ width: '100%', maxWidth: '900px', height: 'auto' }}
               />
             </div>
 

@@ -104,7 +104,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <div className="flex justify-center"><SectionLabel className="justify-center">Who We Are</SectionLabel></div>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6 whitespace-nowrap">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 mb-6">
               A Local Vision with Global Impact
             </h2>            <p className="text-zinc-600 text-lg font-light leading-relaxed">
               Born in the heart of Telangana, India, SRISHREE VISION FOUNDATION exists to close the gap between communities in need and the services that can transform their lives.

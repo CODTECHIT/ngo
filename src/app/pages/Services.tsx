@@ -175,7 +175,7 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="py-12 md:py-32 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
+      <section className="py-10 md:py-16 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-primary/10 z-0" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[400px] bg-gradient-to-r from-primary via-accent to-primary blur-[150px] opacity-20 rounded-full pointer-events-none" />
 

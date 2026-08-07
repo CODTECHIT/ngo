@@ -49,32 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    // 2. Check local/shared custom RBAC team members list
-    try {
-      const storedMembers = localStorage.getItem('ngo_rbac_team_members');
-      if (storedMembers) {
-        const members = JSON.parse(storedMembers);
-        const match = members.find((m: any) => m.email?.toLowerCase() === email || m.id === currentUser.id);
-        if (match && match.role) {
-          const userRole = match.role;
-          setRole(userRole);
-          const isSuper = userRole === 'super_admin' || userRole === 'admin';
-          const isEventMgr = userRole === 'event_manager' || isSuper;
-          setIsAdmin(isSuper || isEventMgr);
-          setIsSuperAdmin(isSuper);
-          setIsEventManager(isEventMgr);
-          // Sync to Supabase profiles in the background
-          supabase.from('profiles').upsert([
-            { id: currentUser.id, full_name: match.name || email, role: userRole }
-          ]).then(res => { if (res.error) console.warn("Background profile sync:", res.error); });
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn("Error reading RBAC team members:", e);
-    }
-
-    // 3. Check Supabase profiles table
+    // 2. Check Supabase profiles table
     try {
       const { data } = await supabase
         .from('profiles')

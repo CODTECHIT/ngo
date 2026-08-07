@@ -15,6 +15,14 @@ export interface EmailNotification {
 
 const STORAGE_KEY = 'ngo_sent_emails_history';
 
+const escapeHtml = (value: unknown): string =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
 export const getSentEmails = (): EmailNotification[] => {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
@@ -135,8 +143,8 @@ const showEmailSentToast = (email: EmailNotification) => {
     </div>
     <div style="flex-grow: 1; overflow: hidden;">
       <div style="font-size: 11px; font-weight: 700; color: #4CAF50; text-transform: uppercase; letter-spacing: 0.5px;">Email Dispatched to Recipient</div>
-      <div style="font-size: 13px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${email.subject}</div>
-      <div style="font-size: 11px; color: #94A3B8; margin-top: 2px;">Sent to: <strong>${email.to}</strong></div>
+      <div style="font-size: 13px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(email.subject)}</div>
+      <div style="font-size: 11px; color: #94A3B8; margin-top: 2px;">Sent to: <strong>${escapeHtml(email.to)}</strong></div>
     </div>
   `;
 
@@ -184,7 +192,7 @@ export const sendDonationInvoiceEmail = (details: {
 
       <!-- Body -->
       <div style="padding: 32px 24px;">
-        <h2 style="font-size: 20px; font-weight: 700; color: #0F6E6E; margin-top: 0;">Thank You for Your Generosity, ${details.name}! 🙏</h2>
+        <h2 style="font-size: 20px; font-weight: 700; color: #0F6E6E; margin-top: 0;">Thank You for Your Generosity, ${escapeHtml(details.name)}! 🙏</h2>
         <p style="font-size: 15px; line-height: 1.6; color: #475569;">
           We have gratefully received your donation. Your support directly funds our ground-level initiatives and brings vision, health and empowerment to those who need it most.
         </p>
@@ -201,12 +209,12 @@ export const sendDonationInvoiceEmail = (details: {
           </div>
           <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #CBD5E1; padding-bottom: 12px; margin-bottom: 12px;">
             <span style="color: #64748B; font-size: 13px;">Supported Cause</span>
-            <span style="font-weight: 600; color: #0F6E6E; font-size: 13px;">${details.cause}</span>
+            <span style="font-weight: 600; color: #0F6E6E; font-size: 13px;">${escapeHtml(details.cause)}</span>
           </div>
           ${details.pan ? `
           <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #CBD5E1; padding-bottom: 12px; margin-bottom: 12px;">
             <span style="color: #64748B; font-size: 13px;">Donor PAN</span>
-            <span style="font-weight: 700; color: #1E293B; font-family: monospace;">${details.pan}</span>
+            <span style="font-weight: 700; color: #1E293B; font-family: monospace;">${escapeHtml(details.pan)}</span>
           </div>` : ''}
           <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
             <span style="font-weight: 700; color: #1E293B; font-size: 15px;">Total Donated Amount</span>
@@ -268,12 +276,12 @@ export const sendEventRegistrationEmail = (details: {
     <div style="font-family: 'Inter', system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 16px; overflow: hidden; color: #1E293B;">
       <div style="background: linear-gradient(135deg, #02042B, #0F6E6E); color: #ffffff; padding: 32px 24px; text-align: center;">
         <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #29B6F6; margin-bottom: 8px;">Event Registration Ticket</div>
-        <h1 style="margin: 0; font-size: 24px; font-weight: 800;">${details.eventTitle}</h1>
+        <h1 style="margin: 0; font-size: 24px; font-weight: 800;">${escapeHtml(details.eventTitle)}</h1>
         <p style="margin: 8px 0 0; font-size: 14px; opacity: 0.9;">Srishree Vision Foundation Community Programs</p>
       </div>
 
       <div style="padding: 32px 24px;">
-        <h2 style="font-size: 18px; font-weight: 700; color: #0F6E6E; margin-top: 0;">Hello ${details.name}, Your Spot is Confirmed! 🎟️</h2>
+        <h2 style="font-size: 18px; font-weight: 700; color: #0F6E6E; margin-top: 0;">Hello ${escapeHtml(details.name)}, Your Spot is Confirmed! 🎟️</h2>
         <p style="font-size: 14px; line-height: 1.6; color: #475569;">
           We are thrilled to have you join us. Here are your official event registration details:
         </p>
@@ -281,7 +289,7 @@ export const sendEventRegistrationEmail = (details: {
         <div style="background: #F8FAFC; border: 2px dashed #0F6E6E; border-radius: 12px; padding: 24px; margin: 24px 0; position: relative;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
             <span style="color: #64748B; font-size: 13px;">Event Name</span>
-            <span style="font-weight: 700; color: #1E293B; font-size: 14px;">${details.eventTitle}</span>
+            <span style="font-weight: 700; color: #1E293B; font-size: 14px;">${escapeHtml(details.eventTitle)}</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
             <span style="color: #64748B; font-size: 13px;">Date</span>
@@ -289,7 +297,7 @@ export const sendEventRegistrationEmail = (details: {
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
             <span style="color: #64748B; font-size: 13px;">Venue Location</span>
-            <span style="font-weight: 600; color: #1E293B; font-size: 13px; max-width: 200px; text-align: right;">${details.location}</span>
+            <span style="font-weight: 600; color: #1E293B; font-size: 13px; max-width: 200px; text-align: right;">${escapeHtml(details.location)}</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
             <span style="color: #64748B; font-size: 13px;">Registration Status</span>
@@ -322,7 +330,7 @@ export const sendEventRegistrationEmail = (details: {
   const notification: EmailNotification = {
     id: 'mail_reg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
     to: details.email || 'attendee@example.com',
-    subject: `🎟️ Ticket Confirmed: ${details.eventTitle} - Srishree Vision Foundation`,
+    subject: `🎟️ Ticket Confirmed: ${escapeHtml(details.eventTitle)} - Srishree Vision Foundation`,
     date: new Date().toISOString(),
     type: 'registration',
     htmlContent: html,
@@ -344,19 +352,19 @@ export const sendCertificateCompletionEmail = (details: {
     <div style="font-family: 'Inter', system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 16px; overflow: hidden; color: #1E293B;">
       <div style="background: linear-gradient(135deg, #4CAF50, #0F6E6E); color: #ffffff; padding: 32px 24px; text-align: center;">
         <div style="font-size: 40px; margin-bottom: 8px;">🎓🌟</div>
-        <h1 style="margin: 0; font-size: 26px; font-weight: 800;">Congratulations, ${details.name}!</h1>
+        <h1 style="margin: 0; font-size: 26px; font-weight: 800;">Congratulations, ${escapeHtml(details.name)}!</h1>
         <p style="margin: 8px 0 0; font-size: 14px; opacity: 0.9;">Official Certificate of Participation Awarded</p>
       </div>
 
       <div style="padding: 32px 24px; text-align: center;">
         <h2 style="font-size: 20px; font-weight: 700; color: #0F6E6E; margin-top: 0;">Thank You for Your Impactful Participation!</h2>
         <p style="font-size: 15px; line-height: 1.6; color: #475569; max-width: 480px; margin: 0 auto 24px;">
-          We proudly recognize your active involvement in <strong>${details.eventTitle}</strong> organized by Srishree Vision Foundation.
+          We proudly recognize your active involvement in <strong>${escapeHtml(details.eventTitle)}</strong> organized by Srishree Vision Foundation.
         </p>
 
         <div style="background: #FEFCE8; border: 2px solid #CA8A04; border-radius: 12px; padding: 24px; margin: 24px 0; text-align: center;">
           <div style="font-size: 12px; font-weight: 700; color: #A16207; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">CERTIFICATE OF RECOGNITION</div>
-          <div style="font-size: 22px; font-weight: 800; color: #1E293B; margin: 8px 0; font-family: 'Playfair Display', serif;">${details.name}</div>
+          <div style="font-size: 22px; font-weight: 800; color: #1E293B; margin: 8px 0; font-family: 'Playfair Display', serif;">${escapeHtml(details.name)}</div>
           <div style="font-size: 13px; color: #713F12;">Awarded on ${new Date(details.eventDate || Date.now()).toLocaleDateString('en-IN', { dateStyle: 'medium' })}</div>
         </div>
 
@@ -374,7 +382,7 @@ export const sendCertificateCompletionEmail = (details: {
   const notification: EmailNotification = {
     id: 'mail_cert_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
     to: details.email || 'volunteer@example.com',
-    subject: `🎓 Congratulations! Your Certificate for ${details.eventTitle} is Ready`,
+    subject: `🎓 Congratulations! Your Certificate for ${escapeHtml(details.eventTitle)} is Ready`,
     date: new Date().toISOString(),
     type: 'certificate',
     htmlContent: html,
@@ -398,7 +406,7 @@ export const sendEmail = (params: {
     subject: params.subject,
     date: new Date().toISOString(),
     type: params.type || 'donation',
-    htmlContent: params.htmlBody || `<div style="padding: 20px;">${params.subject}</div>`
+    htmlContent: params.htmlBody || `<div style="padding: 20px;">${escapeHtml(params.subject)}</div>`
   };
   saveEmailToHistory(notification);
   return notification;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, FileText, Trash2, Printer, CheckCircle, ExternalLink, ShieldCheck, Heart, Ticket, Award } from 'lucide-react';
 import { getSentEmails, markEmailAsRead, EmailNotification } from '../../lib/emailService';
+import { sanitizeHtml } from '../../lib/sanitizeHtml';
 import { usePublicAuth } from '../contexts/PublicAuthContext';
 
 export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
@@ -98,7 +99,7 @@ export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
             </style>
           </head>
           <body>
-            ${email.htmlContent}
+            ${sanitizeHtml(email.htmlContent)}
             <script>
               setTimeout(() => { window.print(); window.close(); }, 500);
             </script>
@@ -265,7 +266,7 @@ export function GmailInboxModal({ isOpen, onClose, initialEmailId, criteria }: {
                   {/* HTML Content Viewer */}
                   <div className="flex-1 overflow-y-auto p-6 bg-zinc-100/50">
                     <div className="max-w-3xl mx-auto shadow-lg rounded-2xl overflow-hidden bg-white">
-                      <div dangerouslySetInnerHTML={{ __html: selectedEmail.htmlContent }} />
+                      <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(selectedEmail.htmlContent) }} />
                     </div>
                   </div>
                 </>

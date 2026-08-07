@@ -146,6 +146,34 @@ export default function Services() {
         </div>
       </section>
 
+      {/* FAQ - answer engine optimization (AEO) */}
+      <section className="py-12 md:py-20 px-4 md:px-6 relative z-10" id="faq">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="flex justify-center mb-4">
+            <SectionLabel>FAQs</SectionLabel>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-10 text-center tracking-tight">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-4">
+            {[
+              ["Does the foundation conduct free eye camps?", "Yes. Srishree Vision Foundation runs free eye check-up camps with comprehensive screening and distribution of free spectacles, often in partnership with iCare Vision Center and Lions Club."],
+              ["What health programs does the NGO run?", "Free eye camps, blood donation drives, sugar/BP/hemoglobin health screening, polio awareness and public health-prevention campaigns across Telangana."],
+              ["Do you run women empowerment programs?", "Yes. We run confidence-building, skill-training and self-reliance programs that help women achieve financial independence and dignity."],
+              ["How can my organization partner with Srishree Vision Foundation?", "We collaborate with Lions Clubs, iCare Vision Center, Telangana Police, TGNAB and other bodies. Use the Apply page to propose a partnership."],
+            ].map(([q, a]) => (
+              <details key={q} className="group bg-white/60 border border-black/10 rounded-2xl overflow-hidden">
+                <summary className="cursor-pointer list-none flex items-center justify-between gap-4 px-5 py-4 font-bold text-zinc-900 text-sm md:text-base">
+                  {q}
+                  <span className="text-primary text-xl leading-none transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="px-5 pb-5 text-zinc-600 text-sm md:text-base font-light leading-relaxed">{a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-12 md:py-32 px-4 md:px-6 relative overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-primary/10 z-0" />

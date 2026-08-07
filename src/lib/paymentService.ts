@@ -119,8 +119,9 @@ export const initiateRazorpayPayment = async (options: PaymentOptions) => {
             }
           } catch (verifyErr) {
             console.error('Error contacting verification tunnel:', verifyErr);
-            // Fallback if local backend server is unreachable
-            options.onSuccess(response.razorpay_payment_id);
+            const errorMsg = 'Security Alert: Payment could not be verified server-side. Your payment was NOT recorded as a donation. Please contact the NGO at info@srishreevision.org before considering the transaction complete.';
+            if (options.onFailure) options.onFailure(errorMsg);
+            else alert(errorMsg);
           }
         } else {
           const errorMsg = "Payment verification failed: No valid Razorpay payment ID received.";

@@ -1,5 +1,27 @@
 import { supabaseAdmin as supabase } from '../lib/supabase';
 
+function randomCertToken(): string {
+  const c = globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function'
+    ? globalThis.crypto.randomUUID().replace(/-/g, '').slice(0, 8).toUpperCase()
+    : Math.random().toString(36).slice(2, 10).toUpperCase();
+  return c;
+}
+
+export function generateCertificateId(category?: string): string {
+  const c = (category || '').toLowerCase();
+  let prefix = 'NMY';
+  if (c.startsWith('netra suraksha')) prefix = 'NETRA';
+  else if (c.startsWith('volunteer')) prefix = 'VOL';
+  else if (c.startsWith('vision warrior')) prefix = 'VIS';
+  return `CERT-${prefix}-2026-${randomCertToken()}`;
+}
+
+function toPublicCertificate(record: any): any {
+  if (!record) return null;
+  const { email: _email, phone: _phone, ...publicFields } = record;
+  return publicFields;
+}
+
 export const api = {
   // Auth methods are handled by Supabase directly in components now, 
   // keeping these as stubs if they are used somewhere accidentally, 
@@ -100,8 +122,7 @@ export const api = {
   }) => {
     let certId = pledgeData.certificate_id;
     if (!certId) {
-      const randNum = Math.floor(10000 + Math.random() * 90000);
-      certId = `CERT-NMY-2026-${randNum}`;
+      certId = generateCertificateId(pledgeData.category);
     }
 
     const payload = {
@@ -244,68 +265,23 @@ export const api = {
     const cleanId = (certificate_id || '').trim().toUpperCase();
     if (!cleanId) return null;
 
-    // 1. Check Supabase DB
+    // 1. Verified registry query via server-side RPC (never exposes email/phone)
     try {
-      const { data, error } = await supabase
-        .from('pledge_certificates')
-        .select('*')
-        .ilike('certificate_id', cleanId)
-        .maybeSingle();
-      if (!error && data) return data;
+      const { data, error } = await supabase.rpc('verify_certificate', { cert_id: cleanId });
+      if (!error) {
+        const record = Array.isArray(data) ? data[0] : data;
+        if (record) return toPublicCertificate(record);
+      }
     } catch (e) {
-      console.warn("Supabase lookup error:", e);
+      console.warn("Certificate registry lookup failed:", e);
     }
 
-    // 2. Check LocalStorage cache
+    // 2. Local registry cache (the submitter's own record)
     try {
       const existing = JSON.parse(localStorage.getItem('ngo_pledge_certificates') || '[]');
       const match = existing.find((c: any) => (c.certificate_id || '').trim().toUpperCase() === cleanId);
-      if (match) return match;
+      if (match) return toPublicCertificate(match);
     } catch (e) {}
-
-    // 3. Pre-seeded test certificates generated during development
-    const KNOWN_TEST_CERTS: Record<string, any> = {
-      'CERT-NMY-2026-76611': {
-        certificate_id: 'CERT-NMY-2026-76611',
-        full_name: 'Ashok Mahajan',
-        email: 'ashok@example.com',
-        phone: '9876543210',
-        category: 'Youth Delegate',
-        state: 'Maharashtra',
-        district: 'Mumbai',
-        organization: 'Viksit & Nasha Mukt Yuva Initiative',
-        pledge_taken: true,
-        created_at: new Date().toISOString()
-      },
-      'CERT-NMY-2026-30269': {
-        certificate_id: 'CERT-NMY-2026-30269',
-        full_name: 'Rahul Sharma',
-        email: 'rahul@example.com',
-        phone: '9876543211',
-        category: 'Youth Delegate',
-        state: 'Telangana',
-        district: 'Hyderabad',
-        organization: 'Viksit & Nasha Mukt Yuva Initiative',
-        pledge_taken: true,
-        created_at: new Date().toISOString()
-      },
-      'CERT-NMY-2026-6671': {
-        certificate_id: 'CERT-NMY-2026-6671',
-        full_name: 'Ashok',
-        email: 'ashok@example.com',
-        phone: '9876543212',
-        category: 'Youth Delegate',
-        state: 'Telangana',
-        district: 'Hyderabad',
-        organization: 'Viksit & Nasha Mukt Yuva Initiative',
-        pledge_taken: true,
-        created_at: new Date().toISOString()
-      }
-    };
-
-    if (KNOWN_TEST_CERTS[cleanId]) {
-      return KNOWN_TEST_CERTS[cleanId];
-    }
 
     // Unregistered / fake / random ID -> Return null (Certificate Not Found)
     return null;

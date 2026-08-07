@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 
-// Helper to get Razorpay credentials from environment variables
+// Helper to get Razorpay credentials from environment variables.
+// Uses ONLY server-side variables. VITE_-prefixed values live in the public
+// bundle and must never be trusted for HMAC signing or order creation.
 const getRazorpayCreds = () => {
-  const keyId = process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID;
-  const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET;
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
   const isReal = keyId && !keyId.includes('placeholder') && keyId !== 'rzp_test_placeholder' && keyId !== 'rzp_test_THmV0hOQyiid4q';
   return { keyId, keySecret, isReal };
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { api } from '../api';
+import { api, generateCertificateId } from '../api';
 import confetti from 'canvas-confetti';
 import { Eye, Award, Download, Share2, CheckCircle2, ShieldCheck, Sparkles, HeartHandshake, Users, ArrowRight, Printer, RefreshCw, QrCode } from 'lucide-react';
 import { Link } from 'react-router';
@@ -55,8 +55,7 @@ export const NetraSurakshaPledge: React.FC = () => {
     }
 
     setLoading(true);
-    const randNum = Math.floor(10000 + Math.random() * 90000);
-    const certId = `CERT-NETRA-2026-${randNum}`;
+    const certId = generateCertificateId('Netra Suraksha');
 
     const newRecord = {
       certificate_id: certId,

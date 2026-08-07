@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/ngo
+Disallow: /login
+Disallow: /signup
+Disallow: /account
+Disallow: /forgot-password
+Disallow: /reset-password
+
+Sitemap: https://srishreevisionfoundation.org/sitemap.xml

@@ -3,6 +3,7 @@ import { Link, useLocation, Outlet } from "react-router";
 import { Heart, Menu, X, Facebook, Twitter, Instagram, Youtube, MessageCircle, ArrowRight, Phone, ChevronDown, Award, CigaretteOff, Eye, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { EVENTS } from "../data";
+import { applySeo } from "../../lib/seo";
 import { usePublicAuth } from "../contexts/PublicAuthContext";
 import { HeaderTicker } from "./HeaderTicker";
 import { WelcomePopup } from "./WelcomePopup";
@@ -118,7 +119,8 @@ function FloatingIslandNav() {
             <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-lg md:text-xl tracking-tight text-zinc-900 hidden sm:block uppercase">
-            SRISHREE VISION FOUNDATION
+            <span className="whitespace-nowrap">SRISHREE VISION</span><br />
+            FOUNDATION
           </span>
         </Link>
 
@@ -349,7 +351,7 @@ function Footer() {
               <div className="w-32 h-32 shrink-0 flex items-center justify-center mb-5">
                 <img src="/logo.jpeg" alt="SRISHREE VISION FOUNDATION Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight text-center md:text-left">SRISHREE VISION FOUNDATION</span>
+              <span className="font-bold text-xl sm:text-2xl md:text-3xl text-zinc-900 tracking-tight uppercase leading-tight text-center md:text-left"><span className="whitespace-nowrap">SRISHREE VISION</span><br />FOUNDATION</span>
             </div>
             <p className="text-zinc-600 text-sm leading-relaxed max-w-sm mb-8 font-light">
               <strong className="block text-zinc-900 mb-2 font-bold">Local Vision, Global Impact</strong>
@@ -423,6 +425,10 @@ function Footer() {
 
 export function Layout() {
   const location = useLocation();
+
+  useEffect(() => {
+    applySeo(location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

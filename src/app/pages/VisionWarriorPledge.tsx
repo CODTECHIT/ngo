@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { api } from '../api';
+import { api, generateCertificateId } from '../api';
 import confetti from 'canvas-confetti';
 import { Award, Download, Share2, CheckCircle2, ShieldCheck, Sparkles, HeartHandshake, Users, ArrowRight, Printer, RefreshCw, QrCode } from 'lucide-react';
 import { Link } from 'react-router';
@@ -57,8 +57,7 @@ export const VisionWarriorPledge: React.FC = () => {
 
     setLoading(true);
 
-      // Set a volunteer certificate ID
-      const newCertId = `CERT-VIS-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+      const newCertId = generateCertificateId('Vision Warrior');
 
     const newRecord = {
       full_name: formData.fullName.trim(),
@@ -80,7 +79,7 @@ export const VisionWarriorPledge: React.FC = () => {
       setPledgeCount(prev => prev + 1);
     } catch (err) {
       console.warn("Saved locally for canvas generation (DB fallback):", err);
-      const fallbackId = `CERT-NMY-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+      const fallbackId = generateCertificateId('Vision Warrior');
       setSubmittedCert({ ...newRecord, certificate_id: fallbackId });
     } finally {
       setLoading(false);

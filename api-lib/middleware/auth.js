@@ -4,8 +4,15 @@ module.exports = function(req, res, next) {
   const token = req.header('Authorization');
   if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
 
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    return res.status(500).json({ error: 'Server not configured: JWT_SECRET missing.' });
+  }
+
   try {
-    const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET || 'fallback_secret');
+    const parts = token.split(' ');
+    const jwtToken = parts.length === 2 && parts[0].toLowerCase() === 'bearer' ? parts[1] : token;
+    const decoded = jwt.verify(jwtToken, secret);
     req.user = decoded;
     next();
   } catch (ex) {

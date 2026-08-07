@@ -78,20 +78,30 @@ ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
 
 -- POLICIES FOR site_content
 CREATE POLICY "Allow public read-only access on site_content" ON site_content FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated full CRUD on site_content" ON site_content FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated full CRUD on site_content" ON site_content FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role IN ('admin', 'super_admin', 'manager'))
+);
 
 -- POLICIES FOR programs
 CREATE POLICY "Allow public read-only access on programs" ON programs FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated full CRUD on programs" ON programs FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated full CRUD on programs" ON programs FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role IN ('admin', 'super_admin', 'manager'))
+);
 
 -- POLICIES FOR events
 CREATE POLICY "Allow public read-only access on events" ON events FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated full CRUD on events" ON events FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated full CRUD on events" ON events FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role IN ('admin', 'super_admin', 'manager'))
+);
 
 -- POLICIES FOR gallery_images
 CREATE POLICY "Allow public read-only access on gallery_images" ON gallery_images FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated full CRUD on gallery_images" ON gallery_images FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated full CRUD on gallery_images" ON gallery_images FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role IN ('admin', 'super_admin', 'manager'))
+);
 
 -- POLICIES FOR contact_submissions
 CREATE POLICY "Allow public insert on contact_submissions" ON contact_submissions FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow authenticated full CRUD on contact_submissions" ON contact_submissions FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated full CRUD on contact_submissions" ON contact_submissions FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role IN ('admin', 'super_admin', 'manager'))
+);

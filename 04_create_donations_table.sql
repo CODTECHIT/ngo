@@ -21,4 +21,6 @@ ALTER TABLE donations ENABLE ROW LEVEL SECURITY;
 -- Create Security Policies
 CREATE POLICY "Allow public insert on donations" ON donations FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow public read on donations" ON donations FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated full CRUD on donations" ON donations FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated full CRUD on donations" ON donations FOR ALL USING (
+  EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role IN ('admin', 'super_admin', 'manager'))
+);

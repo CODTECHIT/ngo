@@ -1,4 +1,4 @@
-﻿// ---- Central SEO / AEO configuration & helpers -----------------------------
+// ---- Central SEO / AEO configuration & helpers -----------------------------
 // Single source of truth for the production URL. Change it in one place and
 // canonical, sitemap, robots and Open Graph URLs all follow.
 
@@ -337,7 +337,7 @@ export function applySeo(pathname: string) {
 
   document.title = page.title;
   upsertMeta("name", "description", page.description);
-  upsertMeta("name", "keywords", page.keywords.join(", "));
+  upsertMeta("name", "keywords", (page.keywords ?? DEFAULT_PAGE.keywords).join(", "));
   upsertMeta("name", "robots", "index, follow, max-snippet:-1, max-image-preview:large");
   upsertMeta("name", "author", SITE.legalName);
   upsertMeta("name", "theme-color", "#0F6E6E");

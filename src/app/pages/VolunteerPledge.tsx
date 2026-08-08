@@ -145,10 +145,18 @@ export const VolunteerPledge: React.FC = () => {
       ctx.fillText(dateStr, canvas.width * 0.33, canvas.height * 0.82);
 
       // Authorized Sign (Right Side, above the AUTHORIZED SIGNATURE line)
-      ctx.font = 'bold italic 30px "Times New Roman", Georgia, serif';
-      ctx.fillText('Lion Dr. R. Srinivas', canvas.width * 0.68, canvas.height * 0.81);
-      ctx.font = 'bold 18px "Inter", sans-serif';
-      ctx.fillText('Director', canvas.width * 0.68, canvas.height * 0.835);
+      const signImg = new Image();
+      signImg.src = '/sign.png';
+      signImg.onload = () => {
+        const signWidth = 140;
+        const signHeight = (signImg.height / signImg.width) * signWidth;
+        ctx.drawImage(signImg, canvas.width * 0.68 - signWidth / 2, canvas.height * 0.81 - signHeight - 10, signWidth, signHeight);
+        
+        ctx.font = 'bold italic 30px "Times New Roman", Georgia, serif';
+        ctx.fillText('Lion Dr. R. Srinivas', canvas.width * 0.68, canvas.height * 0.81);
+        ctx.font = 'bold 18px "Inter", sans-serif';
+        ctx.fillText('Director', canvas.width * 0.68, canvas.height * 0.835);
+      };
     };
   }, [submittedCert]);
 

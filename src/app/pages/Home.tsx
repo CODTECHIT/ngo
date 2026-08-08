@@ -181,10 +181,10 @@ function ImpactStats() {
 // ── About Preview ─────────────────────────────────────────────────────────────
 function AboutPreview() {
   const highlights = [
-    "Registered non-profit with full statutory compliance",
-    "Free health & eye-care camps across Telangana",
-    "Education, women empowerment & rural development programs",
-    "Partner-driven outreach with police, hospitals & Lions Club",
+    "Transparent & Compliant: Fully registered non-profit upholding the highest standards of statutory governance.",
+    "Accessible Eyecare: Free vision screenings and medical outreach serving grassroots communities.",
+    "Sustainable Empowerment: Targeted education and skill development programs for rural development.",
+    "Strong Networks: Collaborative outreach leveraging support from local authorities, hospitals, and service organizations.",
   ];
 
   return (
@@ -194,11 +194,10 @@ function AboutPreview() {
           <SectionLabel>Who We Are</SectionLabel>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6">Empowering People, Changing Lives</h2>
           <div className="text-zinc-600 text-lg leading-relaxed mb-6 whitespace-pre-wrap">
-            We are a dedicated non-profit organization transforming communities through accessible eye care, sustainable development, and rural empowerment Born in Alwal, Hyderabad, we walk alongside the people we serve   one camp, one conversation, one life at a time.
-          </div>
+            Restoring Vision, Building Resilient Communities
+            Born with a mission to bring healthcare and opportunity to every doorstep, we are a non-profit organization dedicated to uplifting underserved communities across Telangana.          </div>
           <div className="text-zinc-600 text-lg leading-relaxed mb-8 whitespace-pre-wrap">
-            Our mission is to empower individuals with better healthcare, foundational education and essential skills   because we believe that when a person thrives, their whole community moves forward.
-          </div>
+            We bridge critical gaps in healthcare, women’s empowerment, and youth skill development. By combining direct community outreach with sustainable local partnerships, we ensure every individual receives the sight, skills, and support they need to thrive.          </div>
           <ul className="space-y-3.5 mb-8">
             {highlights.map((h, i) => (
               <motion.li
